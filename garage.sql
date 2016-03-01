@@ -6,13 +6,15 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   user_id BIGSERIAL PRIMARY KEY NOT NULL,
   username text NOT NULL,
+  firstname text NOT NULL,
+  lastname text NOT NULL,
   password text NOT NULL);
 
 CREATE EXTENSION pgcrypto;
-INSERT INTO users (username, password) VALUES ('Bot', crypt('bot', gen_salt('bf')));
-INSERT INTO users (username, password) VALUES ('raz', crypt('p00d13', gen_salt('bf')));
-INSERT INTO users (username, password) VALUES ('ann', crypt('changeme', gen_salt('bf')));
-INSERT INTO users (username, password) VALUES ('lazy', crypt('querty', gen_salt('bf')));
+INSERT INTO users (username, firstname, lastname, password) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')));
+INSERT INTO users (username, firstname, lastname, password) VALUES ('raz', 'Ron', 'Zarcharski', crypt('p00d13', gen_salt('bf')));
+INSERT INTO users (username, firstname, lastname, password) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')));
+INSERT INTO users (username, firstname, lastname, password) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')));
 
 DROP TABLE IF EXISTS creditcards;
 CREATE TABLE creditcards (

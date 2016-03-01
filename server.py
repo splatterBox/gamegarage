@@ -18,8 +18,8 @@ socketio = SocketIO(app)
 
 # Define database connection method.
 def connectToDB():
-    connectionString = 'dbname=chatmaxed user=limited password=limited762* host=localhost'
-    # connectionString = 'dbname=session user=postgres password=postgres host=localhost'
+    connectionString = 'dbname=garage user=limited password=limited762* host=localhost'
+    # connectionString = 'dbname=garage user=postgres password=postgres host=localhost'
     print connectionString
     try:
         return psycopg2.connect(connectionString)

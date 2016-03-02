@@ -57,13 +57,13 @@ GameGarage.controller('GarageController', function($scope){
         $scope.registerList[4] = $scope.retypedpassword;
         
         // TEST
-        console.log('Registered list values are:');
-        var index;
-        var maxindex = $scope.registerList.length - 1;
-        for(index=0; index < maxindex; index++)
-        {
-            console.log($scope.registerList[index])
-        }
+        //console.log('Registered list values are:');
+        //var index;
+        //var maxindex = $scope.registerList.length - 1;
+        //for(index=0; index < maxindex; index++)
+        //{
+        //    console.log($scope.registerList[index])
+        //}
         
         // Send the info. to the server.
         socket.emit('register', $scope.registerList);

@@ -12,7 +12,7 @@ CREATE TABLE users (
 
 CREATE EXTENSION pgcrypto;
 INSERT INTO users (username, firstname, lastname, password) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')));
-INSERT INTO users (username, firstname, lastname, password) VALUES ('raz', 'Ron', 'Zarcharski', crypt('p00d13', gen_salt('bf')));
+INSERT INTO users (username, firstname, lastname, password) VALUES ('raz', 'Ron', 'Zacharski', crypt('p00d13', gen_salt('bf')));
 INSERT INTO users (username, firstname, lastname, password) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')));
 INSERT INTO users (username, firstname, lastname, password) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')));
 

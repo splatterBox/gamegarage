@@ -10,7 +10,7 @@ Python3 is not compatible with our software.
 
 2) install the psycopg2, flask, and socketio packages for python
 
-3) run 'git clone https://github.com/dai1313/gamegarage' to get a copy of the latest source code.
+3) run 'git clone https://github.com/splatterBox/gamegarage.git' to get a copy of the latest source code.
 
 4) run the server.py file with python2 (usually 'python2 server.py'). 
 

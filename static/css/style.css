@@ -17,7 +17,7 @@ a:hover { text-decoration: none; }
 .left { float: left; display: inline; }
 .right { float: right; display: inline; }
 
-.cl, .clear { display: block; height: 0; font-size: 0; line-height: 0; text-indent: -4000px; clear: both; }
+.cl, .clear { display: block; height: 0; font-size: 0 ; line-height: 0; text-indent: -4000px; clear: both; }
 .field { font-size: 12px; color: #484848; font-family: Arial, "Trebuchet MS", sans-serif; color: #000; border: solid 1px #a0a0a0; width: 140px; padding: 2px 5px; }
 /*----- End "Main definitions" -----*/
 
@@ -56,7 +56,10 @@ a:hover { text-decoration: none; }
 #sort-nav .bg-right { background: url(images/sort-nav-bg-right.gif) no-repeat right 0; position: relative; height: 46px; }
 #sort-nav ul li { float: left; display: inline; list-style-type: none; height: 46px; }
 #sort-nav ul li a { float: left; display: inline; font-size: 13px; font-weight: bold; color: #282828; text-decoration: none; padding: 0 19px; }
-#sort-nav ul li span.sep { float: left; display: inline; width: 2px; height: 46px; font-size: 0; line-height: 0; text-indent: -4000px; background: url(images/sort-nav-sep.gif); }
+#sort-nav ul li span.sep { float: left; display: inline; width: 2px; height: 46px; font-size: 0; line-height: 0; text-indent: -100000px; background: url(images/sort-nav-sep.gif); }
+
+#sort-nav ul li span.zep { float: left; display: inline; width: 0px; height: 46px; font-size: 0; line-height: 0; text-indent: -100000px; background: url(images/sort-nav-sep.gif); }
+
 #sort-nav ul li a:hover { text-decoration: underline; }
 #sort-nav ul li.active a { color: #fff; text-decoration: none; }
 #sort-nav ul li.active a:hover { text-decoration: none; }
@@ -159,3 +162,87 @@ a:hover { text-decoration: none; }
 #footer .navs ul li { list-style-type: none; display: inline; padding: 0 6px; }
 #footer .navs ul li a { color: #656565; text-decoration: none; }
 #footer .navs ul li a:hover { text-decoration: underline; }
+
+/*----- Styles for bootstrap modal dialog box -----*/
+/* removing 'h4,' between .modal-header and .close -----*/
+.modal-header, .close {
+    background-color: #4D4E59;
+    color:white !important;
+    text-align: center;
+    font-size: 30px;
+    }
+    
+.modal-body {
+    background-color: #143B66;
+}
+.modal-footer {
+    background-color: #4D4E59;
+}
+
+.btn {
+    background-color: #265a88;
+    color:white !important;
+    border-color: #265a88;
+    
+        -moz-border-radius: 4px;
+     border-radius: 4px;
+    padding:3px;
+}
+
+.btn-success {
+    background-color: #265a88;
+    color:white !important;
+    border-color: #265a88;
+    
+        -moz-border-radius: 4px;
+     border-radius: 4px;
+    padding:3px;
+}
+
+.btn-block {
+    background-color: #265a88;
+    color:white !important;
+    border-color: #265a88;
+    width: 175px;
+    
+    -moz-border-radius: 4px;
+     border-radius: 4px;
+    padding:3px;
+}
+
+.btn-danger {
+    background-color: #C26571;
+    color:white !important;
+    border-color: #991426;
+    width: 100px;
+    
+    -moz-border-radius: 4px;
+     border-radius: 4px;
+    padding:3px;
+}
+
+.btn-focus {
+    background-color: #265a88;
+    color:white !important;
+    border-color: #265a88;
+    
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding:3px;
+}
+
+#myModal {
+    top:30%;
+}
+
+.modal-dialog {
+    width: 350px;
+}
+
+input
+{
+    -moz-border-radius: 4px;
+     border-radius: 4px;
+    border:solid 1px black;
+    padding:3px;
+}

@@ -190,9 +190,17 @@ def loginEvaluate():
                     name = ['']
                 return render_template('index.html', sessionUser=name)
             else:
+                # For anyone already logged in on this machine, log them out.
+                if 'userName' in session:
+                    del session['userName']
+                    del session['userPassword']
                 name = ['']
                 return render_template('index.html', sessionUser=name)
         else:
+            # For anyone already logged in on this machine, log them out.
+            if 'userName' in session:
+                del session['userName']
+                del session['userPassword']
             name = ['']
             return render_template('index.html', sessionUser=name)
     

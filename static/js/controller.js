@@ -21,8 +21,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.registerList = [];
     // Feedback from the server.
     $scope.registerstatus='';
-    
-    
+
     // If connect on the socket, run a function.
     socket.on('connect', function(){
         console.log('connected');
@@ -56,15 +55,6 @@ GameGarage.controller('GarageController', function($scope){
         $scope.registerList[3] = $scope.newpassword;
         $scope.registerList[4] = $scope.retypedpassword;
         
-        // TEST
-        //console.log('Registered list values are:');
-        //var index;
-        //var maxindex = $scope.registerList.length - 1;
-        //for(index=0; index < maxindex; index++)
-        //{
-        //    console.log($scope.registerList[index])
-        //}
-        
         // Send the info. to the server.
         socket.emit('register', $scope.registerList);
         // Reset all fields.
@@ -85,6 +75,19 @@ GameGarage.controller('GarageController', function($scope){
         $scope.$apply();
     });
     
+    // Attempt to login.
+    $scope.login = function login(){
+        // Close the modal dialog box.  Let server.py handle the rest.
+        modal.style.display = "none";
+    }; 
     
+    // Bootstrap modal dialog box js control script.
+    $(document).ready(function(){
+        $("#myBtn").click(function(){
+            $("#myModal").modal();
+         });
+    });
+    
+
     
 });

@@ -80,6 +80,9 @@ CREATE TABLE userlibrary (
   PRIMARY KEY (g_id, user_id));
   
 INSERT INTO userlibrary (g_id, user_id) VALUES (1, 1);
+INSERT INTO userlibrary (g_id, user_id) VALUES (3, 2);
+INSERT INTO userlibrary (g_id, user_id) VALUES (3, 5);
+INSERT INTO userlibrary (g_id, user_id) VALUES (3, 7);
   
 GRANT SELECT ON creditcards TO limited;
 GRANT INSERT ON creditcards TO limited;

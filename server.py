@@ -1,0 +1,307 @@
+# Import pyscopg2 libraries.
+import psycopg2
+import psycopg2.extras
+# Import operating system module.
+import os
+
+# Import class called "Flask"
+#from flask import Flask, render_template
+from flask import Flask, render_template, session, request
+#import socketio
+from flask.ext.socketio import SocketIO, emit
+# Create 'app' object.  Name is a built-in environment variable that refers to scope.
+app = Flask(__name__, static_url_path='')
+app.config['SECRET_KEY'] = 'secret!'
+
+# Create socketio app.
+socketio = SocketIO(app)
+
+# Define database connection method.
+def connectToDB():
+    connectionString = 'dbname=garage user=limited password=limited762* host=localhost'
+    # connectionString = 'dbname=garage user=postgres password=postgres host=localhost'
+    print connectionString
+    try:
+        return psycopg2.connect(connectionString)
+    except:
+        print("Can't connect to database")
+
+
+# Decorator.  When a socket connect event happens, do this.
+@socketio.on('connect', namespace='/gg')
+def makeConnection():
+    # Print debug message.
+    print('connected')
+
+
+
+# A python decorator.  Whenever route('/') run the layout/index webpage.
+@app.route('/')
+def mainIndex():
+    
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+ 
+    #Find out from the database if the username is already taken.
+    try:
+        cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+    except:
+        print("Error executing SELECT for username lookup.")
+    games=cur.fetchall()
+        
+    # test
+    for entry in games:
+        temptitle = entry.get('title')
+        tempdesc = entry.get('gdesc')
+        print "Title: %s" % temptitle
+        print "Description: %s" % tempdesc
+        print "\n"
+            
+    print 'in hello world'
+    
+    if 'userName' in session:
+        tempName=session['userName']
+        # Capitalize the name for HTML print.
+        newName = tempName.capitalize()
+        print "(Root) Logged in user is: %s" % newName
+    else:
+        newName = ''
+        print "(Root) No one is logged in."
+    name = [newName]    
+    return render_template('index.html', sessionUser=name, games=games)
+    #return render_template('index-backup.html', sessionUser=name)
+    #return app.send_static_file('index-backup.html')
+    
+# A python decorator.  Display the register content page.
+@app.route('/register')
+def registerPage():
+
+    if 'userName' in session:
+        tempName=session['userName']
+        # Capitalize the name for HTML print.
+        newName = tempName.capitalize()
+        print "(Register) Logged in user is: %s" % newName
+    else:
+        newName = ''
+        print "(Register) No one is logged in."
+    
+    name = [newName]
+    return render_template('register.html', sessionUser=name)
+    #return app.send_static_file('index.html')
+
+# Decorator.  When a socket registration event happens, do this.
+@socketio.on('register', namespace='/gg')
+def register(data):
+    
+    # Grab all the values and verify they are received.
+    localAvatar = data[0];
+    localFirstName = data[1];
+    localLastName = data[2];
+    localPass = data[3];
+    localRetyped = data[4];
+
+    print "New username to register is: %s" % localAvatar
+    print "New firstname to register is: %s" % localFirstName
+    print "New lastname to register is: %s" % localLastName
+    #print "New password is: %s" % localPass
+    #print "Retyped password is: %s" % localRetyped
+    
+    # Find out if the passwords match.
+    if localPass == localRetyped:
+        
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+        # Find out from the database if the username is already taken.
+        try:
+            cur.execute("SELECT * FROM users WHERE username = %s;", (localAvatar,))
+        except:
+            print("Error executing SELECT for username lookup.")
+        answer=cur.fetchall()
+            
+        # Find out if the result set is empty.
+        count=0
+        for row in answer:
+            count = count + 1
+            
+        if count > 0:
+            status = 'Username already exists.'
+            emit('status', status)
+        else:
+            # Go ahead and register the new user.
+            try:
+                print(cur.mogrify("INSERT INTO users (username, firstname, lastname, password) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')));", (localAvatar, localFirstName, localLastName, localPass)))
+                cur.execute("INSERT INTO users (username, firstname, lastname, password) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')));", (localAvatar, localFirstName, localLastName, localPass))
+            except:
+                print("Error executing INSERT for new registered user.")
+                conn.rollback()
+            conn.commit()
+      
+            # Test
+            print("You successfull registered!")
+            status = "You sucessfully registered!"
+            emit('status', status)
+
+    else:
+        # Test
+        print("Passwords do not match.")
+        status = 'Passwords do not match.'
+        emit('status', status) 
+
+
+# A python decorator.  Login.
+@app.route('/login', methods=['GET', 'POST'])
+def loginEvaluate():
+    
+    if request.method == 'POST':
+        
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+        #Find out from the database if the username is already taken.
+        try:
+            cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+        except:
+            print("Error executing SELECT for username lookup.")
+        games=cur.fetchall()
+    
+    
+        # Grab the credentials.
+        localName = request.form['username']
+        localPass = request.form['password']
+    
+        # Debug message.
+        print "Username is: %s" % localName
+        #print "Password is: %s" % localPass
+    
+        if localName != '':
+            if localPass != '':
+
+                # Verify that the username and password match a user entry in the database.
+                try:
+                    # print(cur.mogrify("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password);", (tempUser, tempPassword)))
+                    cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password);", (localName, localPass))
+                except:
+                    print("Error executing SELECT for user lookup.")
+                answer=cur.fetchall()
+            
+                # Find out if the result set is empty.
+                count=0
+                for row in answer:
+                    count = count + 1
+        
+                # Set the session variables, if user entry found, and log them in.
+                if count == 1:
+                    print("TEST: Found the username/password in the database!")
+        
+                    # Set the session variables.
+                    session['userName'] = localName
+                    session['userPassword'] = localPass
+                    # Capitalize the name for HTML print.
+                    newName = localName.capitalize()
+                    name = [newName]
+                    return render_template('index.html', sessionUser=name, games=games)
+            
+                elif count == 0:
+                    # For anyone already logged in on this machine, log them out.
+                    if 'userName' in session:
+                        del session['userName']
+                        del session['userPassword']
+                        
+                    print("Failed to log in.")
+                    #emit('loggedinStatus', failed)
+                    name = ['']
+                return render_template('index.html', sessionUser=name, games=games)
+            else:
+                # For anyone already logged in on this machine, log them out.
+                if 'userName' in session:
+                    del session['userName']
+                    del session['userPassword']
+                name = ['']
+                return render_template('index.html', sessionUser=name, games=games)
+        else:
+            # For anyone already logged in on this machine, log them out.
+            if 'userName' in session:
+                del session['userName']
+                del session['userPassword']
+            name = ['']
+            return render_template('index.html', sessionUser=name, games=games)
+    
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def Checkout():
+    cartdict = []
+    pricedict = 0
+    
+    if (request.method == 'POST' or request.method == 'GET'):
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur2 = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            try:
+                print(cur.mogrify(("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")))
+                
+                cur.execute("SELECT title FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cur2.execute("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cartdict = cur.fetchall()
+                pricedict = cur2.fetchall()
+                cart = []
+                price = 0
+                
+                for game in cartdict:
+                    cart.append(game.get('title'))
+                for total in pricedict:
+                    price = total.get('sum')
+            except:
+                print("Error selecting from library.")
+            name = ['']    
+    return render_template('checkout.html', cart=cart, price = price, sessionUser = name)
+            
+
+
+@app.route('/checkout2', methods = ['GET', 'POST'])
+def Check_Complete():
+        
+        if request.method == 'POST':
+	
+		    # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            print("I'm printing something")
+            try:
+               print(cur.mogrify(("INSERT INTO creditcards (userid, ccnumber, cccode, exp_month, expyear) VALUES (2,%s,%s,%s,%d);", (request.form['ccnumber'], request.form['cccode']
+                , request.form['expmonth'], request.form['expyear']))))
+                #cur.execute("INSERT INTO creditcards (user_id, cc_number, cc_code, exp_month, exp_year) VALUES (2,12345,333,June,2014);", (request.form['cc_number'], request.form['cc_code']
+                #, request.form['exp_month'], request.form['exp_year']))
+                #cur.execute("INSERT INTO userlibrary VALUES (1,1,TRUE);")
+                
+                #cur.execute()
+                
+                #answer=cur.fetchall()
+            except:
+                print("Error executing updating game library.")
+            print("I printed something")
+        name = ['']
+        return render_template('checkout2.html', sessionUser = name)   
+
+
+
+
+
+
+
+
+# Start the server.  Main method.  
+if __name__ == '__main__':
+    # Use the IP address for host.  If not present, use 0.0.0.0.
+    # Use the PORT address.  If not present, use 8080.
+    #app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
+    socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)

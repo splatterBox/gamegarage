@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+  
+  <!-- Checkout -->
+      <div class="block">
+        <div class="block-bot">
+          <div class="block-cnt">
+            
+              <h3>Checkout</h3>
+              <div class="cl">&nbsp;</div>
+            </div>
+          
+          <div class="row-articles articles">
+            <div class="cl">&nbsp;</div>
+            <div class = "cnt">
+              <table>
+                {% for game in cart %}
+
+                <tr><td>{{game}}</td></tr>
+                {% endfor %}
+
+                </table>
+                <p>
+                  Total price is: ${{price}}
+                </p>
+                
+                </div>
+
+              &nbsp;<br />
+              &nbsp;<br />
+              &nbsp;<br />
+              &nbsp;<br />
+              &nbsp;<br />
+              &nbsp;<br />
+              
+              <div class="cnt">
+                
+                
+                
+                
+
+                
+                <form method="post" action="/checkout2">
+                  <p>
+                    <h3><label for="cc_number">Credit Card #:</label></h3>
+                    <input type="text" ng-model="cc_number" id="cc_number" name="cc_number" size="30"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="cc_code">Security Code:</label></h3>
+                    <input type="text" ng-model="cc_code" id="cc_code" name="cc_code" size="5"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="exp_month">Expiration month:</label></h3>
+                    <input type="text" ng-model="exp_month" id="exp_month" name="exp_month" size="15"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="exp_year">Expiration year:</label></h3>
+                    <input type="text" ng-model="exp_year" id="exp_year" name="exp_year" size="4"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <input type="submit" value="Checkout" name="submit" ng-disabled="disabledSubmit()" />
+                  </p>
+                </form>
+                            <div class="article">
+              <div class="cl">&nbsp;</div>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  
+  
+  
+{% endblock %}

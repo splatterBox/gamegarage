@@ -46,10 +46,10 @@ def mainIndex():
     
     #Find out from the database if the username is already taken.
     try:
-        cur.execute("SELECT * FROM games;")
+        cur.execute("SELECT games.title, gamedetails.g_desc FROM games NATURAL JOIN gamedetails;")
     except:
         print("Error executing SELECT for username lookup.")
-    #games=cur.fetchall()
+    games=cur.fetchall()
     
     print 'in hello world'
     
@@ -63,7 +63,7 @@ def mainIndex():
         print "(Root) No one is logged in."
     
     name = [newName]    
-    return render_template('index.html', sessionUser=name)
+    return render_template('index.html', sessionUser=name, games=games)
     #return app.send_static_file('index.html')
     
 # A python decorator.  Display the register content page.

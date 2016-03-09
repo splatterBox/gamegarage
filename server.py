@@ -38,8 +38,7 @@ def makeConnection():
 # A python decorator.  Whenever route('/') run the layout/index webpage.
 @app.route('/')
 def mainIndex():
-   
-           
+
     # Connect to the database.
     conn = connectToDB()
     # Create a database cursor object (dictionary style).
@@ -47,12 +46,11 @@ def mainIndex():
     
     # Find out from the database if the username is already taken.
     try:
-        cur.execute("SELECT title FROM games;", (localAvatar,))
+        cur.execute("SELECT * FROM users WHERE username = %s;", (localAvatar,))
     except:
-        print("Error executing SELECT for games.")
+        print("Error executing SELECT for username lookup.")
     games=cur.fetchall()
-
-   
+    
     print 'in hello world'
     
     if 'userName' in session:

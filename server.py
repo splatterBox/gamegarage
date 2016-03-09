@@ -158,6 +158,19 @@ def register(data):
 def loginEvaluate():
     
     if request.method == 'POST':
+        
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+        #Find out from the database if the username is already taken.
+        try:
+            cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+        except:
+            print("Error executing SELECT for username lookup.")
+        games=cur.fetchall()
+    
     
         # Grab the credentials.
         localName = request.form['username']
@@ -169,11 +182,7 @@ def loginEvaluate():
     
         if localName != '':
             if localPass != '':
-                # Connect to the database.
-                conn = connectToDB()
-                # Create a database cursor object (dictionary style).
-                cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        
+
                 # Verify that the username and password match a user entry in the database.
                 try:
                     # print(cur.mogrify("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password);", (tempUser, tempPassword)))
@@ -197,7 +206,7 @@ def loginEvaluate():
                     # Capitalize the name for HTML print.
                     newName = localName.capitalize()
                     name = [newName]
-                    return render_template('index.html', sessionUser=name)
+                    return render_template('index.html', sessionUser=name, games=games)
             
                 elif count == 0:
                     # For anyone already logged in on this machine, log them out.
@@ -208,24 +217,80 @@ def loginEvaluate():
                     print("Failed to log in.")
                     #emit('loggedinStatus', failed)
                     name = ['']
-                return render_template('index.html', sessionUser=name)
+                return render_template('index.html', sessionUser=name, games=games)
             else:
                 # For anyone already logged in on this machine, log them out.
                 if 'userName' in session:
                     del session['userName']
                     del session['userPassword']
                 name = ['']
-                return render_template('index.html', sessionUser=name)
+                return render_template('index.html', sessionUser=name, games=games)
         else:
             # For anyone already logged in on this machine, log them out.
             if 'userName' in session:
                 del session['userName']
                 del session['userPassword']
             name = ['']
-            return render_template('index.html', sessionUser=name)
+            return render_template('index.html', sessionUser=name, games=games)
     
 
+@app.route('/checkout', methods=['GET', 'POST'])
+def Checkout():
+    cartdict = []
+    pricedict = 0
     
+    if (request.method == 'POST' or request.method == 'GET'):
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur2 = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            try:
+                print(cur.mogrify(("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")))
+                
+                cur.execute("SELECT title FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cur2.execute("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cartdict = cur.fetchall()
+                pricedict = cur2.fetchall()
+                cart = []
+                price = 0
+                
+                for game in cartdict:
+                    cart.append(game.get('title'))
+                for total in pricedict:
+                    price = total.get('sum')
+            except:
+                print("Error selecting from library.")
+            name = ['']    
+    return render_template('checkout.html', cart=cart, price = price, sessionUser = name)
+            
+
+
+@app.route('/checkout2', methods = ['GET', 'POST'])
+def Check_Complete():
+        
+        if request.method == 'POST':
+	
+		    # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            print("I'm printing something")
+            try:
+               print(cur.mogrify(("INSERT INTO creditcards (userid, ccnumber, cccode, exp_month, expyear) VALUES (2,%s,%s,%s,%d);", (request.form['ccnumber'], request.form['cccode']
+                , request.form['expmonth'], request.form['expyear']))))
+                #cur.execute("INSERT INTO creditcards (user_id, cc_number, cc_code, exp_month, exp_year) VALUES (2,12345,333,June,2014);", (request.form['cc_number'], request.form['cc_code']
+                #, request.form['exp_month'], request.form['exp_year']))
+                #cur.execute("INSERT INTO userlibrary VALUES (1,1,TRUE);")
+                
+                #cur.execute()
+                
+                #answer=cur.fetchall()
+            except:
+                print("Error executing updating game library.")
+            print("I printed something")
+        name = ['']
+        return render_template('checkout2.html', sessionUser = name)   
 
 
 

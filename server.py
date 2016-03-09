@@ -38,7 +38,21 @@ def makeConnection():
 # A python decorator.  Whenever route('/') run the layout/index webpage.
 @app.route('/')
 def mainIndex():
+   
+           
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    # Find out from the database if the username is already taken.
+    try:
+        cur.execute("SELECT title FROM games;", (localAvatar,))
+    except:
+        print("Error executing SELECT for games.")
+    games=cur.fetchall()
+
+   
     print 'in hello world'
     
     if 'userName' in session:

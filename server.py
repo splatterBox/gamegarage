@@ -292,8 +292,22 @@ def Check_Complete():
         name = ['']
         return render_template('checkout2.html', sessionUser = name)   
 
-
-
+@app.route('/changeInfo')
+def changeInfo():
+    conn = connectToDB()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    tempName=session['userName']
+    newName = tempName.capitalize()
+    name = [newName]
+    try:
+        cur.execute("select username, firstname, lastname, password from users WHERE username= '%s'" % (tempName))
+    except:
+        print("ERROR inserting from the wall")
+        conn.rollback()
+    conn.commit()
+    results = cur.fetchall()
+    return render_template('changeInfo.html', sessionUser=name, info=results)
+    #return app.send_static_file('index.html')
 
 
 

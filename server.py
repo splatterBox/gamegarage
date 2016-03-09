@@ -44,7 +44,7 @@ def mainIndex():
     # Create a database cursor object (dictionary style).
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    Find out from the database if the username is already taken.
+    #Find out from the database if the username is already taken.
     try:
         cur.execute("SELECT * FROM games;")
     except:

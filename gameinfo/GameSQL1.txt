@@ -1,4 +1,4 @@
-INSERT INTO games (title, price, discount_price) VALUES ('Juniper's Knot', 0, 0);
+INSERT INTO games (title, price, discount_price) VALUES ('Juniper''s Knot', 0, 0);
 INSERT INTO games (title, price, discount_price) VALUES ('140', 4.99, 4.99);
 INSERT INTO games (title, price, discount_price) VALUES ('Analogue: A Hate Story', 9.99, 9.99);
 INSERT INTO games (title, price, discount_price) VALUES ('Antichamber', 19.99, 19.99);

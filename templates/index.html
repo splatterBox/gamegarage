@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1>Welcome to gamegarage!</h1>
+
+<b>Here are some of the games that we are offering at this time:</b>
+
+<table>
+	{% for game in games %}
+
+	</br>
+	Game title: {{game.title}}
+	</br>
+	Description: {{game.gdesc}}
+	</br>
+	</br>
+	{% endfor %}
+</table>
+
+{% endblock %}

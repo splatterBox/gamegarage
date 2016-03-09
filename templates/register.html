@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+  {% block content %}
+        
+      <!-- Registration -->
+      <div class="block">
+        <div class="block-bot">
+          <div class="head">
+            <div class="head-cnt">
+              <h3>Account Registration</h3>
+              <div class="cl">&nbsp;</div>
+            </div>
+          </div>
+          <div class="row-articles articles">
+            <div class="cl">&nbsp;</div>
+            <div class="article">
+              <div class="cl">&nbsp;</div>
+              &nbsp;<br />
+              &nbsp;<br />
+              <div class="image"> <a href="#"><img src="css/images/img7.jpg" alt="" /></a> </div>
+              <div class="cnt">
+                
+                <form ng-submit="register()">
+                  <p>
+                    <h3><label for="username">Avatar/Username:</label></h3>
+                    <input type="text" ng-model="username" id="username" name="username" size="20"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="firstname">Firstname:</label></h3>
+                    <input type="text" ng-model="firstname" id="firstname" name="firstname" size="20"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="lastname">Lastname:</label></h3>
+                    <input type="text" ng-model="lastname" id="lastname" name="lastname" size="20"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="newpassword">Password:</label></h3>
+                    <input type="password" ng-model="newpassword" id="newpassword" name="newpassword" size="20"/>
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <h3><label for="retypedpassword">Retype Password:</label></h3>
+                    <input type="password" ng-model="retypedpassword" id="retypedpassword" name="retypedpassword" size="20" />
+                  </p>
+                  &nbsp;<br />
+                  <p>
+                    <input type="submit" value="register" name="submit" ng-disabled="disabledSubmit()" />
+                  </p>
+                </form>
+                &nbsp;<br />
+                <p>
+                  <h3>Status: </h3> 
+                  <input type="text" ng-model="registerstatus" placeholder="Registration Status" size="25" readonly="readonly"/>
+                </p>
+                
+              </div>
+              <div class="cl">&nbsp;</div>
+            </div>
+
+            <div class="article last-article">
+              <div class="cl">&nbsp;</div>
+              <p>
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+
+                
+              </p>
+   
+
+              <div class="cl">&nbsp;</div>
+            </div>
+            <div class="cl">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+      <!-- / Editor's Pick -->
+      
+  
+      
+
+      
+   {% endblock %}

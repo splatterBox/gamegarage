@@ -39,6 +39,26 @@ def makeConnection():
 @app.route('/')
 def mainIndex():
     
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+ 
+    #Find out from the database if the username is already taken.
+    try:
+        cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+    except:
+        print("Error executing SELECT for username lookup.")
+    games=cur.fetchall()
+        
+    # test
+    for entry in games:
+        temptitle = entry.get('title')
+        tempdesc = entry.get('gdesc')
+        print "Title: %s" % temptitle
+        print "Description: %s" % tempdesc
+        print "\n"
+            
     print 'in hello world'
     
     if 'userName' in session:
@@ -49,10 +69,10 @@ def mainIndex():
     else:
         newName = ''
         print "(Root) No one is logged in."
-    
     name = [newName]    
-    return render_template('index.html', sessionUser=name)
-    #return app.send_static_file('index.html')
+    return render_template('index.html', sessionUser=name, games=games)
+    #return render_template('index-backup.html', sessionUser=name)
+    #return app.send_static_file('index-backup.html')
     
 # A python decorator.  Display the register content page.
 @app.route('/register')

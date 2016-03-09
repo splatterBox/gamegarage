@@ -262,6 +262,10 @@ def Checkout():
             except:
                 print("Error selecting from library.")
             name = ['']    
+            
+    tempName=session['userName']
+    newName = tempName.capitalize()
+    name = [newName]
     return render_template('checkout.html', cart=cart, price = price, sessionUser = name)
             
 
@@ -270,6 +274,7 @@ def Checkout():
 def Check_Complete():
         
         if request.method == 'POST':
+            
 	
 		    # Connect to the database.
             conn = connectToDB()

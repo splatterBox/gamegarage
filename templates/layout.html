@@ -103,6 +103,10 @@
             <li><a href="#">Top Games</a><span class="sep">&nbsp;</span></li>
             <li><a href="#">All Games</a><span class="sep">&nbsp;</span></li>
             
+            {% if sessionUser[0] != '' %}
+              <li><a href="/changeInfo">Account Info</a><span class="sep">&nbsp;</span></li>
+            {% endif %}
+            
             <!-- If user is logged in, show their name at top right. //-->
             {% if sessionUser[0] != '' %}
               <li><a href="#"></a><span class="zep">&nbsp;</span></li>

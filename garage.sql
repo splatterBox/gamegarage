@@ -26,7 +26,7 @@ CREATE TABLE creditcards (
   expyear int NOT NULL);
   
 
-INSERT INTO creditcards (user_id, cc_number, cc_code, exp_month, exp_year) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'june', 2050); 
+INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'june', 2050); 
 
 DROP TABLE IF EXISTS games;
 CREATE TABLE games (

@@ -52,12 +52,14 @@ def mainIndex():
     games=cur.fetchall()
         
     # test
+    """
     for entry in games:
         temptitle = entry.get('title')
         tempdesc = entry.get('gdesc')
         print "Title: %s" % temptitle
         print "Description: %s" % tempdesc
         print "\n"
+    """
             
     print 'in hello world'
     
@@ -73,6 +75,154 @@ def mainIndex():
     return render_template('index.html', sessionUser=name, games=games)
     #return render_template('index-backup.html', sessionUser=name)
     #return app.send_static_file('index-backup.html')
+
+# A python decorator.  Whenever '/allgames' run the 'displaygames' webpage.
+@app.route('/allgames')
+def displayAllGames():
+    
+    if 'userName' in session:
+        tempName=session['userName']
+        # Capitalize the name for HTML print.
+        newName = tempName.capitalize()
+        print "(Register) Logged in user is: %s" % newName
+    else:
+        tempName = ''
+        newName = ''
+        print "(Register) No one is logged in."
+        
+    # original username
+    originalname = [tempName]
+    # capitalized username
+    name = [newName]
+    
+    # Search for all games.
+    searchtype = 'all'
+    
+    return render_template('displaygames.html', originalUser=originalname, sessionUser=name, games=searchtype)
+    #return render_template('index-backup.html', sessionUser=name)
+    #return app.send_static_file('index-backup.html')
+
+# Decorator.  When a game search request happens, do this.
+@socketio.on('searchtype', namespace='/gg')
+def findGames(searchtype):
+    
+    # Grab all the values and verify they are received.
+    localSearchType = searchtype
+
+    print "Game search type is: %s" % localSearchType
+
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+ 
+    if localSearchType == 'all':
+        
+        # Get data for all games.
+        try:
+            cur.execute("SELECT * FROM games NATURAL JOIN gamedetails;")
+            #cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+        except:
+            print("Error executing SELECT for all games lookup.")
+        games=cur.fetchall()
+        
+        gamesResult = []
+        
+        
+        for entry in games:
+            # Test
+            #temptitle = entry.get('title')
+            #localprice = entry.get('price')
+            #tempdesc = entry.get('gdesc')
+            #print "Title: %s" % temptitle
+            #print "TEST: Game price is: %s" % localprice
+            #print "Description: %s" % tempdesc
+            #print "\n"
+            
+            # Grab the price (in decimal).
+            decimalprice = entry.get('price')
+            # Convert the price to a string.
+            stringprice = str(decimalprice)
+            # Add the $ character.
+            finalprice = '$' + stringprice
+            
+            #Grab the discount price (in decimal).
+            decimaldiscount = entry.get('discountprice')
+            # Convert the discout price to a string.
+            stringdiscount = str(decimaldiscount)
+            # Add the $ character.
+            finaldiscount = '$' + stringdiscount
+
+            
+            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'discountprice': finaldiscount, 'desc': entry.get('gdesc')}
+            #game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'desc': entry.get('gdesc')}
+            gamesResult.append(game)
+            
+        # Test
+        for entry2 in gamesResult:
+            tempid = entry2.get('gid')
+            temptitle = entry2.get('title')
+            tempprice = entry2.get('price')
+            tempdiscount = entry2.get('discountprice')
+            tempdesc = entry2.get('desc')
+            print "Game ID: %s" % tempid
+            print "Title: %s" % temptitle
+            print "Price: %s" % tempprice
+            print "Discount Price: %s" % tempdiscount
+            print "Description: %s" % tempdesc
+            print "\n"
+            
+        # Test
+        print("You successfull retreived all games!")
+        emit('gamesResult', gamesResult)
+
+
+# Decorator.  When a socket add-to-cart event happens, do this.
+@socketio.on('addtocart', namespace='/gg')
+def addtocart(cartdata):
+    
+    # Grab all the values and verify they are received.
+    localName = cartdata[0];
+    localGameID = cartdata[1];
+
+    print "Logged in user's name: %s" % localName
+    print "Game ID to add to user's cart: %s" % localGameID
+    
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+    # Get the logged in user's userid.
+    try:
+        cur.execute("SELECT userid FROM users WHERE username = %s;", (localName,))
+    except:
+        print("Error executing SELECT for username lookup.")
+    answer=cur.fetchall()
+           
+    # Find out if the result set is empty.
+    count=0
+    for row in answer:
+        count = count + 1
+            
+    if count == 0:
+            status = 'Username does not exist.'
+
+    # Get the userid.
+    for entry in answer:
+        localUserID = entry.get('userid')
+        print 'Userid is: %s' % localUserID
+        
+    # Attempt to add the game to the user's userlibrary.
+    try:
+        print(cur.mogrify("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID)))
+        cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+    except:
+        print("Error executing UPDATE for userlibrary.")
+        conn.rollback()
+    conn.commit()
+    
+    
     
 # A python decorator.  Display the register content page.
 @app.route('/register')
@@ -165,6 +315,8 @@ def loginEvaluate():
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
         #Find out from the database if the username is already taken.
+        
+        # **************Getting games for  front page here.  Will remove when frontpage is restored/replaced **************
         try:
             cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
         except:

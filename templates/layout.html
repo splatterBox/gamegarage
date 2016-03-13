@@ -101,21 +101,15 @@
             <li><a href="#">Previews </a><span class="sep">&nbsp;</span></li>
             <li><a href="#">New Releases</a><span class="sep">&nbsp;</span></li>
             <li><a href="#">Top Games</a><span class="sep">&nbsp;</span></li>
-            <li><a href="#">All Games</a><span class="sep">&nbsp;</span></li>
+            <li><a href="/allgames">All Games</a><span class="sep">&nbsp;</span></li>
             
+            <!-- If user is logged in, show their name at top right. Also show the 2 new menu options.  //-->
             {% if sessionUser[0] != '' %}
               <li><a href="/changeInfo">Account Info</a><span class="sep">&nbsp;</span></li>
               <li><a href="/checkout">Cart</a><span class="sep">&nbsp;</span></li>
-            {% endif %}
-            
-            
-            <!-- If user is logged in, show their name at top right. //-->
-            {% if sessionUser[0] != '' %}
-              <!-- <li><a href="#"></a><span class="zep">&nbsp;</span></li> //-->
               <li><a href="#">Logged In: {{sessionUser[0]}}</a><span class="zep">&nbsp;</span></li>
-
             {% endif %}
-            
+        
           </ul>
           <div class="cl">&nbsp;</div>
         </div>

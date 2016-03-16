@@ -32,8 +32,9 @@ DROP TABLE IF EXISTS games;
 CREATE TABLE games (
   gid BIGSERIAL PRIMARY KEY NOT NULL,
   title text NOT NULL,
-  price decimal NOT NULL,
-  discountprice decimal NOT NULL DEFAULT 0.00);
+  price decimal(10,2) NOT NULL,
+  discountprice decimal(10,2) NOT NULL DEFAULT 0.00,
+  onsale  boolean  NOT NULL DEFAULT FALSE);
   
 INSERT INTO games (title, price, discountprice) VALUES ('FEAR2', 19.99, 19.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Juniper''s Knot', 0, 0);

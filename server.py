@@ -72,7 +72,7 @@ def mainIndex():
         newName = ''
         print "(Root) No one is logged in."
     name = [newName]    
-    return render_template('index.html', sessionUser=name, games=games)
+    return render_template('index.html', sessionUser=name, games=games, selected = 'home')
     #return render_template('index-backup.html', sessionUser=name)
     #return app.send_static_file('index-backup.html')
 
@@ -98,7 +98,7 @@ def displayAllGames():
     # Search for all games.
     searchtype = 'all'
     
-    return render_template('displaygames.html', originalUser=originalname, sessionUser=name, games=searchtype)
+    return render_template('displaygames.html', originalUser=originalname, sessionUser=name, games=searchtype, selected = 'allgames')
     #return render_template('index-backup.html', sessionUser=name)
     #return app.send_static_file('index-backup.html')
 
@@ -238,7 +238,7 @@ def registerPage():
         print "(Register) No one is logged in."
     
     name = [newName]
-    return render_template('register.html', sessionUser=name)
+    return render_template('register.html', sessionUser=name, selected = 'register')
     #return app.send_static_file('index.html')
 
 # Decorator.  When a socket registration event happens, do this.
@@ -358,7 +358,7 @@ def loginEvaluate():
                     # Capitalize the name for HTML print.
                     newName = localName.capitalize()
                     name = [newName]
-                    return render_template('index.html', sessionUser=name, games=games)
+                    return render_template('index.html', sessionUser=name, games=games, selected = 'home')
             
                 elif count == 0:
                     # For anyone already logged in on this machine, log them out.
@@ -369,21 +369,21 @@ def loginEvaluate():
                     print("Failed to log in.")
                     #emit('loggedinStatus', failed)
                     name = ['']
-                return render_template('index.html', sessionUser=name, games=games)
+                return render_template('index.html', sessionUser=name, games=games, selected = 'home')
             else:
                 # For anyone already logged in on this machine, log them out.
                 if 'userName' in session:
                     del session['userName']
                     del session['userPassword']
                 name = ['']
-                return render_template('index.html', sessionUser=name, games=games)
+                return render_template('index.html', sessionUser=name, games=games, selected = 'home')
         else:
             # For anyone already logged in on this machine, log them out.
             if 'userName' in session:
                 del session['userName']
                 del session['userPassword']
             name = ['']
-            return render_template('index.html', sessionUser=name, games=games)
+            return render_template('index.html', sessionUser=name, games=games, selected = 'home')
     
 
 @app.route('/checkout', methods=['GET', 'POST'])
@@ -418,7 +418,7 @@ def Checkout():
     tempName=session['userName']
     newName = tempName.capitalize()
     name = [newName]
-    return render_template('checkout.html', cart=cart, price = price, sessionUser = name)
+    return render_template('checkout.html', cart=cart, price = price, sessionUser = name, selected = 'checkout')
             
 
 
@@ -447,7 +447,7 @@ def Check_Complete():
                 print("Error executing updating game library.")
             print("I printed something")
         name = ['']
-        return render_template('checkout2.html', sessionUser = name)   
+        return render_template('checkout2.html', sessionUser = name, selected = 'checkout')   
 
 @app.route('/changeInfo')
 def changeInfo():
@@ -463,7 +463,7 @@ def changeInfo():
         conn.rollback()
     conn.commit()
     results = cur.fetchall()
-    return render_template('changeInfo.html', sessionUser=name, info=results)
+    return render_template('changeInfo.html', sessionUser=name, info=results, selected = 'changeinfo')
     #return app.send_static_file('index.html')
 
 

@@ -139,22 +139,28 @@ def findGames(searchtype):
             #print "Description: %s" % tempdesc
             #print "\n"
             
-            # Grab the price (in decimal).
-            decimalprice = entry.get('price')
-            # Convert the price to a string.
-            stringprice = str(decimalprice)
-            # Add the $ character.
-            finalprice = '$' + stringprice
+            finalprice = ''
+            # Grab the onsale value.
+            onsale = entry.get('onsale')
+            print "Onsale value is: %s" % onsale
+            if onsale == False:
+                # Grab the price (in decimal).
+                decimalprice = entry.get('price')
+                # Convert the price to a string.
+                stringprice = str(decimalprice)
+                # Add the $ character.
+                finalprice = 'Price $' + stringprice
             
-            #Grab the discount price (in decimal).
-            decimaldiscount = entry.get('discountprice')
-            # Convert the discout price to a string.
-            stringdiscount = str(decimaldiscount)
-            # Add the $ character.
-            finaldiscount = '$' + stringdiscount
+            elif onsale == True:
+                #Grab the discount price (in decimal).
+                decimaldiscount = entry.get('discountprice')
+                # Convert the discout price to a string.
+                stringdiscount = str(decimaldiscount)
+                # Add the $ character.
+                finalprice = 'Discount Price $' + stringdiscount
 
             
-            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'discountprice': finaldiscount, 'desc': entry.get('gdesc')}
+            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'desc': entry.get('gdesc')}
             #game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'desc': entry.get('gdesc')}
             gamesResult.append(game)
             
@@ -163,12 +169,12 @@ def findGames(searchtype):
             tempid = entry2.get('gid')
             temptitle = entry2.get('title')
             tempprice = entry2.get('price')
-            tempdiscount = entry2.get('discountprice')
+            #tempdiscount = entry2.get('discountprice')
             tempdesc = entry2.get('desc')
             print "Game ID: %s" % tempid
             print "Title: %s" % temptitle
             print "Price: %s" % tempprice
-            print "Discount Price: %s" % tempdiscount
+            #print "Discount Price: %s" % tempdiscount
             print "Description: %s" % tempdesc
             print "\n"
             

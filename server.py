@@ -184,10 +184,11 @@ def addtocart(cartdata):
     # Grab all the values and verify they are received.
     localName = cartdata[0];
     localGameID = cartdata[1];
+    pageposition = cartdata[2];
 
     print "Logged in user's name: %s" % localName
     print "Game ID to add to user's cart: %s" % localGameID
-    
+    print "Position of game on inventory page: %s" % pageposition
     # Connect to the database.
     conn = connectToDB()
     # Create a database cursor object (dictionary style).
@@ -213,14 +214,41 @@ def addtocart(cartdata):
         localUserID = entry.get('userid')
         print 'Userid is: %s' % localUserID
         
-    # Attempt to add the game to the user's userlibrary.
+    # Find out if the game is already in the user's cart.
     try:
-        print(cur.mogrify("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID)))
-        cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+        print(cur.mogrify("SELECT * FROM userlibrary WHERE gid = %s AND userid = %s;", (localGameID, localUserID)))
+        cur.execute("SELECT * FROM userlibrary WHERE gid = %s AND userid = %s;", (localGameID, localUserID))
     except:
-        print("Error executing UPDATE for userlibrary.")
-        conn.rollback()
-    conn.commit()
+        print("Error searching for game in userlibrary.")
+    duplicategames = cur.fetchall()
+
+    # Find out if the result set is empty.
+    gamecount=0
+    for gamerow in duplicategames:
+        gamecount = gamecount + 1
+    
+    # Declare empty string for gamestatus just in case it never gets set.
+    gamestatus = ''
+    
+    if gamecount > 0:
+            gamestatus = 'Game already in cart.'
+            print(gamestatus)
+    else:
+        # Attempt to add the game to the user's userlibrary.
+        try:
+            print(cur.mogrify("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID)))
+            cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+        except:
+            print("Error executing UPDATE for userlibrary.")
+            conn.rollback()
+        conn.commit()
+        gamestatus = 'Added game to cart!'
+        print(gamestatus)
+        
+    gameinfo = {'pageposition': pageposition, 'gamestatus': gamestatus}
+    emit('gameinfo', gameinfo)
+    
+
     
     
     

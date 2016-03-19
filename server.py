@@ -384,7 +384,26 @@ def loginEvaluate():
                 del session['userPassword']
             name = ['']
             return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+
+# A python decorator.  Login.
+@app.route('/logout', methods=['GET', 'POST'])
+def logoutEvaluate():
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    try:
+        cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+    except:
+        print("Error executing SELECT for username lookup.")
+    games=cur.fetchall()
     
+    # For anyone already logged in on this machine, log them out.
+    if 'userName' in session:
+        del session['userName']
+        del session['userPassword']
+        name = ['']
+        return render_template('index.html', sessionUser=name, games=games, selected = 'home')
 
 @app.route('/checkout', methods=['GET', 'POST'])
 def Checkout():

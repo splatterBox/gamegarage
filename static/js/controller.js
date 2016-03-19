@@ -41,30 +41,35 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price1 = '';
     $scope.discount1 = '';
     $scope.desc1 = '';
+    $scope.status1 = '';
     
     $scope.gid2 = '';
     $scope.title2 = '';
     $scope.price2 = '';
     $scope.discount2 = '';
     $scope.desc2 = '';
+    $scope.status2 = '';
     
     $scope.gid3 = '';
     $scope.title3 = '';
     $scope.price3 = '';
     $scope.discount3 = '';
     $scope.desc3 = '';
+    $scope.status3 = '';
     
     $scope.gid4 = '';
     $scope.title4 = '';
     $scope.price4 = '';
     $scope.discount4 = '';
     $scope.desc4 = '';
+    $scope.status4 = '';
     
     $scope.gid5 = '';
     $scope.title5 = '';
     $scope.price5 = '';
     $scope.discount5 = '';
     $scope.desc5 = '';
+    $scope.status5 = '';
     
     // Variable to track current game content webpage.
     $scope.pagenumber = 0;
@@ -343,6 +348,8 @@ GameGarage.controller('GarageController', function($scope){
         elem1c.innerHTML = $scope.discount1;
         var elem1d = document.getElementById("desc1ID");
         elem1d.innerHTML = $scope.desc1;
+        var update1 = document.getElementById("status1ID");
+        update1.innerHTML = $scope.status1;
         
         var elem2a = document.getElementById("title2ID");
         elem2a.innerHTML = $scope.title2;
@@ -352,6 +359,8 @@ GameGarage.controller('GarageController', function($scope){
         elem2c.innerHTML = $scope.discount2;
         var elem2d = document.getElementById("desc2ID");
         elem2d.innerHTML = $scope.desc2;
+        var update2 = document.getElementById("status2ID");
+        update2.innerHTML = $scope.status2;
         
         var elem3a = document.getElementById("title3ID");
         elem3a.innerHTML = $scope.title3;
@@ -361,6 +370,8 @@ GameGarage.controller('GarageController', function($scope){
         elem3c.innerHTML = $scope.discount3;
         var elem3d = document.getElementById("desc3ID");
         elem3d.innerHTML = $scope.desc3;
+        var update3 = document.getElementById("status3ID");
+        update3.innerHTML = $scope.status3;
         
         var elem4a = document.getElementById("title4ID");
         elem4a.innerHTML = $scope.title4;
@@ -369,7 +380,9 @@ GameGarage.controller('GarageController', function($scope){
         var elem4c = document.getElementById("discount4ID");
         elem4c.innerHTML = $scope.discount4;
         var elem4d = document.getElementById("desc4ID");
-        elem4d.innerHTML = $scope.desc4;       
+        elem4d.innerHTML = $scope.desc4; 
+        var update4 = document.getElementById("status4ID");
+        update4.innerHTML = $scope.status4;
         
         var elem5a = document.getElementById("title5ID");
         elem5a.innerHTML = $scope.title5;
@@ -378,7 +391,9 @@ GameGarage.controller('GarageController', function($scope){
         var elem5c = document.getElementById("discount5ID");
         elem5c.innerHTML = $scope.discount5;
         var elem5d = document.getElementById("desc5ID");
-        elem5d.innerHTML = $scope.desc5; 
+        elem5d.innerHTML = $scope.desc5;
+        var update5 = document.getElementById("status5ID");
+        update5.innerHTML = $scope.status5;
     };
 
 
@@ -417,26 +432,31 @@ GameGarage.controller('GarageController', function($scope){
         $scope.price1 = '';
         $scope.discount1 = '';
         $scope.desc1 = '';
+        $scope.status1 = '';
 
         $scope.title2 = '';
         $scope.price2 = '';
         $scope.discount2 = '';
         $scope.desc2 = '';
+        $scope.status2 = '';
         
         $scope.title3 = '';
         $scope.price3 = '';
         $scope.discount3 = '';
         $scope.desc3 = '';
+        $scope.status3 = '';
         
         $scope.title4 = '';
         $scope.price4 = '';
         $scope.discount4 = '';
         $scope.desc4 = '';
+        $scope.status4 = '';
         
         $scope.title5 = '';
         $scope.price5 = '';
         $scope.discount5 =  '';
         $scope.desc5 = '';
+        $scope.status5 = '';
         
 
         // Call the method that loads the current webpage's games.
@@ -466,10 +486,13 @@ GameGarage.controller('GarageController', function($scope){
         localList[0] = $scope.loggedinusername;
         // Add the game id to the list.
         localList[1] = $scope.gid1;
+        // Add the page game number to the list.
+        localList[2] = 'gameone';
         
         // TEST
         console.log('Sending username: ', localList[0]);
         console.log('Sending game id to add to cart: ', localList[1]);
+        console.log('Sending game position: ', localList[2]);
         
         // Send the info. to the server.
         socket.emit('addtocart', localList);
@@ -485,10 +508,12 @@ GameGarage.controller('GarageController', function($scope){
         localList[0] = $scope.loggedinusername;
         // Add the game id to the list.
         localList[1] = $scope.gid2;
+        localList[2] = 'gametwo';
         
         // TEST
         console.log('Sending username: ', localList[0]);
         console.log('Sending game id to add to cart: ', localList[1]);
+        console.log('Sending game position: ', localList[2]);
         
         // Send the info. to the server.
         socket.emit('addtocart', localList);
@@ -504,10 +529,12 @@ GameGarage.controller('GarageController', function($scope){
         localList[0] = $scope.loggedinusername;
         // Add the game id to the list.
         localList[1] = $scope.gid3;
+        localList[2] = 'gamethree';
         
         // TEST
         console.log('Sending username: ', localList[0]);
         console.log('Sending game id to add to cart: ', localList[1]);
+        console.log('Sending game position: ', localList[2]);
         
         // Send the info. to the server.
         socket.emit('addtocart', localList);
@@ -523,10 +550,12 @@ GameGarage.controller('GarageController', function($scope){
         localList[0] = $scope.loggedinusername;
         // Add the game id to the list.
         localList[1] = $scope.gid4;
+        localList[2] = 'gamefour';
         
         // TEST
         console.log('Sending username: ', localList[0]);
         console.log('Sending game id to add to cart: ', localList[1]);
+        console.log('Sending game position: ', localList[2]);
         
         // Send the info. to the server.
         socket.emit('addtocart', localList);
@@ -542,15 +571,66 @@ GameGarage.controller('GarageController', function($scope){
         localList[0] = $scope.loggedinusername;
         // Add the game id to the list.
         localList[1] = $scope.gid5;
+        localList[2] = 'gamefive';
         
         // TEST
         console.log('Sending username: ', localList[0]);
         console.log('Sending game id to add to cart: ', localList[1]);
+        console.log('Sending game position: ', localList[2]);
         
         // Send the info. to the server.
         socket.emit('addtocart', localList);
    
     };
+    
+    // Handle gameinfo status sent from server.
+    socket.on('gameinfo', function(gameinfo){
+        // Test that the data is receive.
+        var localpageposition = gameinfo.pageposition;
+        var localgamestatus = gameinfo.gamestatus;
+        console.log('Received game position: ', localpageposition);
+        console.log('Received game status: ', localgamestatus);
+        
+        // Send game data over to HTML page.
+        if(localpageposition == 'gameone')
+        {
+            $scope.status1 = localgamestatus;
+            var update1 = document.getElementById("status1ID");
+            update1.innerHTML = $scope.status1;
+        }
+        else if(localpageposition == 'gametwo')
+        {
+            $scope.status2 = localgamestatus;
+            var update2 = document.getElementById("status2ID");
+            update2.innerHTML = $scope.status2;
+        }
+        else if(localpageposition == 'gamethree')
+        {
+            $scope.status3 = localgamestatus;
+            var update3 = document.getElementById("status3ID");
+            update3.innerHTML = $scope.status3;
+        }
+        else if(localpageposition == 'gamefour')
+        {
+            $scope.status4 = localgamestatus;
+            var update4 = document.getElementById("status4ID");
+            update4.innerHTML = $scope.status4;
+        }
+        else if(localpageposition == 'gamefive')
+        {
+            $scope.status5 = localgamestatus;
+            var update5 = document.getElementById("status5ID");
+            update5.innerHTML = $scope.status5;
+        }
+
+        
+        // Add the status value to the local variable.
+        //$scope.registerstatus = status;
+        // Debug message.
+        //console.log('Registration status is: ', $scope.registerstatus);
+        // Update the view for that variable.
+        //$scope.$apply();
+    });    
     
     
     // Handle some registration conditions up front before getting to the server.

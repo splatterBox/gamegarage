@@ -246,3 +246,13 @@ input
     border:solid 1px black;
     padding:3px;
 }
+
+
+.status {
+    font-size: 14px;
+    line-height: 4.0;
+    font-family: Arial, "Trebuchet MS", sans-serif;
+    color: #7AB7E2;
+    /* color: #007BFF; --*/
+    text-align: center;
+}

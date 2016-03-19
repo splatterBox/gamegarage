@@ -36,45 +36,58 @@ GameGarage.controller('GarageController', function($scope){
     // Size of page list.
     $scope.gamePageListSize = '';
     // Variables for game content.
+    $scope.gimage1 = '';
     $scope.gid1 = '';
     $scope.title1 = '';
     $scope.price1 = '';
-    $scope.discount1 = '';
+    //$scope.discount1 = '';
     $scope.desc1 = '';
     $scope.status1 = '';
     
+    $scope.gimage2 = '';
     $scope.gid2 = '';
     $scope.title2 = '';
     $scope.price2 = '';
-    $scope.discount2 = '';
+    //$scope.discount2 = '';
     $scope.desc2 = '';
     $scope.status2 = '';
     
+    $scope.gimage3 = '';
     $scope.gid3 = '';
     $scope.title3 = '';
     $scope.price3 = '';
-    $scope.discount3 = '';
+    //$scope.discount3 = '';
     $scope.desc3 = '';
     $scope.status3 = '';
     
+    $scope.gimage4 = '';
     $scope.gid4 = '';
     $scope.title4 = '';
     $scope.price4 = '';
-    $scope.discount4 = '';
+    //$scope.discount4 = '';
     $scope.desc4 = '';
     $scope.status4 = '';
     
+    $scope.gimage5 = '';
     $scope.gid5 = '';
     $scope.title5 = '';
     $scope.price5 = '';
-    $scope.discount5 = '';
+    //$scope.discount5 = '';
     $scope.desc5 = '';
     $scope.status5 = '';
     
     // Variable to track current game content webpage.
     $scope.pagenumber = 0;
+    // Variable to track webpage startup.
+    $scope.startup=0;
     // Variable to track last game starting point.
+    $scope.lastindex=0;
+    // Variable to track current game starting point.
     $scope.startindex=0;
+    // Variable to track page movement request.
+    $scope.direction='';
+    // Variable to track number of games on page.
+    //$scope.numberofgames=0;
 
 
     // If connect on the socket, run a function.
@@ -134,14 +147,14 @@ GameGarage.controller('GarageController', function($scope){
             var localgid2 = tempGame2.gid;
             var localtitle2 = tempGame2.title;
             var localprice2 = tempGame2.price;
-            var discountprice2 = tempGame2.discountprice;
+            //var discountprice2 = tempGame2.discountprice;
             var localdesc2 = tempGame2.desc;
             
             // TEST
             console.log('Game ID', localgid2);
             console.log('Title: ', localtitle2);
             console.log('Price: ', localprice2);
-            console.log('Discount Price: ', discountprice2);
+            //console.log('Discount Price: ', discountprice2);
             console.log('Desc: ', localdesc2);
         }
         
@@ -166,6 +179,25 @@ GameGarage.controller('GarageController', function($scope){
     // Update the current webpage's list of games.
     $scope.updatePageGames = function updatePageGames() {
     
+    
+        if($scope.direction == 'next')
+        {
+            //console.log('inside next if');
+            $scope.lastindex = $scope.startindex;
+        }
+        else if($scope.direction == 'prev')
+        {
+            //console.log('inside prev if');
+            $scope.startindex = $scope.lastindex - 5;
+            $scope.lastindex = $scope.lastindex - 5;
+        }
+   
+        
+        console.log('Inside updatePageGames method');
+        console.log('Direction is: ', $scope.direction);
+        console.log('startindex value is now: ', $scope.startindex);
+        console.log('lastindex value is now: ', $scope.lastindex);
+    
         $scope.gamesListSize = $scope.gamesList.length;
         var leftoverGames = $scope.gamesListSize - $scope.startindex;
         // TEST
@@ -176,6 +208,8 @@ GameGarage.controller('GarageController', function($scope){
         
         if(leftoverGames >= 5)
         {
+            //$scope.numberofgames = 5;
+            //console.log('Number of games on this page is: ', $scope.numberofgames);
             //$scope.startindex=0;
             var endindex = $scope.startindex + 5;
             for($scope.startindex; $scope.startindex<endindex; $scope.startindex++)
@@ -188,6 +222,8 @@ GameGarage.controller('GarageController', function($scope){
         
         else
         {
+            //$scope.numberofgames =  $scope.gamesListSize - $scope.startindex;
+            //console.log('Number of games on this page is: ', $scope.numberofgames);
             //$scope.startindex=0;
             for($scope.startindex; $scope.startindex<$scope.gamesListSize; $scope.startindex++)
             {
@@ -202,9 +238,10 @@ GameGarage.controller('GarageController', function($scope){
         //console.log('lessthanfivecount is: ', lessthanfivecount);
         
         //  TEST: Print all the games that will get displayed in the webpage.
-        console.log('gamePageList.length is: ', $scope.gamePageList.length);
-        console.log('Games for current page are:');
         $scope.gamePageListSize = $scope.gamePageList.length;
+        console.log('gamePageListSize is: ', $scope.gamePageListSize);
+        console.log('Games for current page are:');
+      
         var index2=0;
         for(index2; index2<$scope.gamePageListSize; index2++)
         {
@@ -213,13 +250,13 @@ GameGarage.controller('GarageController', function($scope){
             var tempgid3 = tempGame3.gid;
             var temptitle3 = tempGame3.title;
             var tempprice3 = tempGame3.price;
-            var tempdiscount3 = tempGame3.discountprice;
+            //var tempdiscount3 = tempGame3.discountprice;
             var tempdesc3 = tempGame3.desc;
             // TEST
             console.log('Game ID: ', tempgid3);
             console.log('Title: ', temptitle3);
             console.log('Price: ', tempprice3);
-            console.log('Discount Price: ', tempdiscount3);
+            //console.log('Discount Price: ', tempdiscount3);
             console.log('Desc: ', tempdesc3);
 
         }
@@ -251,7 +288,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.gid1 = gameData1.gid;
             $scope.title1 = gameData1.title;
             $scope.price1 = gameData1.price;
-            $scope.discount1 = gameData1.discountprice;
+            //$scope.discount1 = gameData1.discountprice;
             $scope.desc1 = gameData1.desc;
         }
         
@@ -261,7 +298,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.gid2 = gameData2.gid;
             $scope.title2 = gameData2.title;
             $scope.price2 = gameData2.price;
-            $scope.discount2 = gameData2.discountprice;
+            //$scope.discount2 = gameData2.discountprice;
             $scope.desc2 = gameData2.desc;
         }
         
@@ -271,7 +308,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.gid3 = gameData3.gid;
             $scope.title3 = gameData3.title;
             $scope.price3 = gameData3.price;
-            $scope.discount3 = gameData3.discountprice;
+            //$scope.discount3 = gameData3.discountprice;
             $scope.desc3 = gameData3.desc;
         }
 
@@ -281,7 +318,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.gid4 = gameData4.gid;
             $scope.title4 = gameData4.title;
             $scope.price4 = gameData4.price;
-            $scope.discount4 = gameData4.discountprice;
+            //$scope.discount4 = gameData4.discountprice;
             $scope.desc4 = gameData4.desc;
             
             // TEST
@@ -295,7 +332,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.gid5 = gameData5.gid;
             $scope.title5 = gameData5.title;
             $scope.price5 = gameData5.price;
-            $scope.discount5 = gameData5.discountprice;
+            //$scope.discount5 = gameData5.discountprice;
             $scope.desc5 = gameData5.desc;
         }     
         
@@ -324,18 +361,37 @@ GameGarage.controller('GarageController', function($scope){
         //console.log('Local desc5 variable is: ', $scope.desc5);
         
         // Update the current webpage page number.
-        $scope.pagenumber = $scope.pagenumber + 1;
+        if(($scope.direction == 'next') || ($scope.startup == 0))
+        {
+            $scope.pagenumber++;
+        }
+        else if($scope.direction == 'prev')
+        {
+            $scope.pagenumber--;
+        }
+        
+        // Webpage has initialized.
+        if($scope.startup < 2)
+        {
+            $scope.startup++;
+        }
+        
         // TEST
         console.log('Current page number is: ', $scope.pagenumber);
         
-        if($scope.pagenumber == 1)
+        if($scope.startup == 1)
         {
             // Update the view for that variable.
             $scope.$apply();
+            
         }
+        
+        // Send over the next page of game data to the webpage.
+        //$scope.sendinnerHTML();
         
     };
     
+
     // Method to send game data over to webpage.
     $scope.sendinnerHTML = function sendinnerHTML() {
         
@@ -344,8 +400,8 @@ GameGarage.controller('GarageController', function($scope){
         elem1a.innerHTML = $scope.title1;
         var elem1b = document.getElementById("price1ID");
         elem1b.innerHTML = $scope.price1;
-        var elem1c = document.getElementById("discount1ID");
-        elem1c.innerHTML = $scope.discount1;
+        //var elem1c = document.getElementById("discount1ID");
+        //elem1c.innerHTML = $scope.discount1;
         var elem1d = document.getElementById("desc1ID");
         elem1d.innerHTML = $scope.desc1;
         var update1 = document.getElementById("status1ID");
@@ -355,8 +411,8 @@ GameGarage.controller('GarageController', function($scope){
         elem2a.innerHTML = $scope.title2;
         var elem2b = document.getElementById("price2ID");
         elem2b.innerHTML = $scope.price2;
-        var elem2c = document.getElementById("discount2ID");
-        elem2c.innerHTML = $scope.discount2;
+        //var elem2c = document.getElementById("discount2ID");
+        //elem2c.innerHTML = $scope.discount2;
         var elem2d = document.getElementById("desc2ID");
         elem2d.innerHTML = $scope.desc2;
         var update2 = document.getElementById("status2ID");
@@ -366,8 +422,8 @@ GameGarage.controller('GarageController', function($scope){
         elem3a.innerHTML = $scope.title3;
         var elem3b = document.getElementById("price3ID");
         elem3b.innerHTML = $scope.price3;
-        var elem3c = document.getElementById("discount3ID");
-        elem3c.innerHTML = $scope.discount3;
+        //var elem3c = document.getElementById("discount3ID");
+        //elem3c.innerHTML = $scope.discount3;
         var elem3d = document.getElementById("desc3ID");
         elem3d.innerHTML = $scope.desc3;
         var update3 = document.getElementById("status3ID");
@@ -377,23 +433,28 @@ GameGarage.controller('GarageController', function($scope){
         elem4a.innerHTML = $scope.title4;
         var elem4b = document.getElementById("price4ID");
         elem4b.innerHTML = $scope.price4;
-        var elem4c = document.getElementById("discount4ID");
-        elem4c.innerHTML = $scope.discount4;
+        //var elem4c = document.getElementById("discount4ID");
+        //elem4c.innerHTML = $scope.discount4;
         var elem4d = document.getElementById("desc4ID");
         elem4d.innerHTML = $scope.desc4; 
         var update4 = document.getElementById("status4ID");
+        console.log('update4-status4ID is: ', update4);
         update4.innerHTML = $scope.status4;
         
+        console.log('TEST: $scope.title5 is: ', $scope.title5);
+        
         var elem5a = document.getElementById("title5ID");
+        console.log('elem5a=title5ID is: ', elem5a);
         elem5a.innerHTML = $scope.title5;
         var elem5b = document.getElementById("price5ID");
         elem5b.innerHTML = $scope.price5;
-        var elem5c = document.getElementById("discount5ID");
-        elem5c.innerHTML = $scope.discount5;
+        //var elem5c = document.getElementById("discount5ID");
+        //elem5c.innerHTML = $scope.discount5;
         var elem5d = document.getElementById("desc5ID");
         elem5d.innerHTML = $scope.desc5;
         var update5 = document.getElementById("status5ID");
         update5.innerHTML = $scope.status5;
+        
     };
 
 
@@ -413,6 +474,29 @@ GameGarage.controller('GarageController', function($scope){
         return false;
     };
     
+    // Disable the prevpage button if there are no more games to get.
+    $scope.disabledprevpage = function disabledprevpage() {
+        
+        // TEST
+       console.log('startindex value is: ', $scope.startindex);
+       
+        if($scope.startindex <= 5)
+        {
+            return true;
+        }
+        
+        return false;
+    };
+    
+    
+    //
+    //angular.element(document).ready(function () {
+
+    // your code here
+
+    //});
+    //angular.element($window).bind('load', function() {});
+    // angular.element($window)
 
     // Attempt to load the next page of game data.
     $scope.nextpage = function nextpage() {
@@ -430,41 +514,95 @@ GameGarage.controller('GarageController', function($scope){
         // Reset variables.
         $scope.title1 = '';
         $scope.price1 = '';
-        $scope.discount1 = '';
+        //$scope.discount1 = '';
         $scope.desc1 = '';
         $scope.status1 = '';
 
         $scope.title2 = '';
         $scope.price2 = '';
-        $scope.discount2 = '';
+        //$scope.discount2 = '';
         $scope.desc2 = '';
         $scope.status2 = '';
         
         $scope.title3 = '';
         $scope.price3 = '';
-        $scope.discount3 = '';
+        //$scope.discount3 = '';
         $scope.desc3 = '';
         $scope.status3 = '';
         
         $scope.title4 = '';
         $scope.price4 = '';
-        $scope.discount4 = '';
+        //$scope.discount4 = '';
         $scope.desc4 = '';
         $scope.status4 = '';
         
         $scope.title5 = '';
         $scope.price5 = '';
-        $scope.discount5 =  '';
+        //$scope.discount5 =  '';
         $scope.desc5 = '';
         $scope.status5 = '';
         
-
+        $scope.direction = 'next';
         // Call the method that loads the current webpage's games.
         $scope.updatePageGames();
         // Send over the next page of game data to the webpage.
         $scope.sendinnerHTML();
     };
     
+    
+    // Attempt to load the prev page of game data.
+    $scope.prevpage = function prevpage() {
+       
+        // TEST
+        console.log('TEST: Inside prevpage socketio method.  You pressed the button!'); 
+        console.log('startindex value is: ', $scope.startindex);
+        console.log('lastindex value is: ', $scope.lastindex);
+        
+        // Empty the gamePageList list.
+        var gamePageListSize = $scope.gamePageList.length;
+        if(gamePageListSize > 0)
+        {
+            $scope.gamePageList.length = 0;
+        }
+
+        // Reset variables.
+        $scope.title1 = '';
+        $scope.price1 = '';
+        //$scope.discount1 = '';
+        $scope.desc1 = '';
+        $scope.status1 = '';
+
+        $scope.title2 = '';
+        $scope.price2 = '';
+        //$scope.discount2 = '';
+        $scope.desc2 = '';
+        $scope.status2 = '';
+        
+        $scope.title3 = '';
+        $scope.price3 = '';
+        //$scope.discount3 = '';
+        $scope.desc3 = '';
+        $scope.status3 = '';
+        
+        $scope.title4 = '';
+        $scope.price4 = '';
+        //$scope.discount4 = '';
+        $scope.desc4 = '';
+        $scope.status4 = '';
+        
+        $scope.title5 = '';
+        $scope.price5 = '';
+        //$scope.discount5 = '';
+        $scope.desc5 = '';
+        $scope.status5 = '';
+        
+        $scope.direction = 'prev'
+        // Call the method that loads the current webpage's games.
+        $scope.updatePageGames();
+        // Send over the next page of game data to the webpage.
+        $scope.sendinnerHTML();
+        
+    };
     
     // Disable the addtocart buttons if no user is logged in.
     $scope.disabledcart = function disabledcart() {

@@ -1,21 +1,100 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
-<h1>Welcome to gamegarage!</h1>
-
-<b>Here are some of the games that we are offering at this time:</b>
-
-<table>
-	{% for game in games %}
-
-	</br>
-	Game title: {{game.title}}
-	</br>
-	Description: {{game.gdesc}}
-	</br>
-	</br>
-	{% endfor %}
-</table>
-
-{% endblock %}
+      
+<!-- Editor's Pick -->
+<div class="block">
+	<div class="block-bot">
+		<div class="head">
+			<div class="head-cnt">
+				<a href="#" class="view-all">
+					view all
+				</a>
+				<h3>Editor`s Pick</h3>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="row-articles articles">
+			<div class="cl">
+				&nbsp;
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/img7.jpg" alt="" />
+					</a> 
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							F.E.A.R.2
+						</a>
+					</h4>
+                	<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie urna, id scelerisque leo sodales sit amet. Curabitur volutpat lorem euismod nunc tincidunt condimentum. Suspendisse gravida elementum mauris, in vulputate justo ultrices sit amet. Maecenas ultricies elit 
+					</p>
+				</div>
+              	<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/img8.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+                	<h4>
+						<a href="#">
+							FALLOUT 3
+						</a>
+					</h4>
+                	<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie urna, id scelerisque leo sodales sit amet. Curabitur volutpat lorem euismod nunc tincidunt condimentum. Suspendisse gravida elementum mauris, in vulputate justo ultrices sit amet. Maecenas ultricies elit in mi sagittis fringilla.
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+            </div>
+			<div class="article last-article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/img9.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							STARCRAF II
+						</a>
+					</h4>
+                	<p>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie urna, id scelerisque leo sodales sit amet. Curabitur volutpat lorem euismod nunc tincidunt condimentum. Suspendisse gravida elementum mauris, in vulputate justo ultrices sit amet. Maecenas ultricies elit in mi sagittis fringilla.
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+            <div class="cl">
+				&nbsp;
+			</div>
+		</div>
+	</div>
+</div>
+      <!-- / Editor's Pick -->
+      
+   {% endblock %}

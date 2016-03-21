@@ -1,21 +1,100 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
-<h1>Welcome to gamegarage!</h1>
-
-<b>Here are some of the games that we are offering at this time:</b>
-
-<table>
-	{% for game in games %}
-
-	</br>
-	Game title: {{game.title}}
-	</br>
-	Description: {{game.gdesc}}
-	</br>
-	</br>
-	{% endfor %}
-</table>
-
-{% endblock %}
+      
+<!-- Editor's Pick -->
+<div class="block">
+	<div class="block-bot">
+		<div class="head">
+			<div class="head-cnt">
+				<a href="#" class="view-all">
+					view all
+				</a>
+				<h3>Editor`s Pick</h3>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="row-articles articles">
+			<div class="cl">
+				&nbsp;
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff1.jpg" alt="" />
+					</a> 
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							Long Live the Queen
+						</a>
+					</h4>
+                	<p>
+						Long live the queen is an excellent game in the style of the Princess Maker series. One of the strengths of the game is the many endings. There is no "one correct way" to raise young princess Elodie to the throne, and players of the game will enjoy analyzing the different events in the game and optimising their studies, and managing her mood. The game was complex enough that our staff here had to make some charts to keep track of everything that was going on! [read full review]
+					</p>
+				</div>
+              	<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff2.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+                	<h4>
+						<a href="#">
+							Cave Story
+						</a>
+					</h4>
+                	<p>
+						Cave Story is a cute little platformer filled with surprisingly coherent world design and unique characters. Don't let the cute looks fool you though, beneath the cute exterior lies simple but challenging platforming gameplay with clean and responsive controls. [read full review]
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+            </div>
+			<div class="article last-article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff3.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							Antichamber
+						</a>
+					</h4>
+                	<p>
+						Antichamber is a game that requires a player to rethink how they view the world entirely. Many of the hallways and rooms that the player will visit are impossible within real-world 3-dimensional space. When you look at the level design in this game, you can see that the developer put a lot of creativity into it. [read full review] 
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+            <div class="cl">
+				&nbsp;
+			</div>
+		</div>
+	</div>
+</div>
+      <!-- / Editor's Pick -->
+      
+   {% endblock %}

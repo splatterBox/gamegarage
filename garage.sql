@@ -9,7 +9,7 @@ CREATE TABLE users (
   firstname text NOT NULL,
   lastname text NOT NULL,
   password text NOT NULL,
-  avatarpath text NOT NULL);
+  avatarpath text NOT NULL DEFAULT 'none');
 
 CREATE EXTENSION pgcrypto;
 INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'none');

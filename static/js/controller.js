@@ -42,6 +42,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price1 = '';
     //$scope.discount1 = '';
     $scope.desc1 = '';
+    $scope.art1 = '';
     $scope.status1 = '';
     
     $scope.gimage2 = '';
@@ -50,6 +51,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price2 = '';
     //$scope.discount2 = '';
     $scope.desc2 = '';
+    $scope.art2 = '';
     $scope.status2 = '';
     
     $scope.gimage3 = '';
@@ -58,6 +60,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price3 = '';
     //$scope.discount3 = '';
     $scope.desc3 = '';
+    $scope.art3 = '';
     $scope.status3 = '';
     
     $scope.gimage4 = '';
@@ -66,6 +69,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price4 = '';
     //$scope.discount4 = '';
     $scope.desc4 = '';
+    $scope.art4 = '';
     $scope.status4 = '';
     
     $scope.gimage5 = '';
@@ -74,6 +78,7 @@ GameGarage.controller('GarageController', function($scope){
     $scope.price5 = '';
     //$scope.discount5 = '';
     $scope.desc5 = '';
+    $scope.art5 = '';
     $scope.status5 = '';
     
     // Variable to track current game content webpage.
@@ -149,13 +154,16 @@ GameGarage.controller('GarageController', function($scope){
             var localprice2 = tempGame2.price;
             //var discountprice2 = tempGame2.discountprice;
             var localdesc2 = tempGame2.desc;
+            var localpath2 = tempGame2.artpath;
             
             // TEST
             console.log('Game ID', localgid2);
             console.log('Title: ', localtitle2);
             console.log('Price: ', localprice2);
             //console.log('Discount Price: ', discountprice2);
+            console.log('Cover Art Path: ', localpath2);
             console.log('Desc: ', localdesc2);
+            
         }
         
         // Empty the gamePageList list.
@@ -252,12 +260,15 @@ GameGarage.controller('GarageController', function($scope){
             var tempprice3 = tempGame3.price;
             //var tempdiscount3 = tempGame3.discountprice;
             var tempdesc3 = tempGame3.desc;
+            var temppath3 = tempGame3.artpath;
             // TEST
             console.log('Game ID: ', tempgid3);
             console.log('Title: ', temptitle3);
             console.log('Price: ', tempprice3);
+            console.log('Cover Art Path: ', temppath3);
             //console.log('Discount Price: ', tempdiscount3);
             console.log('Desc: ', tempdesc3);
+            
 
         }
         
@@ -290,6 +301,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.price1 = gameData1.price;
             //$scope.discount1 = gameData1.discountprice;
             $scope.desc1 = gameData1.desc;
+            $scope.art1 = gameData1.artpath;
         }
         
         if($scope.gamePageListSize >= 2)
@@ -300,6 +312,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.price2 = gameData2.price;
             //$scope.discount2 = gameData2.discountprice;
             $scope.desc2 = gameData2.desc;
+            $scope.art2 = gameData2.artpath;
         }
         
         if($scope.gamePageListSize >= 3)
@@ -310,6 +323,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.price3 = gameData3.price;
             //$scope.discount3 = gameData3.discountprice;
             $scope.desc3 = gameData3.desc;
+            $scope.art3 = gameData3.artpath;
         }
 
         if($scope.gamePageListSize >= 4)
@@ -320,6 +334,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.price4 = gameData4.price;
             //$scope.discount4 = gameData4.discountprice;
             $scope.desc4 = gameData4.desc;
+            $scope.art4 = gameData4.artpath;
             
             // TEST
             //console.log('TEST: game4 title is: ', $scope.title4);
@@ -334,6 +349,7 @@ GameGarage.controller('GarageController', function($scope){
             $scope.price5 = gameData5.price;
             //$scope.discount5 = gameData5.discountprice;
             $scope.desc5 = gameData5.desc;
+            $scope.art5 = gameData5.artpath;
         }     
         
         // TEST
@@ -406,6 +422,8 @@ GameGarage.controller('GarageController', function($scope){
         elem1d.innerHTML = $scope.desc1;
         var update1 = document.getElementById("status1ID");
         update1.innerHTML = $scope.status1;
+        var image1 = document.getElementById("image1ID");
+        image1.setAttribute('src', $scope.art1);
         
         var elem2a = document.getElementById("title2ID");
         elem2a.innerHTML = $scope.title2;
@@ -417,6 +435,15 @@ GameGarage.controller('GarageController', function($scope){
         elem2d.innerHTML = $scope.desc2;
         var update2 = document.getElementById("status2ID");
         update2.innerHTML = $scope.status2;
+        var image2 = document.getElementById("image2ID");
+        image2.setAttribute('src', $scope.art2);
+        
+        // TEST
+        //var image = "css/images/slider4.jpg"
+        //console.log('Image2ID path is: ', image)
+        //var image2 = document.getElementById("image2ID");
+        //image2.setAttribute('src',image);
+        
         
         var elem3a = document.getElementById("title3ID");
         elem3a.innerHTML = $scope.title3;
@@ -428,6 +455,8 @@ GameGarage.controller('GarageController', function($scope){
         elem3d.innerHTML = $scope.desc3;
         var update3 = document.getElementById("status3ID");
         update3.innerHTML = $scope.status3;
+        var image3 = document.getElementById("image3ID");
+        image3.setAttribute('src', $scope.art3);
         
         var elem4a = document.getElementById("title4ID");
         elem4a.innerHTML = $scope.title4;
@@ -440,6 +469,8 @@ GameGarage.controller('GarageController', function($scope){
         var update4 = document.getElementById("status4ID");
         console.log('update4-status4ID is: ', update4);
         update4.innerHTML = $scope.status4;
+        var image4 = document.getElementById("image4ID");
+        image4.setAttribute('src', $scope.art4);
         
         console.log('TEST: $scope.title5 is: ', $scope.title5);
         
@@ -454,6 +485,8 @@ GameGarage.controller('GarageController', function($scope){
         elem5d.innerHTML = $scope.desc5;
         var update5 = document.getElementById("status5ID");
         update5.innerHTML = $scope.status5;
+        var image5 = document.getElementById("image5ID");
+        image5.setAttribute('src', $scope.art5);
         
     };
 
@@ -516,30 +549,35 @@ GameGarage.controller('GarageController', function($scope){
         $scope.price1 = '';
         //$scope.discount1 = '';
         $scope.desc1 = '';
+        $scope.art1 = '';
         $scope.status1 = '';
 
         $scope.title2 = '';
         $scope.price2 = '';
         //$scope.discount2 = '';
         $scope.desc2 = '';
+        $scope.art2 = '';
         $scope.status2 = '';
         
         $scope.title3 = '';
         $scope.price3 = '';
         //$scope.discount3 = '';
         $scope.desc3 = '';
+        $scope.art3 = '';
         $scope.status3 = '';
         
         $scope.title4 = '';
         $scope.price4 = '';
         //$scope.discount4 = '';
         $scope.desc4 = '';
+        $scope.art4 = '';
         $scope.status4 = '';
         
         $scope.title5 = '';
         $scope.price5 = '';
         //$scope.discount5 =  '';
         $scope.desc5 = '';
+        $scope.art5 = '';
         $scope.status5 = '';
         
         $scope.direction = 'next';
@@ -570,30 +608,35 @@ GameGarage.controller('GarageController', function($scope){
         $scope.price1 = '';
         //$scope.discount1 = '';
         $scope.desc1 = '';
+        $scope.art1 = '';
         $scope.status1 = '';
 
         $scope.title2 = '';
         $scope.price2 = '';
         //$scope.discount2 = '';
         $scope.desc2 = '';
+        $scope.art2 = '';
         $scope.status2 = '';
         
         $scope.title3 = '';
         $scope.price3 = '';
         //$scope.discount3 = '';
         $scope.desc3 = '';
+        $scope.art3 = '';
         $scope.status3 = '';
         
         $scope.title4 = '';
         $scope.price4 = '';
         //$scope.discount4 = '';
         $scope.desc4 = '';
+        $scope.art4 = '';
         $scope.status4 = '';
         
         $scope.title5 = '';
         $scope.price5 = '';
         //$scope.discount5 = '';
         $scope.desc5 = '';
+        $scope.art5 = '';
         $scope.status5 = '';
         
         $scope.direction = 'prev'
@@ -831,6 +874,10 @@ GameGarage.controller('GarageController', function($scope){
          });
     });
     
+
+
+
+
 
     
 });

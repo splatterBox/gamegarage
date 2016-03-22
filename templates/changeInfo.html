@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+
+  {% block content %}
+        
+      <!-- Registration -->
+      <div class="block">
+        <div class="block-bot">
+          
+                    <div class="head">
+            <div class="head-cnt">
+              <h3>Current Account Information</h3>
+              <div class="cl">&nbsp;</div>
+            </div>
+          </div>
+        <br />
+              {% for name in info %}
+                <br /><tr>
+                <td><h3>&nbsp;&nbsp;Your current user name is: {{name[0]}}</td>
+                <br /><br />
+                <td>&nbsp;&nbsp;Your current first name is: {{name[1]}}</td>
+                <br /><br />
+                <td>&nbsp;&nbsp;Your current last name is: {{name[2]}}</td>
+                <br /><br />
+                <td>&nbsp;&nbsp;((TEST)) Your current encrypted password is: &nbsp;&nbsp;{{name[3]}}</h3></td>
+                <br /></tr>
+              {% endfor %}
+          
+                &nbsp;<br />
+          
+          <div class="head">
+            <div class="head-cnt">
+              <h3>New Account Information</h3>
+              <div class="cl">&nbsp;</div>
+            </div>
+          </div>
+          <div class="row-articles articles">
+            <div class="cl">&nbsp;</div>
+            <div class="article">
+              <div class="cl">&nbsp;</div>
+              &nbsp;<br />
+              &nbsp;<br />
+              <div class="image"> <a href="#"></a> </div>
+              <!--<div class="cnt">-->
+                
+                <form ng-submit="register()">
+                  <p>
+                    <h3><label for="username">Avatar/Username:</label></h3>
+                    <input type="text" ng-model="username" id="username" name="username" size="20"/>
+                  &nbsp;<br /><br /><br />
+                  <p>
+                    <h3><label for="firstname">Firstname:</label>
+                    <input type="text" ng-model="firstname" id="firstname" name="firstname" size="20"/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="lastname">Lastname:</label>
+                    <input type="text" ng-model="lastname" id="lastname" name="lastname" size="20"/>
+                  </h3></p>
+                  &nbsp;<br /><br />
+                  <p>
+                    <h3><label for="newpassword">Password:</label>
+                    <input type="password" ng-model="newpassword" id="newpassword" name="newpassword" size="20"/>
+                    &nbsp;&nbsp;
+                    <label for="retypedpassword">Retype Password:</label>
+                    <input type="password" ng-model="retypedpassword" id="retypedpassword" name="retypedpassword" size="20" />
+                  </h3></p>
+                  &nbsp;<br /><br /><br />
+                  <p>
+                    <h3><label for="fgenre">Favorite Genre:</label>
+                    <input type="text" ng-model="fgenre" id="fgenre" name="fgenre" size="20"/>
+                    &nbsp;&nbsp;
+                    </h3>
+                  </p>
+                  <p>
+                    <h3><label for="fgame">Favorite Game:</label>
+                    <input type="text" ng-model="fgame" id="fgame" name="fgame" size="20" />
+                  </h3></p>                  
+                  &nbsp;<br />
+                  <div class="cnt">
+                    <br />
+                    </h3>
+                  <p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="submit" value="Submit Changes" name="submit" ng-disabled="disabledSubmit()" />
+                  </p>
+                  </div>
+                  <br /><br />
+                </form>
+                &nbsp;<br />
+                
+              </div>
+              <div class="cl">&nbsp;</div>
+            </div>
+
+            <div class="article last-article">
+              <div class="cl">&nbsp;</div>
+              <p>
+          
+
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+
+                
+              </p>
+   
+
+              <div class="cl">&nbsp;</div>
+            </div>
+            <div class="cl">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+      <!-- / Editor's Pick -->
+      
+   {% endblock %}

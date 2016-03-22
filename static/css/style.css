@@ -144,7 +144,7 @@ a:hover { text-decoration: none; }
 #slider .fragment .image { position: relative; width: 638px; height: 287px; }
 #slider .frame { width: 638px; height: 287px; position: absolute; top: 0; left: 0; z-index: 100; background: url(images/slider-image-bg.png) no-repeat 0 0; }
 #slider .frame { font-size: 0; line-height: 0; text-indent: -4000px; }
-#slider .fragment .cnt { margin-top: 5px; height: 49px; background: url(images/slider-cnt-bg.gif) repeat-x; color: #fff; font-size: 11px; line-height: 1.4; padding: 8px 15px; }
+#slider .fragment .cnt { margin-top: 5px; height: 100px; background: url(images/slider-cnt-bg.gif) repeat-x; color: #fff; font-size: 11px; line-height: 1.4; padding: 8px 15px; }
 #slider .fragment .cnt .side-a { float: left; display: inline; width: 150px; }
 #slider .fragment .cnt .side-b { float: right; display: inline; width: 430px; }
 #slider .fragment .cnt h4 { font-size: 19px; font-weight: bold; color: #212121; text-transform: uppercase; margin-bottom: 5px; }
@@ -245,4 +245,14 @@ input
      border-radius: 4px;
     border:solid 1px black;
     padding:3px;
+}
+
+
+.status {
+    font-size: 14px;
+    line-height: 4.0;
+    font-family: Arial, "Trebuchet MS", sans-serif;
+    color: #7AB7E2;
+    /* color: #007BFF; --*/
+    text-align: center;
 }

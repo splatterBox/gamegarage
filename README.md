@@ -18,7 +18,7 @@ You will need to do the following things to get gamegarage running on your compu
     Linux installation commands are:
     
     sudo apt-get update
-    sudop apt-get install postgresql
+    sudo apt-get install postgresql
     sudo easy_install flask markdown
     sudo apt-get install python-psycopg2
     sudo apt-get install postgresql-contrib-9.3

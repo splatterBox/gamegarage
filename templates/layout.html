@@ -75,14 +75,18 @@
       <div class="bg-right">
         <div class="bg-left">
           <ul>
-            <li><a href="#">community</a></li>
-            <li><a href="#">forum</a></li>
-            <li><a href="#">video</a></li>
-            <li><a href="#">cheats</a></li>
-            <li><a href="#">features</a></li>
-            <li><a href="#">downloads</a></li>
-            <li><a href="#">sports</a></li>
-            <li><a href="#">tech</a></li>
+            <li><p>Welcome to GameGarage.</p></li>
+            <li><a><p></br></p></a></li>
+            <li><p>Make a purchase and vote for a game to go on sale next week!</p></li>
+            <!-- If user is logged in, show log out button at top right.  //-->
+            {% if sessionUser[0] != '' %}  
+            <li><a><p></br></p></a></li>
+            <li><a><p></br></p></a></li>
+            <li><p>logout</p></li>
+            <!--<div class="right"> <a href="/logout"><img src="css/images/gnome_panel_force_quit.png" height="32" width="32" alt="" /></a> </div> -->
+            <div class="right"> <a href="/logout"><img src="css/images/gnome_session_logout.png" height="32" width="32" alt="" /></a> </div>
+            <!-- <div class="right"> <a href="/logout"><img src="css/images/gnome_logout.png" height="32" width="32" alt="" /></a> </div> -->
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -97,22 +101,48 @@
         <div class="bg-left">
           <div class="cl">&nbsp;</div>
           <ul>
-            <li class="first active first-active"><a href="#">Review</a><span class="sep">&nbsp;</span></li>
-            <li><a href="#">Previews </a><span class="sep">&nbsp;</span></li>
-            <li><a href="#">New Releases</a><span class="sep">&nbsp;</span></li>
-            <li><a href="#">Top Games</a><span class="sep">&nbsp;</span></li>
-            <li><a href="#">All Games</a><span class="sep">&nbsp;</span></li>
+            <li 
+              {% if selected == "home" %}
+                class="first active first-active"
+              {% endif %}
+            ><a href="/">Home</a><span class="sep">&nbsp;</span></li>
+            <li
+              {% if selected == "previews" %}
+                class="first active first-active"
+              {% endif %}
+            ><a href="#">Previews </a><span class="sep">&nbsp;</span></li>
+            <li
+              {% if selected == "newreleases" %}
+                class="first active first-active"
+              {% endif %}
+            ><a href="#">New Releases</a><span class="sep">&nbsp;</span></li>
+            <li
+              {% if selected == "topgames" %}
+                class="first active first-active"
+              {% endif %}
+            ><a href="#">Top Games</a><span class="sep">&nbsp;</span></li>
+            <li
+              {% if selected == "allgames" %}
+                class="first active first-active"
+              {% endif %}
+            ><a href="/allgames">All Games</a><span class="sep">&nbsp;</span></li>
             
-            <!-- If user is logged in, show their name at top right. //-->
+            <!-- If user is logged in, show their name at top right. Also show the 2 new menu options.  //-->
             {% if sessionUser[0] != '' %}
-              <li><a href="#"></a><span class="zep">&nbsp;</span></li>
-              <li><a href="#"></a><span class="zep">&nbsp;</span></li>
-              <li><a href="#"></a><span class="zep">&nbsp;</span></li>
-              <li><a href="#"></a><span class="zep">&nbsp;</span></li>
+              <li
+                {% if selected == "changeinfo" %}
+                  class="first active first-active"
+                {% endif %}
+              ><a href="/changeInfo">Account Info</a><span class="sep">&nbsp;</span></li>
+              <li
+                {% if selected == "checkout" %}
+                  class="first active first-active"
+                {% endif %}
+              ><a href="/checkout">Cart</a><span class="sep">&nbsp;</span></li>
+              
               <li><a href="#">Logged In: {{sessionUser[0]}}</a><span class="zep">&nbsp;</span></li>
-
             {% endif %}
-            
+        
           </ul>
           <div class="cl">&nbsp;</div>
         </div>

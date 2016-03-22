@@ -2,20 +2,255 @@
 
 {% block content %}
 
-<h1>Welcome to gamegarage!</h1>
 
-<b>Here are some of the games that we are offering at this time:</b>
+<!-- Top Game JavaScript Slider Thingy -->
+<div class="block">
+	<div class="block-bot">
+		<div class="block-cnt">
+			<h3>Notable Awards for Artistic Design.</h3>
+			<div id="slider">
+				<div class="buttons"> 
+					<span class="prev">
+						prev
+					</span>
+					<span class="next">
+						next
+					</span>
+				</div>
+				<div class="holder">
+					<div class="frame">
+						&nbsp;
+					</div>
+					<div class="content">
+						<ul> 
+							<li class="fragment">
+								<div class="image">
+	  								<img src="css/images/slider1.jpg" alt="" /> 
+	  							</div>
+	  							<div class="cnt">
+									<div class="cl">
+										&nbsp;
+									</div>
+									<div class="side-a">
+										<h4>
+											Sword & Swo
+										</h4>
+		  								<ul class="rating">
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="votes">1.456 votes</span></li>
+			  							</ul>
+									</div>
+									<div class="side-b">
+		  								<p>
+											Superbrothers: Sword and Sorcery EP is a game with a very unique style. It's visual style is hard to describe but it has a soft and dreamlike feel. The sound design is also put into focus for this game, it is well composed and incorporates itself with the boss battles well.
+										</p>
+									</div>
+									<div class="cl">
+										&nbsp;
+									</div>
+	  							</div>
+	  						</li>
+	  						<li class="fragment">
+								<div class="image">
+									<img src="css/images/slider2.jpg" alt="" />
+								</div>
+								<div class="cnt">
+		  							<div class="cl">
+										&nbsp;
+									</div>
+									<div class="side-a">
+										<h4>
+											Limbo
+										</h4>
+										<ul class="rating">
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="votes">1.456 votes</span></li>
+										</ul>
+									</div>
+		  							<div class="side-b">
+										<p>
+											Limbo is an atmospheric and dark game. It plays to it's strengths well, by providing an subtle soundtrack with a game world that looks as if it is being seen though the eyes of a terrified child. 
+										</p>
+		  							</div>
+		  							<div class="cl">
+										&nbsp;
+									</div>
+								</div>
+	  						</li>
+							<li class="fragment">
+								<div class="image">
+									<img src="css/images/slider3.jpg" alt="" />
+								</div>
+								<div class="cnt">
+		  							<div class="cl">
+										&nbsp;
+									</div>
+									<div class="side-a">
+										<h4>
+											A Hate Story
+										</h4>
+										<ul class="rating">
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="votes">1.456 votes</span></li>
+										</ul>
+									</div>
+									<div class="side-b">
+										<p>
+											Analogue: A Hate Story takes a very different approach for presenting the game world. Instead of allowing the player to see the world directly, the world is experienced though the use of computer logs. Your view of the world is always from someone else's perspective, and that provides the world a multi-faceted image.
+										</p>
+									</div>
+									<div class="cl">
+										&nbsp;
+									</div>
+								</div>
+							</li>
+							<li class="fragment">
+								<div class="image">
+									<img src="css/images/slider4.jpg" alt="" /> 
+								</div>
+								<div class="cnt">
+									<div class="cl">
+										&nbsp;
+									</div>
+									<div class="side-a">
+										<h4>
+											Thomas Was
+										</h4>
+										<ul class="rating">
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star full-star">&nbsp;</span></li>
+											<li><span class="star empty-star">&nbsp;</span></li>
+											<li><span class="votes">1.456 votes</span></li>
+										</ul>
+									</div>
+									<div class="side-b">
+										<p>
+											The art style in this game is an exercise in simplicity. All of the characters in this game are simple geometric figures, yet each one has personalities and depth that make them feel like so much more than pixels on a screen.    
+										</p>
+									</div>
+		  							<div class="cl">
+										&nbsp;
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- / Top Game JavaScript Slider Thingy -->
 
-<table>
-	{% for game in games %}
 
-	</br>
-	Game title: {{game.title}}
-	</br>
-	Description: {{game.gdesc}}
-	</br>
-	</br>
-	{% endfor %}
-</table>
-
+      
+<!-- Editor's Pick -->
+<div class="block">
+	<div class="block-bot">
+		<div class="head">
+			<div class="head-cnt">
+				<a href="#" class="view-all">
+					view all
+				</a>
+				<h3>Editor's Pick</h3>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="row-articles articles">
+			<div class="cl">
+				&nbsp;
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff1.jpg" alt="" />
+					</a> 
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							Long Live the Queen
+						</a>
+					</h4>
+                	<p>
+						Long live the queen is an excellent game in the style of the Princess Maker series. One of the strengths of the game is the many endings. There is no "one correct way" to raise young princess Elodie to the throne, and players of the game will enjoy analyzing the different events in the game and optimising their studies, and managing her mood. The game was complex enough that our staff here had to make some charts to keep track of everything that was going on! [read full review]
+					</p>
+				</div>
+              	<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+			<div class="article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff2.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+                	<h4>
+						<a href="#">
+							Cave Story
+						</a>
+					</h4>
+                	<p>
+						Cave Story is a cute little platformer filled with surprisingly coherent world design and unique characters. Don't let the cute looks fool you though, beneath the cute exterior lies simple but challenging platforming gameplay with clean and responsive controls. [read full review]
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+            </div>
+			<div class="article last-article">
+				<div class="cl">
+					&nbsp;
+				</div>
+				<div class="image"> 
+					<a href="#">
+						<img src="css/images/staff3.jpg" alt="" />
+					</a>
+				</div>
+				<div class="cnt">
+					<h4>
+						<a href="#">
+							Antichamber
+						</a>
+					</h4>
+                	<p>
+						Antichamber is a game that requires a player to rethink how they view the world entirely. Many of the hallways and rooms that the player will visit are impossible within real-world 3-dimensional space. When you look at the level design in this game, you can see that the developer put a lot of creativity into it. [read full review] 
+					</p>
+				</div>
+				<div class="cl">
+					&nbsp;
+				</div>
+			</div>
+            <div class="cl">
+				&nbsp;
+			</div>
+		</div>
+	</div>
+</div>
+      <!-- / Editor's Pick -->
+      
 {% endblock %}

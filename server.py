@@ -160,7 +160,7 @@ def findGames(searchtype):
                 finalprice = 'Discount Price $' + stringdiscount
 
             
-            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'desc': entry.get('gdesc')}
+            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'desc': entry.get('gdesc'), 'artpath': entry.get('artpath')}
             #game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'desc': entry.get('gdesc')}
             gamesResult.append(game)
             
@@ -171,10 +171,12 @@ def findGames(searchtype):
             tempprice = entry2.get('price')
             #tempdiscount = entry2.get('discountprice')
             tempdesc = entry2.get('desc')
+            temppath = entry2.get('artpath')
             print "Game ID: %s" % tempid
             print "Title: %s" % temptitle
             print "Price: %s" % tempprice
             #print "Discount Price: %s" % tempdiscount
+            print "Cover art path: %s" % temppath
             print "Description: %s" % tempdesc
             print "\n"
             

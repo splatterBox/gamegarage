@@ -51,6 +51,7 @@ INSERT INTO games (title, price, discountprice, onsale) VALUES ('Portal', 9.99, 
 INSERT INTO games (title, price, discountprice) VALUES ('Space Pirates and Zombies (S.P.A.Z.)', 9.99, 4.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Superbrothers: Sword & Sworcery EP', 7.99, 3.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Thomas Was Alone', 9.99, 4.99);
+INSERT INTO games (title, price, discountprice) VALUES ('Transistor', 19.99, 11.99);
  
 DROP TABLE IF EXISTS gamedetails;
 CREATE TABLE gamedetails (
@@ -73,6 +74,7 @@ INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (11, 'The game primarily co
 INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (12, 'Explore a randomly generated Galaxy populated with factions, enemies, missions, and items providing you with a unique experience each time you play.', 'css/images/SPAZ.jpg');
 INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (13, 'If you''re the sort of gamer who likes unsolved mysteries and plot intepretation then you will love everything Sword & Sworcery has to offer.  The Scythian is on a woeful journey in search of the Golden Trigon. It is her purpose to tame each of the three pieces, obtain the Megatome, and put a stop to an acnient evil.  Dog is the companion of the Scythian. He accompanies the hero throughout most of the game and proves to be useful on a number of occasions. It''s unclear whether he belongs to the Scythian or Logfella.', 'css/images/Superbrothers-Sword-Sworcery-EP.jpg');
 INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (14, 'In the game, the player controls one or more simple polygon shapes representing several out-of-control artificial intelligence entities, working with the shapes to get each to their individual end points on each level. Each shape is characterized with a unique name and personality, including the eponymous Thomas, which are conveyed to the player through the use of a narrator, voiced by Danny Wallace and whose performance earned the game a BAFTA Games Award.', 'css/images/Thomas_Was_Alone.jpg');
+INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (15, 'Cloudbank is a hand-drawn, utopian-variant of Blade Runner’s neon-soaked future, and the battleground for robotic evil-doers the Process. Standing in their way is Red: a pop star swinging a giant green sword that talks.  That sword is the Transistor, which not only acts at the excellent narrator of the game, but is also the key mechanical component of the game’s battle system.  Transistor is an absolute mental work-out. Kill things in the wrong order and you can make things magnitudes worse for yourself.  A haunting, ethereal soundtrack accompanies the game.', 'css/images/Transistor.jpg');
  
 DROP TABLE IF EXISTS userlibrary;
 CREATE TABLE userlibrary (

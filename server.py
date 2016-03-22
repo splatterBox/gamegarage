@@ -143,7 +143,7 @@ def findGames(searchtype):
             # Grab the onsale value.
             onsale = entry.get('onsale')
             print "Onsale value is: %s" % onsale
-            if onsale == False:
+            if onsale == 'FALSE':
                 # Grab the price (in decimal).
                 decimalprice = entry.get('price')
                 # Convert the price to a string.
@@ -151,7 +151,7 @@ def findGames(searchtype):
                 # Add the $ character.
                 finalprice = 'Price $' + stringprice
             
-            elif onsale == True:
+            elif onsale == 'TRUE':
                 #Grab the discount price (in decimal).
                 decimaldiscount = entry.get('discountprice')
                 # Convert the discout price to a string.

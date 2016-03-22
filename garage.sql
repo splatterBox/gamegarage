@@ -35,19 +35,19 @@ CREATE TABLE games (
   title text NOT NULL,
   price decimal(10,2) NOT NULL,
   discountprice decimal(10,2) NOT NULL DEFAULT 0.00,
-  onsale  boolean  NOT NULL DEFAULT FALSE);
+  onsale  text  NOT NULL DEFAULT 'FALSE');
   
-INSERT INTO games (title, price, discountprice, onsale) VALUES ('FEAR2', 19.99, 9.99, TRUE);
+INSERT INTO games (title, price, discountprice, onsale) VALUES ('FEAR2', 19.99, 9.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Juniper''s Knot', 0, 0);
 INSERT INTO games (title, price, discountprice) VALUES ('140', 4.99, 2.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Analogue: A Hate Story', 9.99, 5.99);
-INSERT INTO games (title, price, discountprice, onsale) VALUES ('Antichamber', 19.99, 9.99, TRUE);
+INSERT INTO games (title, price, discountprice, onsale) VALUES ('Antichamber', 19.99, 9.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Cave Story', 14.99, 7.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Hotline Miami', 9.99, 4.99);
 INSERT INTO games (title, price, discountprice) VALUES ('LIMBO', 9.99, 4.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Touhou Gensoukyou ~ Lotus Land Story', 29.99, 19.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Long Live the Queen', 9.99, 4.99);
-INSERT INTO games (title, price, discountprice, onsale) VALUES ('Portal', 9.99, 4.99, TRUE);
+INSERT INTO games (title, price, discountprice, onsale) VALUES ('Portal', 9.99, 4.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Space Pirates and Zombies (S.P.A.Z.)', 9.99, 4.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Superbrothers: Sword & Sworcery EP', 7.99, 3.99);
 INSERT INTO games (title, price, discountprice) VALUES ('Thomas Was Alone', 9.99, 4.99);
@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS userlibrary;
 CREATE TABLE userlibrary (
   gid int REFERENCES games(gid) NOT NULL,
   userid int REFERENCES users(userid) NOT NULL,
-  purchasedstatus boolean NOT NULL DEFAULT FALSE,
+  purchasedstatus text NOT NULL DEFAULT 'FALSE',
   PRIMARY KEY (gid, userid));
   
 INSERT INTO userlibrary (gid, userid) VALUES (1, 1);

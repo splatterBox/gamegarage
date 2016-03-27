@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS userlibrary;
 CREATE TABLE userlibrary (
   gid int REFERENCES games(gid) NOT NULL,
   userid int REFERENCES users(userid) NOT NULL,
-  purchasedstatus boolean NOT NULL DEFAULT False,
+  purchasedstatus boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (gid, userid));
   
 INSERT INTO userlibrary (gid, userid) VALUES (1, 1);

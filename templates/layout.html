@@ -81,11 +81,9 @@
             <!-- If user is logged in, show log out button at top right.  //-->
             {% if sessionUser[0] != '' %}  
             <li><a><p></br></p></a></li>
-            <li><a><p></br></p></a></li>
+            <!-- <li><a><p></br></p></a></li> //-->
             <li><p>logout</p></li>
-            <!--<div class="right"> <a href="/logout"><img src="css/images/gnome_panel_force_quit.png" height="32" width="32" alt="" /></a> </div> -->
             <div class="right"> <a href="/logout"><img src="css/images/gnome_session_logout.png" height="32" width="32" alt="" /></a> </div>
-            <!-- <div class="right"> <a href="/logout"><img src="css/images/gnome_logout.png" height="32" width="32" alt="" /></a> </div> -->
             {% endif %}
           </ul>
         </div>
@@ -138,9 +136,9 @@
                 {% if selected == "checkout" %}
                   class="first active first-active"
                 {% endif %}
-              ><a href="/checkout">Cart</a><span class="sep">&nbsp;</span></li>
+                ><a href= "/checkout"><div class="image"> <img src="css/images/cart.png" height = "35" width = "35"/></div></a><span class="sep">&nbsp;</span></li>
               
-              <li><a href="#">Logged In: {{sessionUser[0]}}</a><span class="zep">&nbsp;</span></li>
+              <li><a>Logged In: {{sessionUser[0]}}</a><span class="zep">&nbsp;</span></li>
             {% endif %}
         
           </ul>
@@ -199,7 +197,7 @@
             
             <a href="/register" class="button button-right">create account</a>
             <div class="cl">&nbsp;</div>
-            <p class="center"><a href="#">Help?</a>&nbsp;&nbsp;<a href="#">Forgot Password?</a></p>
+            <!--<p class="center"><a href="#">Help?</a>&nbsp;&nbsp;<a href="#">Forgot Password?</a></p>-->
           </div>
         </div>
       </div>

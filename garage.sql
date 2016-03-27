@@ -27,7 +27,8 @@ CREATE TABLE creditcards (
   expyear int NOT NULL);
   
 
-INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'june', 2050); 
+INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'January', 2016); 
+INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (2, crypt('9234567890123456', gen_salt('bf')), crypt('4234', gen_salt('bf')), 'May', 2020); 
 
 DROP TABLE IF EXISTS games;
 CREATE TABLE games (
@@ -35,7 +36,7 @@ CREATE TABLE games (
   title text NOT NULL,
   price decimal(10,2) NOT NULL,
   discountprice decimal(10,2) NOT NULL DEFAULT 0.00,
-  onsale  text  NOT NULL DEFAULT 'FALSE');
+  onsale boolean NOT NULL DEFAULT FALSE);
   
 INSERT INTO games (title, price, discountprice, onsale) VALUES ('FEAR2', 19.99, 9.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Juniper''s Knot', 0, 0);
@@ -80,7 +81,7 @@ DROP TABLE IF EXISTS userlibrary;
 CREATE TABLE userlibrary (
   gid int REFERENCES games(gid) NOT NULL,
   userid int REFERENCES users(userid) NOT NULL,
-  purchasedstatus text NOT NULL DEFAULT 'FALSE',
+  purchasedstatus boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (gid, userid));
   
 INSERT INTO userlibrary (gid, userid) VALUES (1, 1);
@@ -110,5 +111,6 @@ GRANT UPDATE ON gamedetails TO limited;
 GRANT SELECT ON userlibrary TO limited;
 GRANT INSERT ON userlibrary TO limited;
 GRANT UPDATE ON userlibrary TO limited;
+GRANT DELETE ON userlibrary TO limited;
 
 GRANT CONNECT ON DATABASE garage TO limited;

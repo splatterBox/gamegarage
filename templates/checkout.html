@@ -1,80 +1,264 @@
 {% extends "layout.html" %}
 
-
-{% block content %}
-  
-  <!-- Checkout -->
+  {% block content %}
+        
+      <!-- Checkout -->
       <div class="block">
         <div class="block-bot">
-          <div class="block-cnt">
-            
+          <div class="head">
+            <div class="head-cnt">
               <h3>Checkout</h3>
               <div class="cl">&nbsp;</div>
             </div>
+          </div>
+          
+          {% if sessionUser[0] != '' %}
+            <p hidden type="text" ng-model="loggedinusername" ng-init="loggedinusername='{{sessionUser[0]}}'"></p>
+            <p hidden type="text" ng-model="cartSize" ng-init="cartSize='{{cartSize}}'"></p>
+            <p hidden type="text" ng-model="ccstatus" ng-init="ccstatus='{{ccstatus}}'"></p>
+            <p hidden type="text" ng-model="cmonth" ng-init="cmonth='{{currentmonth}}'"></p>
+            <p hidden type="text" ng-model="cyear" ng-init="cyear='{{currentyear}}'"></p>
+          {% endif %}
+          
+           <div class = "cnt" ng-if="cartSize == 0">
+              <tr>
+                <td>
+                  </br>
+                </td>
+                <td>
+                  </br>
+                </td>
+                <td>
+                  <h3 align="middle">Your cart is empty.</h3>
+                </td>
+              </tr>
+            </div>
+
+
+            <div class = "cnt" ng-if="cartSize > 0">
+              <table>
+                {% for game in cart %}
+                  </br>          
+                  <tr>
+                    <td>
+                      <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{game.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+                    </td>
+                    <td>
+                      </b>
+                    </td>
+                    <td>
+                      </b>
+                    </td>
+                    <td>
+                      <h3 align="right">{{game.pricedesc}}</h3>
+                    </td>
+                  </tr>
+                
+                  <tr>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;<br />
+                    &nbsp;<br />
+                    </td>
+                  </tr>
+                
+                {% endfor %}
+
+                <tr>
+                  <td>
+                    </br>
+                  </td>
+                  <td>
+                    </br>
+                  </td>
+                  <td>
+                    </br>
+                  </td>
+                  <td>
+                    <h3 align="right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Subtotal: ${{price}}</u></h3>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    </br>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    </br>
+                  </td>
+                </tr>
+                </table>
+               
+                <p align="middle">
+                  <input type="submit" value="remove all games from cart?" name="deletegames" ng-click="deletegames()"/>
+                </p>
+                
+            </div>
+          
+          
+          
           
           <div class="row-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class = "cnt">
-              <table>
-                {% for game in cart %}
+            <div class="article">
+              <div class="cl">&nbsp;</div>
+              &nbsp;<br />
+              &nbsp;<br />
 
-                <tr><td>{{game}}</td></tr>
-                {% endfor %}
+              {% if ccstatus != '' %}
+                  <h3 align="middle">{{ccmessage}}</h3>
+                  <p></br></p>
+              {% endif %}
 
-                </table>
-                <p>
-                  Total price is: ${{price}}
-                </p>
-                
-                </div>
 
-              &nbsp;<br />
-              &nbsp;<br />
-              &nbsp;<br />
-              &nbsp;<br />
-              &nbsp;<br />
-              &nbsp;<br />
               
-              <div class="cnt">
-                
-                
-                
-                
+              {% if ccstatus == 'true' %}
+                <div ng-if="cartSize > 0">
+                  <form method="post" action="/checkout2">
+                   <p align="middle">
+                     <input type="submit" value="checkout" name="checkout"  ng-disabled="actualCheckout()"/>
+                  </p>
+                  </form>
+                </div>
+              {% endif %}
 
-                
-                <form method="post" action="/checkout2">
+
+
+
+
+
+
+
+
+  
+ 
+              <div class="cnt">
+              {% if ccstatus != 'true' %} 
+                <form ng-submit="registercc()">
                   <p>
-                    <h3><label for="cc_number">Credit Card #:</label></h3>
-                    <input type="text" ng-model="cc_number" id="cc_number" name="cc_number" size="30"/>
+                    <h3><label for="ccnumber">Credit Card #:</label></h3>
+                    <input type="number" ng-model="ccnumber" id="ccnumber" name="ccnumber" size="20" oninput="if(value.length>16)value=value.slice(0,16)" pattern=".{15,16}" required title="15 to 16 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3><label for="cc_code">Security Code:</label></h3>
-                    <input type="text" ng-model="cc_code" id="cc_code" name="cc_code" size="5"/>
+                    <h3><label for="cccode">Security Code:</label></h3>
+                    <input type="number" ng-model="cccode" id="cccode" name="cccode" size="20" oninput="if(value.length>4)value=value.slice(0,4)" pattern=".{3,4}" required title="3 to 4 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3><label for="exp_month">Expiration month:</label></h3>
-                    <input type="text" ng-model="exp_month" id="exp_month" name="exp_month" size="15"/>
+                    <h3><label for="expmonth">Expiration Month:</label></h3>
+                    <select ng-model="expmonth" id="expmonth" name="expmonth">
+                      <option selected="selected" disabled="disabled">Select Month</option>
+                      <option value="1">January</option>
+                      <option value="2">February</option>
+                      <option value="3">March</option>
+                      <option value="4">April</option>
+                      <option value="5">May</option>
+                      <option value="6">June</option>
+                      <option value="7">July</option>
+                      <option value="8">August</option>
+                      <option value="9">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3><label for="exp_year">Expiration year:</label></h3>
-                    <input type="text" ng-model="exp_year" id="exp_year" name="exp_year" size="4"/>
+                    <h3><label for="expyear">Expiration Year:</label></h3>
+                    <input type="number" ng-model="expyear" id="expyear" name="expyear" size="20" oninput="if(value.length>4)value=value.slice(0,4)" pattern=".{4,4}" required title="4 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <input type="submit" value="Checkout" name="submit" ng-disabled="disabledSubmit()" />
+                    <input type="submit" value="update" name="update" ng-disabled="disabledCheck()"/>
                   </p>
                 </form>
-                            <div class="article">
+                &nbsp;<br />
+                <p>
+                  <h3>Status: </h3> 
+                  <input type="text" ng-model="checkoutstatus" placeholder="Checkout Status" size="36" readonly="readonly"/>
+                </p>
+                
+               <form method="post" action="/checkout2">
+                 <p>
+                     </br>
+                    <input type="submit" value="checkout" name="checkout" ng-disabled="actualCheckout()"/>
+                </p>
+              </form>               
+              {% endif %}
+              </div>
+
+              
+
+              
               <div class="cl">&nbsp;</div>
-  </div>
-  </div>
-  </div>
-  </div>
-  </div>
+            </div>
+
+            <div class="article last-article">
+              <div class="cl">&nbsp;</div>
+              <p>
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+
+                
+              </p>
+   
+
+              <div class="cl">&nbsp;</div>
+            </div>
+            <div class="cl">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+      <!-- / Editor's Pick -->
+      
   
-  
-  
-{% endblock %}
+      
+
+      
+   {% endblock %}

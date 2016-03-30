@@ -110,11 +110,6 @@
               {% endif %}
             ><a href="#">Previews </a><span class="sep">&nbsp;</span></li>
             <li
-              {% if selected == "newreleases" %}
-                class="first active first-active"
-              {% endif %}
-            ><a href="#">New Releases</a><span class="sep">&nbsp;</span></li>
-            <li
               {% if selected == "topgames" %}
                 class="first active first-active"
               {% endif %}
@@ -139,6 +134,7 @@
                 ><a href= "/checkout"><div class="image"> <img src="css/images/cart.png" height = "35" width = "35"/></div></a><span class="sep">&nbsp;</span></li>
               
               <li><a>Logged In: {{sessionUser[0]}}</a><span class="zep">&nbsp;</span></li>
+              <div class="right"><img src= {{avatarValue}} height="46" width="46" alt="" /></a></div>
             {% endif %}
         
           </ul>

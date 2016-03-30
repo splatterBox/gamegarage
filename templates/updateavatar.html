@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+
+  {% block content %}
+        
+      <!-- Registration -->
+      <div class="block">
+        <div class="block-bot">
+          <div class="head">
+            <div class="head-cnt">
+              <h3>Update User Avatar</h3>
+              <div class="cl">&nbsp;</div>
+            </div>
+          </div>
+          
+          <div class="row-articles articles">
+            <div class="cl">&nbsp;</div>
+            <div class = "cnt">
+                </div>
+                &nbsp;<br />
+                &nbsp;<br />
+                
+                <form method="post" action="/updateavatar">
+                <table>
+                  <p>&emsp;
+                    <img src="avatars/m1.jpg" alt="" /></a> 
+                    <img src="avatars/m2.jpg" alt="" /></a> 
+                    <img src="avatars/m3.jpg" alt="" /></a>
+      
+                    <img src="avatars/crysis31.jpg" alt="" /></a> 
+                    <img src="avatars/crysis32.jpg" alt="" /></a> 
+                    <img src="avatars/crysis33.jpg" alt="" /></a>  
+
+                    <img src="avatars/wow-blood-elf-icon.jpg" alt="" /></a> 
+                    <img src="avatars/wow-goblin-icon.jpg" alt="" /></a> 
+                    <img src="avatars/wow-ilidan-icon.jpg" alt="" /></a>
+                    <br /><br />&emsp;
+                    <img src="avatars/n64.jpg" alt="" /></a>
+                    <img src="avatars/segadc.jpg" alt="" /></a>
+                    <img src="avatars/snes.jpg" alt="" /></a>
+
+                    <img src="avatars/masterchief.jpg" alt="" /></a> 
+                    <img src="avatars/Stormtrooper.jpg" alt="" /></a> 
+                    <img src="avatars/killzone.jpg" alt="" /></a>
+
+                    <img src="avatars/Kingdom-Hearts-Logo-icon.jpg" alt="" /></a> 
+                    <img src="avatars/Sora-Face-icon.jpg" alt="" /></a>
+                    
+                    <img src="avatars/Portal-icon.jpg" alt="" /></a> 
+                    <img src="avatars/Doom-1-icon.jpg" alt="" /></a>  
+                    
+                    <br /><br />&emsp;
+                    <img src="avatars/Hitchhiker-Symbol-icon.png" alt="" /></a>&emsp; 
+                    <img src="avatars/Babelfish-icon.png" alt="" /></a>&emsp; 
+                    <img src="avatars/Marvin-icon.png" alt="" /></a>
+                    
+                    <img src="avatars/Boba-Fett-icon.png" alt="" /></a>&emsp;
+                    <img src="avatars/Death-Star-icon.png" alt="" /></a>&emsp;
+                    <img src="avatars/Leia-icon.png" alt="" /></a>
+                    
+                    <img src="avatars/Yoshi-icon.jpg" alt="" /></a> 
+                    <img src="avatars/Lakitu-icon.jpg" alt="" /></a>
+                    <img src="avatars/Goomba-icon.png" alt="" /></a>                    
+   
+                    <br /><br />
+                    <h3>&emsp;<label for="avatar" >New Avatar Choice:</label></h3>
+                        <td>&emsp;<select name="avatar" Profile picture:='avatar'>
+                        <option value="avatars/m1.jpg">Baby Mario</option>
+                        <option value="avatars/m2.jpg">Jumping Mario</option>
+                        <option value="avatars/m3.jpg">Flying Mario</option>
+                        
+                        <option value="avatars/crysis31.jpg">Crysis 3-1</option>
+                        <option value="avatars/crysis32.jpg">Crysis 3-2</option>
+                        <option value="avatars/crysis33.jpg">Crysis 3-3</option>         
+                        
+                        <option value="avatars/wow-blood-elf-icon.jpg">WOW Elf</option>
+                        <option value="avatars/wow-goblin-icon.jpg">WOW Goblin</option>
+                        <option value="avatars/wow-ilidan-icon.jpg">WOW Ilidan</option>
+                    
+                        <option value="avatars/n64.jpg">N64</option>
+                        <option value="avatars/segadc.jpg">Sega DC</option>
+                        <option value="avatars/snes.jpg">SNES</option>
+                        
+                        <option value="avatars/masterchief.jpg">Masterchief</option>
+                        <option value="avatars/Stormtrooper.jpg">Stormtrooper</option>
+                        <option value="avatars/killzone.jpg">Killzone</option>         
+                        
+                        <option value="avatars/Kingdom-Hearts-Logo-icon.jpg">KIngdom Hearts logo</option>
+                        <option value="avatars/Sora-Face-icon.jpg">Sora</option> 
+                        
+                        <option value="avatars/Portal-icon.jpg">Portal</option>
+                        <option value="avatars/Doom-1-icon.jpg">Doom</option>
+                        
+                        <option value="avatars/Hitchhiker-Symbol-icon.png">Hitchhiker Symbol</option>
+                        <option value="avatars/Babelfish-icon.png">Babelfish</option>
+                        <option value="avatars/Marvin-icon.png">Marvin</option>
+                        
+                        <option value="avatars/Boba-Fett-icon.png">Boba Fett</option>
+                        <option value="avatars/Death-Star-icon.png">Death Star</option>
+                        <option value="avatars/avatars/Leia-icon.png">Leia</option>
+                        
+                        <option value="avatars/Yoshi-icon.jpg">Yoshi</option>
+                        <option value="avatars/Lakitu-icon.jpg">Lakitu</option>
+                        <option value="avatars/Goomba-icon.png">Goomba</option>                        
+                        </select></td>
+                        
+            <!--{% if avatar == 'babyMario' %}-->
+            <!--avatar = 'avatars/m1.jpg'    -->
+            <!--{% endif %}-->
+          
+ <!--value="avatars/m1.jpg"          -->
+          
+          
+            
+            
+                </table>
+                  </p>
+                 
+                  
+                  <br />
+                  <p>
+                    &emsp;<input type="submit" value="Update Avatar" localPath='localPath' name="submit"/>
+                  </p>
+                </form>
+                
+                
+                
+                
+                    <div class="article">
+              <div class="cl">&nbsp;</div>
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />  
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                 
+  </div>
+  </div>
+  </div>
+  </div>
+  
+  
+  
+{% endblock %}

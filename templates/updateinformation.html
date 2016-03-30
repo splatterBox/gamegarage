@@ -7,48 +7,60 @@
         <div class="block-bot">
           <div class="head">
             <div class="head-cnt">
-              <h3>Current Account Registration</h3>
-              <div class="cl">&nbsp;</div>
-            </div>
-          </div>
-        
-              {% for name in info %}
-                <br /><tr>
-                <td><h3>&nbsp;&nbsp;Your current user name is: {{name[0]}}</td>
-                <br /><br />
-                <td>&nbsp;&nbsp;Your current first name is: {{name[1]}}</td>
-                <br /><br />
-                <td>&nbsp;&nbsp;Your current last name is: {{name[2]}}</td>
-                <br /><br />
-                <td>&nbsp;&nbsp;Your current favorite game is: {{name[4]}}</td>
-                <br /><br />
-                <td>&nbsp;&nbsp;Your current favorite genre is: {{name[5]}}</td>
-
-                              <!--placeholder="Registration Status"                -->
-                </h3>
-                <br /></tr>
-              {% endfor %}
-                &nbsp;<br />
-          
-          <div class="head">
-            <div class="head-cnt">
               <h3>Update Account Information</h3>
               <div class="cl">&nbsp;</div>
             </div>
           </div>
+          
           <div class="row-articles articles">
             <div class="cl">&nbsp;</div>
             <div class="article">
               <div class="cl">&nbsp;</div>
               &nbsp;<br />
-              
-                <h3><a href="/updateinformation">Update User Information</a>&emsp;&emsp;
-                <a href="/updatecreditcard">Update User Credit Card</a>&emsp;&emsp;
-                <a href="/updateavatar">Update User Avatar</a></h3>
-
               <div class="image"> <a href="#"></a> </div>
               <!--<div class="cnt">-->
-              </div>
+                <form method="post" action="/updateinformation">
+                  <p>
+                    <h3><label for="username">Username:</label></h3>
+                    <input type="text" name="username" value="" size="20"/>
+                    </p><br />
+                  <p>
+                    <h3><label for="firstname">Firstname:</label>
+                    <input type="text" name="firstname" value="" size="20"/>
+                      &nbsp;&nbsp;
+                    <label for="lastname">Lastname:</label>
+                    <input type="text" name="lastname" value="" size="20"/>
+                  </h3></p>
+                      &nbsp;<br /><br />
+                  <p>
+                    <h3><label for="newpassword">Password:</label>
+                    <input type="password" name="newpassword" value="" size="20"/>
+                      &nbsp;&nbsp;
+                    <label for="retypedpassword">Retype Password:</label>
+                    <input type="password" name="retypedpassword" value="" size="20" />
+                  </h3></p>
+                      &nbsp;<br /><br />
+                  <p>
+                    <h3><label for="favgenre">Favorite Genre:</label>
+                    <input type="text" name="favgenre" value="" size="20"/>
+                      &nbsp;&nbsp;
+                    <label for="favgame">Favorite Game:</label>
+                    <input type="text" name="favgame" value="" size="20" />
+                  </h3></p>        
+                  <br />
+                    <br />
+                    
+                  <p><center>
+              <input type="submit" value="update Information" localPath='localPath' name="submit" />
+                  </p>
+                </form>
+                &nbsp;<br />
+                <p>
+                <!--  <h3>Status: </h3> -->
+                <!--  <input type="text" ng-model="updatestatus" placeholder="Update Status" size="25" readonly="readonly"/>-->
+                <!--</center></p>-->
+                
+                &nbsp;<br />                
               <div class="cl">&nbsp;</div>
             </div>
 
@@ -85,6 +97,10 @@
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
+                &nbsp;<br />     
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
@@ -101,25 +117,14 @@
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />                
+               
               </p>
-   
 
+              <div class="cl">&nbsp;</div>
+            </div>
             <div class="cl">&nbsp;</div>
           </div>
         </div>
       </div>
-      <!-- / Editor's Pick -->
-      
-  
-      
 
-      
    {% endblock %}

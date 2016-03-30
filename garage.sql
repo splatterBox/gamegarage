@@ -2,6 +2,9 @@ DROP DATABASE IF EXISTS garage;
 CREATE DATABASE garage;
 \c garage
 
+DROP ROLE IF EXISTS limited;
+CREATE ROLE limited LOGIN PASSWORD 'limited762*';
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   userid BIGSERIAL PRIMARY KEY NOT NULL,
@@ -9,13 +12,15 @@ CREATE TABLE users (
   firstname text NOT NULL,
   lastname text NOT NULL,
   password text NOT NULL,
+  favgenre text NOT NULL DEFAULT 'none',
+  favgame text NOT NULL DEFAULT 'none',
   avatarpath text NOT NULL DEFAULT 'none');
 
 CREATE EXTENSION pgcrypto;
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('raz', 'Ron', 'Zacharski', crypt('p00d13', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')), 'none');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'FPS', 'Duck Hunt', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('raz', 'Ron', 'Zacharski', crypt('p00d13', gen_salt('bf')), 'Adventure', 'Zelda', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')), 'Puzzle', 'Warios Woods', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')), 'none', 'none', 'avatars/m2.jpg');
 
 DROP TABLE IF EXISTS creditcards;
 CREATE TABLE creditcards (

@@ -68,14 +68,17 @@ def mainIndex():
     
     if 'userName' in session:
         tempName=session['userName']
+        avatarValue=session['avatarpath']
+        
         # Capitalize the name for HTML print.
         newName = tempName.capitalize()
         print "(Root) Logged in user is: %s" % newName
     else:
         newName = ''
+        avatarValue = ''
         print "(Root) No one is logged in."
     name = [newName]    
-    return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
     #return render_template('index-backup.html', sessionUser=name)
     #return app.send_static_file('index-backup.html')
 
@@ -85,12 +88,14 @@ def displayAllGames():
     
     if 'userName' in session:
         tempName=session['userName']
+        avatarValue=session['avatarpath']
         # Capitalize the name for HTML print.
         newName = tempName.capitalize()
         print "(Register) Logged in user is: %s" % newName
     else:
         tempName = ''
         newName = ''
+        avatarValue= ''
         print "(Register) No one is logged in."
         
     # original username
@@ -101,7 +106,7 @@ def displayAllGames():
     # Search for all games.
     searchtype = 'all'
     
-    return render_template('displaygames.html', originalUser=originalname, sessionUser=name, games=searchtype, selected = 'allgames')
+    return render_template('displaygames.html', originalUser=originalname, avatarValue=avatarValue, sessionUser=name, games=searchtype, selected = 'allgames')
     #return render_template('index-backup.html', sessionUser=name)
     #return app.send_static_file('index-backup.html')
 
@@ -275,15 +280,17 @@ def registerPage():
 
     if 'userName' in session:
         tempName=session['userName']
+        avatarValue = session['avatarpath']
         # Capitalize the name for HTML print.
         newName = tempName.capitalize()
         print "(Register) Logged in user is: %s" % newName
     else:
         newName = ''
+        avatarValue = ''
         print "(Register) No one is logged in."
     
     name = [newName]
-    return render_template('register.html', sessionUser=name, selected = 'register')
+    return render_template('register.html', sessionUser=name, avatarValue=avatarValue, selected = 'register')
     #return app.send_static_file('index.html')
 
 # Decorator.  When a socket registration event happens, do this.
@@ -291,61 +298,73 @@ def registerPage():
 def register(data):
     
     # Grab all the values and verify they are received.
-    localAvatar = data[0];
+    localUser = data[0];
     localFirstName = data[1];
     localLastName = data[2];
     localPass = data[3];
     localRetyped = data[4];
+    localAvatar = data[5];
 
-    print "New username to register is: %s" % localAvatar
+    print "New username to register is: %s" % localUser
     print "New firstname to register is: %s" % localFirstName
     print "New lastname to register is: %s" % localLastName
+    print "New avatar to register is: %s" % localAvatar
+    
+    if localAvatar == 'babyMario':
+        localPath = "avatars/m1.jpg"    
+    if localAvatar == 'jumpingMario':
+        localPath = "avatars/m2.jpg" 
+    if localAvatar == 'flyingMario':
+        localPath = "avatars/m3.jpg" 
+    if localAvatar == '':
+        localPath = "NONE"        
+
+    # print "New path to register is: %s" % localPath
     #print "New password is: %s" % localPass
     #print "Retyped password is: %s" % localRetyped
-    
     # Find out if the passwords match.
-    if localPass == localRetyped:
+    
+    if localPath == "NONE":
+        status = 'Please choose an avatar.'
+        emit('status', status) 
+        
+    else:
+        if localPass == localRetyped:
         
         # Connect to the database.
-        conn = connectToDB()
+            conn = connectToDB()
         # Create a database cursor object (dictionary style).
-        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
         # Find out from the database if the username is already taken.
-        try:
-            cur.execute("SELECT * FROM users WHERE username = %s;", (localAvatar,))
-        except:
-            print("Error executing SELECT for username lookup.")
-        answer=cur.fetchall()
-            
-        # Find out if the result set is empty.
-        count=0
-        for row in answer:
-            count = count + 1
-            
-        if count > 0:
-            status = 'Username already exists.'
-            emit('status', status)
-        else:
-            # Go ahead and register the new user.
             try:
-                print(cur.mogrify("INSERT INTO users (username, firstname, lastname, password) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')));", (localAvatar, localFirstName, localLastName, localPass)))
-                cur.execute("INSERT INTO users (username, firstname, lastname, password) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')));", (localAvatar, localFirstName, localLastName, localPass))
+                cur.execute("SELECT * FROM users WHERE username = %s;", (localUser,))
             except:
-                print("Error executing INSERT for new registered user.")
-                conn.rollback()
-            conn.commit()
-      
-            # Test
-            print("You successfull registered!")
-            status = "You sucessfully registered!"
-            emit('status', status)
-
-    else:
-        # Test
-        print("Passwords do not match.")
-        status = 'Passwords do not match.'
-        emit('status', status) 
+                print("Error executing SELECT for username lookup.")
+            answer=cur.fetchall()
+                
+            # Find out if the result set is empty.
+            count=0
+            for row in answer:
+                count = count + 1
+                
+            if count > 0:
+                status = 'Username already exists.'
+                emit('status', status)
+            else:
+                # Go ahead and register the new user.
+                try:
+                    print(cur.mogrify("INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')), %s);", (localUser, localFirstName, localLastName, localPass, localPath)))
+                    cur.execute("INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')), %s);", (localUser, localFirstName, localLastName, localPass, localPath))
+                except:
+                    print("Error executing INSERT for new registered user.")
+                    conn.rollback()
+                conn.commit()
+          
+                # Test
+                print("You successfull registered!")
+                status = "You sucessfully registered!"
+                emit('status', status)
 
 
 # A python decorator.  Login.
@@ -367,7 +386,6 @@ def loginEvaluate():
         except:
             print("Error executing SELECT for username lookup.")
         games=cur.fetchall()
-    
     
         # Grab the credentials.
         localName = request.form['username']
@@ -392,6 +410,9 @@ def loginEvaluate():
                 count=0
                 for row in answer:
                     count = count + 1
+
+                for entry in answer:
+                    avatarValue=entry.get('avatarpath')                       
         
                 # Set the session variables, if user entry found, and log them in.
                 if count == 1:
@@ -400,35 +421,38 @@ def loginEvaluate():
                     # Set the session variables.
                     session['userName'] = localName
                     session['userPassword'] = localPass
+                    session['avatarpath'] = avatarValue
                     # Capitalize the name for HTML print.
                     newName = localName.capitalize()
                     name = [newName]
-                    return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+                    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
             
                 elif count == 0:
                     # For anyone already logged in on this machine, log them out.
                     if 'userName' in session:
                         del session['userName']
                         del session['userPassword']
-                        
                     print("Failed to log in.")
                     #emit('loggedinStatus', failed)
                     name = ['']
-                return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+                    avatarValue=''
+                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
             else:
                 # For anyone already logged in on this machine, log them out.
                 if 'userName' in session:
                     del session['userName']
                     del session['userPassword']
                 name = ['']
-                return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+                avatarValue=''
+                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
         else:
             # For anyone already logged in on this machine, log them out.
             if 'userName' in session:
                 del session['userName']
                 del session['userPassword']
             name = ['']
-            return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+            avatarValue=''
+            return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
 
 # A python decorator.  Login.
 @app.route('/logout', methods=['GET', 'POST'])
@@ -461,6 +485,8 @@ def Checkout():
         
         if 'userName' in session:
             localName=session['userName']
+            avatarValue=session['avatarpath']
+            
             # Capitalize the name for HTML print.
             newName = localName.capitalize()
             # Add the capitalized name to a list.
@@ -646,7 +672,7 @@ def Checkout():
 
         print 'cartSize is: %s' % cartSize
         
-        return render_template('checkout.html', cartSize=cartSize, cart=gamesList, price=finalprice, ccstatus=ccstatus, ccmessage=ccmessage, currentmonth = digitMonth, currentyear = fullYear, sessionUser=name, selected='checkout')
+        return render_template('checkout.html', cartSize=cartSize, cart=gamesList, avatarValue=avatarValue, price=finalprice, ccstatus=ccstatus, ccmessage=ccmessage, currentmonth = digitMonth, currentyear = fullYear, sessionUser=name, selected='checkout')
 
 # Decorator.  When a socket credit card update event happens, do this.
 @socketio.on('updatecc', namespace='/gg')
@@ -693,6 +719,7 @@ def updatecc(newccinfo):
     
     if 'userName' in session:
         localName=session['userName']
+        avatarValue=session['avatarpath']
         # Capitalize the name for HTML print.
         newName = localName.capitalize()
         # Add the capitalized name to a list.
@@ -776,6 +803,7 @@ def Check_Complete():
             
             if 'userName' in session:
                 localName=session['userName']
+                avatarValue=session['avatarpath']
                 # Capitalize the name for HTML print.
                 newName = localName.capitalize()
                 # Add the capitalized name to a list.
@@ -815,7 +843,7 @@ def Check_Complete():
                 conn.rollback()
             conn.commit()
 
-            return render_template('checkout2.html', sessionUser = name, selected = 'checkout')   
+            return render_template('checkout2.html', sessionUser = name, avatarValue=avatarValue, selected = 'checkout')   
 
 @socketio.on('deletecart', namespace='/gg')
 def deletecart(name):
@@ -826,6 +854,7 @@ def deletecart(name):
     
     if 'userName' in session:
         localName=session['userName']
+        avatarValue=session['avatarpath']
         
     try:
         cur.execute("SELECT * FROM users WHERE username = %s;", (localName,))
@@ -859,25 +888,144 @@ def deletecart(name):
         deletestatus = 'Your cart is now empty.'
         emit('deletestatus', deletestatus)
     
-
+    
 @app.route('/changeInfo')
 def changeInfo():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    if 'userName' in session:
+        tempName=session['userName']
+        # Capitalize the name for HTML print.
+        avatarValue=session['avatarpath']
+        newName = tempName.capitalize()
+        print "(Register) Logged in user is: %s" % newName
+    else:
+        print("OOPS")
+        
+        tempName = ''
+        newName = ''
+        avatarValue = ''
+        print "(Register) No one is logged in."    
+    
     tempName=session['userName']
     newName = tempName.capitalize()
     name = [newName]
     try:
-        cur.execute("select username, firstname, lastname, password from users WHERE username= '%s'" % (tempName))
+        cur.execute("SELECT username, firstname, lastname, password, favgame, favgenre from users WHERE username= '%s'" % (tempName))
     except:
-        print("ERROR inserting from the wall")
+        print("ERROR")
         conn.rollback()
     conn.commit()
     results = cur.fetchall()
-    return render_template('changeInfo.html', sessionUser=name, info=results, selected = 'changeinfo')
+    return render_template('changeInfo.html', sessionUser=name, info=results, avatarValue=avatarValue, selected = 'changeinfo')
     #return app.send_static_file('index.html')
 
+@app.route('/updateinformation', methods=['GET', 'POST'])
+def updateinformation():
+    if (request.method == 'POST' or request.method == 'GET'):
+            
+            currentname=session['userName']
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+            try:
+                newusername = request.form['username']
+                newfirst = request.form['firstname']
+                newlast = request.form['lastname']
+                newgenre = request.form['favgenre']
+                newgame = request.form['favgame']
+                newpass = request.form['newpassword']
+                newpassretype = request.form['retypedpassword']
+                
+                # print(newpass)
+                # print(cur.mogrify("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
+                if newfirst != '': 
+                    cur.execute("UPDATE users SET firstname = '%s' WHERE username= '%s'" % (newfirst, currentname))
+                if newlast != '': 
+                    cur.execute("UPDATE users SET lastname = '%s' WHERE username= '%s'" % (newlast, currentname))                    
+                if newgenre != '': 
+                    cur.execute("UPDATE users SET favgenre = '%s' WHERE username= '%s'" % (newgenre, currentname))
+                if newgame != '': 
+                    cur.execute("UPDATE users SET favgame = '%s' WHERE username= '%s'" % (newgame, currentname))
+                if newpass != '':
+                    # if newpassretype == newpass:
+                    cur.execute("UPDATE users SET password = crypt('%s', gen_salt('bf')) WHERE username= '%s'" % (newpass, currentname))
+                print(newpass)
+                print(newpassretype)
 
+                # cur.execute("INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')), %s);", (localUser, localFirstName, localLastName, localPass, localPath))
+
+            # cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+            
+            except:
+                print("Error updating Information.")
+                conn.rollback()
+            conn.commit()
+    avatarValue=session['avatarpath']
+    tempName=session['userName']
+    newName = tempName.capitalize()
+    name = [newName]
+    return render_template('updateinformation.html', sessionUser=name, avatarValue=avatarValue, selected = 'updateinformation')
+    #return app.send_static_file('index.html')
+    
+@app.route('/updatecreditcard', methods=['GET', 'POST'])
+def updatecreditcard():
+    cartdict = []
+    pricedict = 0
+    
+    if (request.method == 'POST' or request.method == 'GET'):
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur2 = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            try:
+                print(cur.mogrify(("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")))
+                
+                cur.execute("SELECT title FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cur2.execute("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
+                cartdict = cur.fetchall()
+                pricedict = cur2.fetchall()
+                cart = []
+                price = 0
+            except:
+                print("Error selecting from library.")
+            name = ['']    
+    avatarValue=session['avatarpath']
+    tempName=session['userName']
+    newName = tempName.capitalize()
+    name = [newName]
+    return render_template('updatecreditcard.html', cart=cart, price = price, avatarValue=avatarValue, sessionUser = name, selected = 'updatecreditcard')
+            
+@app.route('/updateavatar', methods=['GET', 'POST'])
+def updateavatar():
+    if (request.method == 'POST' or request.method == 'GET'):
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            tempName=session['userName']
+            try:
+                newavatar = request.form['avatar']
+                print(tempName)
+                print(newavatar)
+                # print(cur.mogrify("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
+                session['avatarpath']=newavatar
+                cur.execute("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
+            # cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+            
+            except:
+                print("Error updating Avatar.")
+                conn.rollback()
+            conn.commit()
+    avatarValue=session['avatarpath']
+    tempName=session['userName']
+    newName = tempName.capitalize()
+    name = [newName]
+    return render_template('updateavatar.html', avatarValue=avatarValue, sessionUser = name, selected = 'updateavatar')
 
 
 

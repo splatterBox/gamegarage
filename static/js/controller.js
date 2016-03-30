@@ -21,6 +21,19 @@ GameGarage.controller('GarageController', function($scope){
     $scope.registerList = [];
     // Feedback from the server.
     $scope.registerstatus='';
+    $scope.avatar='';
+    // Variable for the favorite genre.
+    $scope.favgenre = '';
+    // Variable for the favorite game.
+    $scope.favegame = '';
+    // Variable for the CC number.
+    $scope.creditcardnum='';
+    // Variable for the securitycode.
+    $scope.securitycode='';
+    // Variable for the expiration month.
+    $scope.expmonth='';
+    // Variable for the expiration year.
+    $scope.expyear='';  
     
     // Variables to display game data dynamically.
     // Username variable passed from the server to HTML to the js controller.
@@ -856,6 +869,7 @@ GameGarage.controller('GarageController', function($scope){
         $scope.registerList[2] = $scope.lastname;
         $scope.registerList[3] = $scope.newpassword;
         $scope.registerList[4] = $scope.retypedpassword;
+        $scope.registerList[5] = $scope.avatar;
         
         // Send the info. to the server.
         socket.emit('register', $scope.registerList);
@@ -1009,6 +1023,12 @@ GameGarage.controller('GarageController', function($scope){
         
         // // Send the info. to the server.
         socket.emit('updatecc', localList);
+        $scope.username = '';
+        $scope.firstname = '';
+        $scope.lastname = '';
+        $scope.newpassword = '';
+        $scope.retypedpassword = '';
+        $scope.avatar = '';        
     };
     
     // Method that handles server emit for socketio credit card update from within game checkout.

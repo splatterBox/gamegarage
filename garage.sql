@@ -2,6 +2,9 @@ DROP DATABASE IF EXISTS garage;
 CREATE DATABASE garage;
 \c garage
 
+DROP ROLE IF EXISTS limited;
+CREATE ROLE limited LOGIN PASSWORD 'limited762*';
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   userid BIGSERIAL PRIMARY KEY NOT NULL,
@@ -9,13 +12,15 @@ CREATE TABLE users (
   firstname text NOT NULL,
   lastname text NOT NULL,
   password text NOT NULL,
+  favgenre text NOT NULL DEFAULT 'none',
+  favgame text NOT NULL DEFAULT 'none',
   avatarpath text NOT NULL DEFAULT 'none');
 
 CREATE EXTENSION pgcrypto;
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('raz', 'Ron', 'Zacharski', crypt('p00d13', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')), 'none');
-INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')), 'none');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'FPS', 'Duck Hunt', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('raz', 'Ron', 'Zacharski', crypt('p00d13', gen_salt('bf')), 'Adventure', 'Zelda', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('ann', 'Ann', 'Hedberg', crypt('changeme', gen_salt('bf')), 'Puzzle', 'Warios Woods', 'avatars/m2.jpg');
+INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('lazy', 'Big', 'Easy', crypt('querty', gen_salt('bf')), 'none', 'none', 'avatars/m2.jpg');
 
 DROP TABLE IF EXISTS creditcards;
 CREATE TABLE creditcards (
@@ -27,7 +32,8 @@ CREATE TABLE creditcards (
   expyear int NOT NULL);
   
 
-INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'june', 2050); 
+INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (1, crypt('1234567890123456', gen_salt('bf')), crypt('1234', gen_salt('bf')), 'January', 2016); 
+INSERT INTO creditcards (userid, ccnumber, cccode, expmonth, expyear) VALUES (2, crypt('9234567890123456', gen_salt('bf')), crypt('4234', gen_salt('bf')), 'May', 2020); 
 
 DROP TABLE IF EXISTS games;
 CREATE TABLE games (
@@ -35,7 +41,7 @@ CREATE TABLE games (
   title text NOT NULL,
   price decimal(10,2) NOT NULL,
   discountprice decimal(10,2) NOT NULL DEFAULT 0.00,
-  onsale  text  NOT NULL DEFAULT 'FALSE');
+  onsale boolean NOT NULL DEFAULT FALSE);
   
 INSERT INTO games (title, price, discountprice, onsale) VALUES ('FEAR2', 19.99, 9.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Juniper''s Knot', 0, 0);
@@ -80,7 +86,7 @@ DROP TABLE IF EXISTS userlibrary;
 CREATE TABLE userlibrary (
   gid int REFERENCES games(gid) NOT NULL,
   userid int REFERENCES users(userid) NOT NULL,
-  purchasedstatus text NOT NULL DEFAULT 'FALSE',
+  purchasedstatus boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (gid, userid));
   
 INSERT INTO userlibrary (gid, userid) VALUES (1, 1);
@@ -110,5 +116,6 @@ GRANT UPDATE ON gamedetails TO limited;
 GRANT SELECT ON userlibrary TO limited;
 GRANT INSERT ON userlibrary TO limited;
 GRANT UPDATE ON userlibrary TO limited;
+GRANT DELETE ON userlibrary TO limited;
 
 GRANT CONNECT ON DATABASE garage TO limited;

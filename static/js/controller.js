@@ -21,6 +21,19 @@ GameGarage.controller('GarageController', function($scope){
     $scope.registerList = [];
     // Feedback from the server.
     $scope.registerstatus='';
+    $scope.avatar='';
+    // Variable for the favorite genre.
+    $scope.favgenre = '';
+    // Variable for the favorite game.
+    $scope.favegame = '';
+    // Variable for the CC number.
+    $scope.creditcardnum='';
+    // Variable for the securitycode.
+    $scope.securitycode='';
+    // Variable for the expiration month.
+    $scope.expmonth='';
+    // Variable for the expiration year.
+    $scope.expyear='';  
     
     // Variables to display game data dynamically.
     // Username variable passed from the server to HTML to the js controller.
@@ -93,6 +106,22 @@ GameGarage.controller('GarageController', function($scope){
     $scope.direction='';
     // Variable to track number of games on page.
     //$scope.numberofgames=0;
+
+
+    // Variables for checkout functionality.
+    $scope.cartSize=0;
+    $scope.ccstatus='';
+    $scope.cmonth=0;
+    $scope.cyear=0;
+    // User input
+    $scope.ccnumber='';
+    $scope.cccode='';
+    $scope.expmonth='Select Month';
+    $scope.expyear='';
+    // Feedback to user for data checking.
+    $scope.checkoutstatus='';
+    $scope.ccmessage=''
+
 
 
     // If connect on the socket, run a function.
@@ -840,6 +869,7 @@ GameGarage.controller('GarageController', function($scope){
         $scope.registerList[2] = $scope.lastname;
         $scope.registerList[3] = $scope.newpassword;
         $scope.registerList[4] = $scope.retypedpassword;
+        $scope.registerList[5] = $scope.avatar;
         
         // Send the info. to the server.
         socket.emit('register', $scope.registerList);
@@ -874,10 +904,154 @@ GameGarage.controller('GarageController', function($scope){
          });
     });
     
+    // Method to delete all games in the logged in user's cart
+    // (that are flagged as in the cart (NOT purchased))
+    $scope.deletegames = function deletegames(){
+      var name = $scope.loggedinusername;
+      socket.emit('deletecart', name);
+    };
+    
+    // Method that handles server emit for socketio deletegames.
+    socket.on('deletestatus', function(deletestatus){
+       console.log('Game cart delete status is: ', $scope.deletestatus);
+       $scope.cartSize=0;
+       console.log('Number of games in cart is: ', $scope.cartSize);
+       $scope.$apply();
+    });
 
+    // Method that disable/enables the 'Update' button
+    // based on some BUT not all data checks. (for credit card update)
+    $scope.disabledCheck = function disabledCheck() {
+        
 
+        // If ccstatus id is 'false', then there is no credit card on file.  Also if ccstatus is 'expired'.
+        // Need to create a new credit card.
+        if(($scope.ccstatus == 'false') || ($scope.ccstatus == 'expired'))
+        {
+            if(($scope.expmonth == 'Select Month') || ($scope.expyear == '') || ($scope.cccode == '') || ($scope.ccnumber == ''))
+            {
+                console.log('To create new credit card, all fields must have values.');
+                $scope.checkoutstatus = 'Complete all fields to add new credit card.';
+                return true;
+            }
+            
+            // Now check that ccnumber, cccode, expmonth and expyear are good.
+            var intccnum = parseInt($scope.ccnumber,10);
+            var intcode = parseInt($scope.cccode,10);
+            var intexpmonth = parseInt($scope.expmonth,10);
+            var intexpyear = parseInt($scope.expyear,10);
+            console.log('Intccnum is: ', intccnum);
+            console.log('Intcode is: ', intcode);
+            console.log('Intexpmonth is: ', intexpmonth);
+            console.log('Intexpyear is: ', intexpyear);
+            
+            if(isNaN($scope.ccnumber))
+            {
+                $scope.checkoutstatus = 'Credit card must have 15-16 digits.';
+                return true;
+            }
+            else if(isNaN($scope.cccode))
+            {
+                $scope.checkoutstatus = 'Security code must have 3-4 digits.';
+                return true;
+            }
+            else if(isNaN($scope.expyear))
+            {
+                $scope.checkoutstatus = 'Expiration year must have 4 digits.';
+                return true;
+            }
 
+            if(intexpyear < $scope.cyear)
+            {
+                console.log('Entered expyear is less than current year.');
+                $scope.checkoutstatus = 'Expiration year is invalid.';
+                return true;
+            }
+            
+            if((intexpyear == $scope.cyear) && (intexpmonth < $scope.cmonth))
+            {
+                console.log('Entered expyear matches current year.');
+                console.log('Entered expmonth is less than current month');
+                $scope.checkoutstatus = 'Expiration month for current year is invalid.';
+                return true;
+            }
 
+            if($scope.ccmessage!='')
+            {
+                $scope.checkoutstatus = $scope.ccmessage;
+                return false;
+            }
+            else
+            {
+                console.log('New create card data is OK.')
+                $scope.checkoutstatus = 'New credit card data is valid.'
+                return false;
+            }
+        }   
+        
+        if($scope.ccmessage!='')
+        {
+            $scope.checkoutstatus = $scope.ccmessage;
+            return false;
+        }
+        else
+        {
+            console.log('New create card data is OK.')
+            $scope.checkoutstatus = 'New credit card data is valid.'
+            return false;
+        }
 
+    };
+    
+    
+    // Send new credit card info. to the server for processing.
+    $scope.registercc = function registercc() {
+
+        // TEST
+        console.log('Sending new credit card number: ', $scope.ccnumber);
+        console.log('Sending new security code: ', $scope.cccode);
+        console.log('Sending new expiration month: ', $scope.expmonth);
+        console.log('Sending new expiration year: ', $scope.expyear);
+        
+        // Create a list.
+        var localList = [];
+        // Add data.
+        localList[0] = $scope.ccnumber;
+        localList[1] = $scope.cccode;
+        localList[2] = $scope.expmonth;
+        localList[3] = $scope.expyear;
+        
+        // // Send the info. to the server.
+        socket.emit('updatecc', localList);
+        $scope.username = '';
+        $scope.firstname = '';
+        $scope.lastname = '';
+        $scope.newpassword = '';
+        $scope.retypedpassword = '';
+        $scope.avatar = '';        
+    };
+    
+    // Method that handles server emit for socketio credit card update from within game checkout.
+    socket.on('updatestatus', function(updatestatus){
+        // Add the status value to the local variable.
+        $scope.ccmessage = updatestatus;
+        // Debug message.
+        console.log('Credit Card status: ', $scope.ccmessage);
+        // Update the view for that variable.
+        $scope.$apply();
+    });
+    
+      // Method that disable/enables the 'Checkout' button
+    // based on some BUT not all data checks.
+    $scope.actualCheckout = function actualCheckout() {
+        
+        if((($scope.ccmessage != '') || ($scope.ccstatus == 'true') || ($scope.ccmessage == 'Successfully added credit card.') || ($scope.ccmessage == 'Successfully updated credit card.')) && ($scope.cartSize != 0))
+        {
+            //console.log('cartSize is: ', $scope.cartSize);
+            return false;
+        }
+        return true;
+    };
+    
     
 });

@@ -122,7 +122,11 @@ GameGarage.controller('GarageController', function($scope){
     $scope.checkoutstatus='';
     $scope.ccmessage=''
 
-
+    // Variables for game voting.
+    $scope.favorite=''
+    $scope.comment='';
+    $scope.color='none';
+    $scope.votecount=0;
 
     // If connect on the socket, run a function.
     socket.on('connect', function(){
@@ -1053,5 +1057,52 @@ GameGarage.controller('GarageController', function($scope){
         return true;
     };
     
+    // Disable the Vote button if all fields are not selected.  (NOTE: Color defaults to 'none'.)
+    $scope.disabledVote = function disabledVote() {
+        // TEST
+        console.log('Voting for: ', $scope.favorite);
+        console.log('Comment: ', $scope.comment);
+        console.log('Text color: ', $scope.color);
+  
+
+        if(($scope.favorite == '') || ($scope.comment == '') || ($scope.votecount == 1))
+        {
+            // Means locked button
+            return true;
+        }
+        
+        // Means unlocked button
+        return false;
+        
+        
+    };    
+    
+    
+     // Vote for a game.
+    $scope.vote = function vote() {
+
+        if($scope.votecount < 1)
+        {
+            $scope.votecount = $scope.votecount + 1;
+            
+            console.log('Emitting the following voting data:');
+            console.log('username: ', $scope.loggedinusername);
+            console.log('favorite: ', $scope.favorite);
+            console.log('comment: ', $scope.comment);
+            console.log('color: ', $scope.color);
+            // Create a list.
+            var voteList = [];
+            // Add vote data to list.
+            voteList[0] = $scope.loggedinusername;
+            voteList[1] = $scope.favorite;
+            voteList[2] = $scope.comment;
+            voteList[3] = $scope.color;
+            
+            // Emit the list.
+            socket.emit('voteList', voteList);
+        }
+   
+    };
+
     
 });

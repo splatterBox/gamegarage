@@ -268,90 +268,134 @@
       
       
       
-       <!-- Top Games Sidebar -->
+       <!-- Top Game Votes Sidebar -->
       <div class="block">
         <div class="block-bot">
           <div class="head">
             <div class="head-cnt">
-              <h3>Top Games</h3>
+              <h3>Top Voted Games To Slash</h3>
             </div>
           </div>
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">TMNT</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            {% for game in votedgames %}
+            
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+                <div class="image"> <a href="#"><img src={{game.artpath}} alt="css/images/img3.gif" /></a> </div>
+                <div class="cnt">
+                  <h4><a href="#!">{{game.title}}</a></h4>
+                  </br>
+                  <h3>Winning Votes: {{game.votes}}</h3>
+                </div>
+                <div class="cl">&nbsp;</div>
               </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">F.E.A.R.2</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">Steel Fury</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
+            
+            {% endfor %}
+            <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>
-            <a href="#" class="view-all">view all</a>
-            <div class="cl">&nbsp;</div>
+            
           </div>
         </div>
       </div>
       <!-- / Top Games Sidebar -->
       
-      <!-- Top Videos Sidebar -->
+      <!-- Most Recent Comments Sidebar -->
       <div class="block">
         <div class="block-bot">
           <div class="head">
             <div class="head-cnt">
-              <h3>Top Videos</h3>
+              <h3>Recent Comments</h3>
             </div>
           </div>
+          
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">FALLOUT3</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            {% for comment in topcomments %}
+            
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+                <!--<div class="blog"><h2>{{comment.month}}</h2><h3>{{comment.day}}</h3></div>-->
+                <div class="image">
+                  <div class="blog"><h2>{{comment.month}}</h2><h3>{{comment.day}}</h3></div>
+                </div>
+                <div class="cnt">
+                  <h4><a href="#!">{{comment.username}}</a></h4>
+                  </br>
+                  
+                  {% if comment.color == 'none' %}
+                    <h3>{{comment.comment}}</h3>
+                  {% else %}
+                   {% if comment.color == 'yellow' %}
+                     <h3><font color = "yellow">{{comment.comment}}</font></h3> 
+                   {% else %}
+                     {% if comment.color == 'red' %}
+                       <h3><font color = "red">{{comment.comment}}</font></h3> 
+                     {% else %}
+                       {% if comment.color == 'limegreen' %}
+                         <h3><font color = "limegreen">{{comment.comment}}</font></h3> 
+                       {% else %}
+                         {% if comment.color == 'blue' %}
+                           <h3><font color = "blue">{{comment.comment}}</font></h3> 
+                         {% else %}
+                           {% if comment.color == 'peachpuff' %}
+                             <h3><font color = "peachpuff">{{comment.comment}}</font></h3> 
+                           {% else %}
+                             {% if comment.color == 'orange' %}
+                               <h3><font color = "orange">{{comment.comment}}</font></h3> 
+                             {% else %}
+                               {% if comment.color == 'darkviolet' %}
+                                 <h3><font color = "darkviolet">{{comment.comment}}</font></h3> 
+                               {% endif %} 
+                              {% endif %} 
+                            {% endif %} 
+                           {% endif%} 
+                         {% endif %} 
+                       {% endif %} 
+                      {% endif %} 
+                     {% endif %} 
+                  
+                </div>
+               <div class="cl">&nbsp;</div>
               </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">Crysis</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">F.E.A.R.2</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="cl">&nbsp;</div>
-            <a href="#" class="view-all">view all</a>
+                
+            {% endfor %}
+
+            
+            <!--<div class="article">-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--  <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>-->
+            <!--  <div class="cnt">-->
+            <!--    <h4><a href="#">FALLOUT3</a></h4>-->
+            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
+            <!--  </div>-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--</div>-->
+            
+            <!--<div class="article">-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--  <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>-->
+            <!--  <div class="cnt">-->
+            <!--    <h4><a href="#">Crysis</a></h4>-->
+            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
+            <!--  </div>-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--</div>-->
+            
+            <!--<div class="article">-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--  <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>-->
+            <!--  <div class="cnt">-->
+            <!--    <h4><a href="#">F.E.A.R.2</a></h4>-->
+            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
+            <!--  </div>-->
+            <!--  <div class="cl">&nbsp;</div>-->
+            <!--</div>-->
+            
+ 
+            <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>
           </div>
         </div>

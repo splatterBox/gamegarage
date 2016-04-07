@@ -39,8 +39,7 @@ You will need to do the following things to get gamegarage running on your compu
 
    A. Login and set username of root:
 
-   sudo sudo -U rootusername psql
-   (I think "U" is capitalized.  Try it out.)
+   sudo sudo -u postgres psql
 
    B. Set root user password:
 

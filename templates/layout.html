@@ -269,6 +269,8 @@
       
       
        <!-- Top Game Votes Sidebar -->
+      <p hidden type="number" ng-model="dynamicFlag" ng-init="dynamicFlag=0"></p>
+      
       <div class="block">
         <div class="block-bot">
           <div class="head">
@@ -276,8 +278,12 @@
               <h3>Top Voted Games To Slash</h3>
             </div>
           </div>
+          
+          
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
+            
+            <div ng-if="dynamicFlag == 0">
             
             {% for game in votedgames %}
             
@@ -293,10 +299,57 @@
               </div>
             
             {% endfor %}
+            
+            </div>
+            
+            <div ng-if="dynamicFlag == 1">
+
+              <div ng-controller="getSideBarTopGames">
+                
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image"> <a href="#"><img id="tpgmimageID1" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpgmtitleID1"></a></h4>
+                    </br>
+                    <h3 id="tpgmvotesID1"></h3>
+                </div>
+                <div class="cl">&nbsp;</div>
+                </div>
+                
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image"> <a href="#"><img id="tpgmimageID2" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpgmtitleID2"></a></h4>
+                    </br>
+                    <h3 id="tpgmvotesID2"></h3>
+                </div>
+                <div class="cl">&nbsp;</div>
+                </div>   
+                
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image"> <a href="#"><img id="tpgmimageID3" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpgmtitleID3"></a></h4>
+                    </br>
+                    <h3 id="tpgmvotesID3"></h3>
+                </div>
+                <div class="cl">&nbsp;</div>
+                </div>          
+                
+              </div>
+              
+            </div>
+            
             <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>
             
           </div>
+          
+          
+          
         </div>
       </div>
       <!-- / Top Games Sidebar -->
@@ -313,6 +366,8 @@
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
             
+            <div ng-if="dynamicFlag == 0">
+              
             {% for comment in topcomments %}
             
               <div class="article">
@@ -362,38 +417,53 @@
               </div>
                 
             {% endfor %}
-
             
-            <!--<div class="article">-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--  <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>-->
-            <!--  <div class="cnt">-->
-            <!--    <h4><a href="#">FALLOUT3</a></h4>-->
-            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
-            <!--  </div>-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--</div>-->
+            </div>
             
-            <!--<div class="article">-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--  <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>-->
-            <!--  <div class="cnt">-->
-            <!--    <h4><a href="#">Crysis</a></h4>-->
-            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
-            <!--  </div>-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--</div>-->
+            <div ng-if="dynamicFlag == 1">
+              <div ng-controller="getSideBarTopComments">
             
-            <!--<div class="article">-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--  <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>-->
-            <!--  <div class="cnt">-->
-            <!--    <h4><a href="#">F.E.A.R.2</a></h4>-->
-            <!--    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>-->
-            <!--  </div>-->
-            <!--  <div class="cl">&nbsp;</div>-->
-            <!--</div>-->
-            
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image">
+                    <div class="blog"><h2 id="tpmonthID1"></h2><h3 id="tpdayID1"></h3></div>
+                  </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpusrnameID1"></a></h4>
+                    </br>
+                    <h3 ng-style="{'color':colorOne}" id="tpcommentID1"></h3>
+                  </div>
+                 <div class="cl">&nbsp;</div>
+                </div>    
+    
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image">
+                    <div class="blog"><h2 id="tpmonthID2"></h2><h3 id="tpdayID2"></h3></div>
+                  </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpusrnameID2"></a></h4>
+                    </br>
+                    <h3 ng-style="{'color':colorTwo}" id="tpcommentID2"></h3>
+                  </div>
+                 <div class="cl">&nbsp;</div>
+                </div>    
+    
+                <div class="article">
+                  <div class="cl">&nbsp;</div>
+                  <div class="image">
+                    <div class="blog"><h2 id="tpmonthID3"></h2><h3 id="tpdayID3"></h3></div>
+                  </div>
+                  <div class="cnt">
+                    <h4><a href="#!" id="tpusrnameID3"></a></h4>
+                    </br>
+                    <h3 ng-style="{'color':colorThree}" id="tpcommentID3"></h3>
+                  </div>
+                 <div class="cl">&nbsp;</div>
+                </div>    
+    
+              </div>
+            </div>
  
             <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>

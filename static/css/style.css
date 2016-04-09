@@ -309,19 +309,21 @@ acenter {
 
 .blog h2 {
   font: bold 90% arial, sans-serif;
-  color:black !important;
+  font-weight: bold;
+  color:#0099FF  !important;
   text-shadow: none;
   text-align: center;
   margin: 0;
-  padding: 4px 0 0 0;}
+  padding: 13px 5px 0 0;}
   
 .blog h3 {
   font: 140% arial, sans-serif;
-  color:black !important;
+  font-weight: bold;
+  color:#0099FF  !important;
   text-shadow: none;
   margin: 0;
   text-align: center;
-  padding: -10px 0 0 0;}
+  padding: 0px 5px 0 0;}
   
 #blog_text {
   padding: 20px;

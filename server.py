@@ -1216,7 +1216,7 @@ def updateavatar():
     return render_template('updateavatar.html', avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, sessionUser = name, selected = 'updateavatar')
 
 
-
+# Update the database vote count and post the user's comment to the mini-blog.
 @socketio.on('voteList', namespace='/gg')
 def vote(voteList):
     user = voteList[0];
@@ -1341,7 +1341,47 @@ def vote(voteList):
                     conn.rollback()
                 conn.commit()           
 
-
+                # Now get the (1) updated votes and (2) updated blog comments and send them over to the js controller.
+    
+                # Get top 3 voted games.
+                try:
+                    print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                    cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+            
+                except:
+                    print('Could not SELECT top 3 voted games.')
+                votedgames = cur.fetchall()
+                
+                # TEST
+                # print('Printing top 3 voted games.')
+                # for game in votedgames:
+                #     print(game)
+                
+                # Get top 3 user blog data.
+                try:
+                    print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                    cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+                except:
+                    print('Could not SELECT top 3 comments.')
+                topcomments = cur.fetchall() 
+    
+                sidebarData = []
+                
+                # Add the data to the list as a dictionary.
+                for abc in votedgames:
+                    game = {'title': abc.get('title'), 'artpath': abc.get('artpath'), 'votes': abc.get('votes')}
+                    sidebarData.append(game)
+                for cba in topcomments:
+                    comment = {'username': cba.get('username'), 'month': cba.get('month'), 'day': cba.get('day'), 'comment': cba.get('comment'), 'color': cba.get('color')} 
+                    sidebarData.append(comment)
+                
+                # TEST
+                print('Sidebar Data:')
+                for xyz in sidebarData:
+                    print(xyz)
+                    
+                # Send the data over to controller.js.
+                emit('sidebarData', sidebarData)
 
 
 

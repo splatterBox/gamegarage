@@ -127,6 +127,14 @@ GameGarage.controller('GarageController', function($scope){
     $scope.comment='';
     $scope.color='none';
     $scope.votecount=0;
+    // Variables for handling sidebar voting/mini-blog data.
+    $scope.sidebarList = [];
+    $scope.dynamicFlag = 0;
+    $scope.colorOne='';
+    $scope.colorTwo='';
+    $scope.colorThree='';
+
+
 
     // If connect on the socket, run a function.
     socket.on('connect', function(){
@@ -1104,5 +1112,160 @@ GameGarage.controller('GarageController', function($scope){
    
     };
 
+
+    // Method that handles server emit for socketio sidebar vote and mini-blog data.
+    socket.on('sidebarData', function(sidebarData){
+        
+        //console.log('Inside sidebarData method'); 
+        
+        // Add the data to the local list.
+        var index=0;
+        for(index=0; index < sidebarData.length; index++) {
+            var tempObject = sidebarData[index];
+            //console.log(tempObject);
+            $scope.sidebarList.push(tempObject);
+        }
+
+        // TEST the data.
+        console.log('\nEmitted Sidebar Data:');
+        //console.log('SidebarList length is: ', $scope.sidebarList.length);
+        var index2=0;
+        for(index2=0; index2 < $scope.sidebarList.length; index2++) {
+            if(index2 < 3) {
+                var tempObject = $scope.sidebarList[index2];
+                console.log('Title: ', tempObject.title);
+                console.log('Artpath: ', tempObject.artpath);
+                console.log('Votes: ', tempObject.votes);
+            }
+            else {
+                var tempObject = $scope.sidebarList[index2];
+                console.log('Username: ', tempObject.username);
+                console.log('Month: ', tempObject.month);
+                console.log('Day: ', tempObject.day);
+                console.log('Comment: ', tempObject.comment);
+                console.log('Color: ', tempObject.color);
+            }
+        }
+        
+        $scope.dynamicFlag = 1;
+        
+        // Grab the objects.
+        var tempObject1 = $scope.sidebarList[3]; 
+        var tempObject2 = $scope.sidebarList[4];
+        var tempObject3 = $scope.sidebarList[5];
+        // Set the color variables.
+        $scope.colorOne = tempObject1.color;
+        $scope.colorTwo = tempObject2.color;
+        $scope.colorThree = tempObject3.color;
+        
+        
+        // Update the view for that variable.
+        $scope.$apply();
+    });
+
+
+     // Display dynamic sidebar data for top games.
+    $scope.getSideBarTopGames = function getSideBarTopGames() {
+
+       //console.log('Inside getSideBardata method');
     
+        // Top Game #1
+        var tempObject1 = $scope.sidebarList[0];
+        var image1 = document.getElementById("tpgmimageID1");
+        image1.setAttribute('src', tempObject1.artpath);
+        
+        var title1 = document.getElementById("tpgmtitleID1");
+        title1.innerHTML = tempObject1.title;
+        
+        var tempVotes1 = tempObject1.votes;
+        var votes1String = tempVotes1.toString();
+        var votes1header = "Winning Votes: ";
+        var finalvotes1 = votes1header.concat(votes1String);
+        var votes1 = document.getElementById("tpgmvotesID1");
+        votes1.innerHTML = finalvotes1;
+  
+        // Top Game #2
+        var tempObject2 = $scope.sidebarList[1];
+        var image2 = document.getElementById("tpgmimageID2");
+        image2.setAttribute('src', tempObject2.artpath);
+        
+        var title2 = document.getElementById("tpgmtitleID2");
+        title2.innerHTML = tempObject2.title;
+        
+        var tempVotes2 = tempObject2.votes;
+        var votes2String = tempVotes2.toString();
+        var votes2header = "Winning Votes: ";
+        var finalvotes2 = votes2header.concat(votes2String);
+        var votes2 = document.getElementById("tpgmvotesID2");
+        votes2.innerHTML = finalvotes2;
+  
+        // Top Game #3
+        var tempObject3 = $scope.sidebarList[2];
+        var image3 = document.getElementById("tpgmimageID3");
+        image3.setAttribute('src', tempObject3.artpath);
+        
+        var title3 = document.getElementById("tpgmtitleID3");
+        title3.innerHTML = tempObject3.title;
+        
+        var tempVotes3 = tempObject3.votes;
+        var votes3String = tempVotes3.toString();
+        var votes3header = "Winning Votes: ";
+        var finalvotes3 = votes3header.concat(votes3String);
+        var votes3 = document.getElementById("tpgmvotesID3");
+        votes3.innerHTML = finalvotes3;
+   
+    };  
+    
+    
+    // Display dynamic sidebar data for top comments.
+    $scope.getSideBarTopComments = function getSideBarTopComments() {
+
+       //console.log('Inside getSideBardata method');
+       
+        // Grab the objects.
+        var tempObject1 = $scope.sidebarList[3]; 
+        var tempObject2 = $scope.sidebarList[4];
+        var tempObject3 = $scope.sidebarList[5];
+
+        
+        // Top Comment #1
+        var month1 = document.getElementById("tpmonthID1");
+        month1.innerHTML = tempObject1.month;
+        
+        var day1 = document.getElementById("tpdayID1");
+        day1.innerHTML = tempObject1.day;
+        
+        var username1 = document.getElementById("tpusrnameID1");
+        username1.innerHTML = tempObject1.username;
+
+        var comment1 = document.getElementById("tpcommentID1");
+        comment1.innerHTML = tempObject1.comment;
+        
+        // Top Comment #2
+        var month2 = document.getElementById("tpmonthID2");
+        month2.innerHTML = tempObject2.month;
+        
+        var day2 = document.getElementById("tpdayID2");
+        day2.innerHTML = tempObject2.day;
+        
+        var username2 = document.getElementById("tpusrnameID2");
+        username2.innerHTML = tempObject2.username;
+
+        var comment2 = document.getElementById("tpcommentID2");
+        comment2.innerHTML = tempObject2.comment;
+  
+        // Top Comment #3
+        var month3 = document.getElementById("tpmonthID3");
+        month3.innerHTML = tempObject3.month;
+        
+        var day3 = document.getElementById("tpdayID3");
+        day3.innerHTML = tempObject3.day;
+        
+        var username3 = document.getElementById("tpusrnameID3");
+        username3.innerHTML = tempObject3.username;
+
+        var comment3 = document.getElementById("tpcommentID3");
+        comment3.innerHTML = tempObject3.comment;
+
+    }; 
 });

@@ -48,7 +48,7 @@ def resetgamesonsale():
     # if day != 'Saturday'
     if day != 'Sunday':
         global resetFlag
-        resetFlag == 1
+        resetFlag == 0
         print('Sorry, today is not reset day.')
 
         # If today is reset day, only run reset once.  

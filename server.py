@@ -29,15 +29,107 @@ def connectToDB():
     except:
         print("Can't connect to database")
 
+# Global flag for game sale price reset.
+resetFlag=0
+
+#@app.before_first_request
+# Runs before EACH request.
+@app.before_request
+def resetgamesonsale():
+    
+    # Change the time zone to Eastern Standard Time.
+    os.environ['TZ'] = 'US/Eastern'
+    time.tzset()
+    
+    day = time.strftime('%A')
+    print 'DAY: %s' % day
+
+    # If today is NOT reset day, reset the global to zero.
+    # if day != 'Saturday'
+    if day != 'Sunday':
+        global resetFlag
+        resetFlag == 1
+        print('Sorry, today is not reset day.')
+
+        # If today is reset day, only run reset once.  
+        # elif day == 'Saturday':
+    elif day == 'Sunday':      
+        
+        global resetFlag
+        localFlag = resetFlag
+        
+        if localFlag == 0:
+            print 'resetFlag is: %s' % resetFlag
+            print 'Today is %s.  You are executing the reset method.' % day
+            
+            # If today is Sunday:
+            # 1. Reset all games to retail price.
+            # 2. Grab the top 3 voted games.
+            # 3. Set the top 3 voted games on discount.
+            # 4. Reset the top 3 games voted for discount, by setting 1 vote to all games.
+    
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+            # 1. Reset all games to retail price.
+            try:
+              print(cur.mogrify("UPDATE games SET onsale = %s;", (False,)))
+              cur.execute("UPDATE games SET onsale = %s;", (False,))
+            except:
+                print('Could not wipe all games of discount price flag.')
+                conn.rollback()
+            conn.commit()
+    
+             #  2. Get top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()    
+    
+            # 3. Set the top 3 voted games on discount.
+    
+            for game in votedgames:
+                tempName = game.get('title')
+                print 'Game name: %s' % tempName
+    
+                try:
+                    print(cur.mogrify("UPDATE games SET onsale = %s WHERE title = %s;", (True, tempName)))
+                    cur.execute("UPDATE games SET onsale = %s WHERE title = %s;", (True, tempName))
+                except:
+                    print('Could not set game to discount price.')
+                    conn.rollback()
+                conn.commit()
+                
+            # 4. Reset the top 3 games voted for discount, by setting 1 vote to all games.
+             
+            try:
+                print(cur.mogrify("UPDATE gamedetails SET votes = %s;", (1,)))
+                cur.execute("UPDATE gamedetails SET votes = %s;", (1,))
+            except:
+                print('Could not reset all game votes.')
+                conn.rollback()
+            conn.commit()
+            
+            resetFlag = 1
+            print 'resetFlag is now: %s' % resetFlag
+
+        else:
+            print 'resetFlag is: %s' % resetFlag
 
 # Decorator.  When a socket connect event happens, do this.
 @socketio.on('connect', namespace='/gg')
 def makeConnection():
     # Print debug message.
     print('connected')
+    
 
-
-
+        
+         
+ 
 # A python decorator.  Whenever route('/') run the layout/index webpage.
 @app.route('/')
 def mainIndex():
@@ -1392,4 +1484,8 @@ if __name__ == '__main__':
     # Use the PORT address.  If not present, use 8080.
     #app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
     socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
+    
+    
+    
+    
     

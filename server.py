@@ -44,10 +44,10 @@ def resetgamesonsale():
     day = time.strftime('%A')
     print 'DAY: %s' % day
 
+    global resetFlag
     # If today is NOT reset day, reset the global to zero.
     # if day != 'Saturday'
     if day != 'Sunday':
-        global resetFlag
         resetFlag == 0
         print('Sorry, today is not reset day.')
 
@@ -55,7 +55,6 @@ def resetgamesonsale():
         # elif day == 'Saturday':
     elif day == 'Sunday':      
         
-        global resetFlag
         localFlag = resetFlag
         
         if localFlag == 0:

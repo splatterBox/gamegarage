@@ -244,7 +244,7 @@ def findGames(searchtype):
         
         # Get data for all games.
         try:
-            cur.execute("SELECT * FROM games NATURAL JOIN gamedetails;")
+            cur.execute("SELECT * FROM games NATURAL JOIN gamedetails ORDER BY gid;")
             #cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
         except:
             print("Error executing SELECT for all games lookup.")

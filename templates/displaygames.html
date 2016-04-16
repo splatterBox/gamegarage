@@ -34,115 +34,94 @@
             <div class="cl">&nbsp;</div>
             
             <!-- If 1st game exists, display it. //-->
-              <div class="article" ng-if="gamePageListSize >= 1">
+              <div class="article" ng-if="gamePageListSize >= 1" ng-repeat="x in gamePageList" ng-init="number = countInit()">
+                
                 <div class="cl">&nbsp;</div>
-                <div class="image"> <a href="#"><img id="image1ID" src="css/images/img7.jpg" alt="" /></a> </div>
-                <div class="cnt">
-                  <h4 id="title1ID"></h4>
-                  <p id="desc1ID"></p>
-                  <p ng-if="gamePageListSize >= 1"></br></p>
-                  <p id="price1ID"></p>
-                  <!-- <p id="discount1ID"></p> //-->
-                  
-                  <!-- Make socketio changes for the addtocart button. //-->
-                  <form ng-submit="addtocart1()">
-                    <p></br></p>
-                    <button type="submit" name="addtocart1" ng-disabled="disabledcart()">add to cart</button>
-                  </form>
-              
+                
+                <div class="image" ng-if="number == 1">
+                  <a href="#"><img id="image1ID" src="" /></a>
+                  <p hidden ng-init="updateImage1()"></p>
                 </div>
-                <h3 class="status" id="status1ID"></h3>
+                <div class="image" ng-if="number == 2">
+                  <a href="#"><img id="image2ID" src="" /></a>
+                  <p hidden ng-init="updateImage2()"></p>
+                </div>  
+                <div class="image" ng-if="number == 3">
+                  <a href="#"><img id="image3ID" src="" /></a>
+                  <p hidden ng-init="updateImage3()"></p>
+                </div>                
+                <div class="image" ng-if="number == 4">
+                  <a href="#"><img id="image4ID" src="" /></a>
+                  <p hidden ng-init="updateImage4()"></p>
+                </div>
+                <div class="image" ng-if="number == 5">
+                  <a href="#"><img id="image5ID" src="" /></a>
+                  <p hidden ng-init="updateImage5()"></p>
+                </div>                
+
+                <div class="cnt">
+                  <h4 ng-bind="x.title"></h4>
+                  <p ng-bind="x.desc"></p>
+                  
+                  <p ng-if="gamePageListSize >= 1"></br></p>
+                  <p ng-bind="x.price"></p>
+                  
+                  <div ng-if="number == 1">
+                    <!-- Make socketio changes for the addtocart button. //-->
+                    <form ng-submit="addtocart1()">
+                      <p></br></p>
+                      <button type="submit" name="addtocart1" ng-disabled="disabledcart()">add to cart</button>
+                    </form>
+                  </div>
+                  <div ng-if="number == 2">
+                    <!-- Make socketio changes for the addtocart button. //-->
+                    <form ng-submit="addtocart2()">
+                      <p></br></p>
+                      <button type="submit" name="addtocart2" ng-disabled="disabledcart()">add to cart</button>
+                    </form>
+                  </div>
+                  <div ng-if="number == 3">
+                    <!-- Make socketio changes for the addtocart button. //-->
+                    <form ng-submit="addtocart3()">
+                      <p></br></p>
+                      <button type="submit" name="addtocart3" ng-disabled="disabledcart()">add to cart</button>
+                    </form>
+                  </div>              
+                  <div ng-if="number == 4">
+                    <!-- Make socketio changes for the addtocart button. //-->
+                    <form ng-submit="addtocart4()">
+                      <p></br></p>
+                      <button type="submit" name="addtocart4" ng-disabled="disabledcart()">add to cart</button>
+                    </form>
+                  </div> 
+                  <div ng-if="number == 5">
+                    <!-- Make socketio changes for the addtocart button. //-->
+                    <form ng-submit="addtocart5()">
+                      <p></br></p>
+                      <button type="submit" name="addtocart5" ng-disabled="disabledcart()">add to cart</button>
+                    </form>
+                  </div>   
+                </div>
+                <div ng-if="number == 1">
+                  <h3 class="status" id="status1ID"></h3>
+                </div>
+                <div ng-if="number == 2">
+                  <h3 class="status" id="status2ID"></h3>
+                </div>  
+                <div ng-if="number == 3">
+                  <h3 class="status" id="status3ID"></h3>
+                </div>                
+                <div ng-if="number == 4">
+                  <h3 class="status" id="status4ID"></h3>
+                </div> 
+                <div ng-if="number == 5">
+                  <h3 class="status" id="status5ID"></h3>
+                </div>                
+                
                 <div class="cl">&nbsp;</div>
-              </div>
- 
-            <!-- If 2nd game exists, display it. //-->
-            <div class="article" ng-if="gamePageListSize >= 2">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img id="image2ID" src="css/images/img8.jpg" alt="" /></a> </div>
-              <div class="cnt">
-                <h4 id="title2ID"></h4>
-                <p id="desc2ID"></p>
-                <p ng-if="gamePageListSize >= 2"></br></p>
-                <p id="price2ID"></p>
-                <!-- <p id="discount2ID"></p> //-->
-                
-                <!-- Make socketio changes for the addtocart button. //-->
-                <form ng-submit="addtocart2()">
-                  <p></br></p>
-                  <button type="submit" name="addtocart2" ng-disabled="disabledcart()">add to cart</button>
-                </form>
-                
-              </div>
-              <h3 class="status" id="status2ID"></h3>
-              <div class="cl">&nbsp;</div>
-            </div>
+              </div>            
             
-            <!-- If 3rd game exists, display it. //-->
-            <div class="article" ng-if="gamePageListSize >= 3">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img id="image3ID" src="css/images/img9.jpg" alt="" /></a> </div>
-              <div class="cnt">
-                <h4 id="title3ID"></h4>
-                <p id="desc3ID"></p>
-                <p ng-if="gamePageListSize >= 3"></br></p>
-                <p id="price3ID"></p>
-                <!-- <p id="discount3ID"></p> //-->
-                
-                <!-- Make socketio changes for the addtocart button. //-->
-                <form ng-submit="addtocart3()">
-                  <p></br></p>
-                  <button type="submit" name="addtocart3" ng-disabled="disabledcart()">add to cart</button>
-                </form>
-                
-              </div>
-              <h3 class="status" id="status3ID"></h3>
-              <div class="cl">&nbsp;</div>
-            </div>           
-            
-            <!-- If 4th game exists, display it. //-->
-            <div class="article" ng-if="gamePageListSize >= 4">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img id="image4ID" src="css/images/img9.jpg" alt="" /></a> </div>
-              <div class="cnt">
-                <h4 id="title4ID"></h4>
-                <p id="desc4ID"></p>
-                <p ng-if="gamePageListSize >= 4"></br></p>
-                <p id="price4ID"></p>
-                <!-- <p id="discount4ID"></p> //-->
-                
-                <!-- Make socketio changes for the addtocart button. //-->
-                <form ng-submit="addtocart4()">
-                  <p></br></p>
-                  <button type="submit" name="addtocart4" ng-disabled="disabledcart()">add to cart</button>
-                </form>                
-                
-              </div>
-              <h3 class="status" id="status4ID"></h3>
-              <div class="cl">&nbsp;</div>
-            </div>            
-            
-            <!-- If 5th game exists, display it. //-->
-            <div class="article last-article" ng-if="gamePageListSize >= 5">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img id="image5ID" src="css/images/img10.jpg" alt="" /></a> </div>
-              <div class="cnt">
-                <h4 id="title5ID"></h4>
-                <p id="desc5ID"></p>
-                <p ng-if="gamePageListSize >= 5"></br></p>
-                <p id="price5ID"></p>
-                <!-- <p id="discount5ID"></p> //-->
-                
-                <!-- Make socketio changes for the addtocart button. //-->
-                <form ng-submit="addtocart5()">
-                  <p></br></p>
-                  <button type="submit" name="addtocart5" ng-disabled="disabledcart()">add to cart</button>
-                </form>                
-                
-              </div>
-              <h3 class="status" id="status5ID"></h3>
-              <div class="cl">&nbsp;</div>
-            </div>
-            
+
             <div class="cl">&nbsp;</div>
             
           </div>

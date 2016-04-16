@@ -93,6 +93,9 @@ GameGarage.controller('GarageController', function($scope){
     $scope.desc5 = '';
     $scope.art5 = '';
     $scope.status5 = '';
+    // Variable that tracks what game we are at in the game inventory loop.
+    $scope.ngIndex = 0;
+    
     
     // Variable to track current game content webpage.
     $scope.pagenumber = 0;
@@ -219,8 +222,6 @@ GameGarage.controller('GarageController', function($scope){
         
         // Call the method that loads the current webpage's games.
         $scope.updatePageGames();
-        // Send over the 1st page of game data to the webpage.
-        $scope.sendinnerHTML();
     });
     
     
@@ -233,12 +234,14 @@ GameGarage.controller('GarageController', function($scope){
         {
             //console.log('inside next if');
             $scope.lastindex = $scope.startindex;
+            $scope.ngIndex = 0;
         }
         else if($scope.direction == 'prev')
         {
             //console.log('inside prev if');
             $scope.startindex = $scope.lastindex - 5;
             $scope.lastindex = $scope.lastindex - 5;
+            $scope.ngIndex = 0;
         }
    
         
@@ -443,95 +446,8 @@ GameGarage.controller('GarageController', function($scope){
             
         }
         
-        // Send over the next page of game data to the webpage.
-        //$scope.sendinnerHTML();
-        
     };
     
-
-    // Method to send game data over to webpage.
-    $scope.sendinnerHTML = function sendinnerHTML() {
-        
-        // Send game data over to HTML page. 
-        var elem1a = document.getElementById("title1ID");
-        elem1a.innerHTML = $scope.title1;
-        var elem1b = document.getElementById("price1ID");
-        elem1b.innerHTML = $scope.price1;
-        //var elem1c = document.getElementById("discount1ID");
-        //elem1c.innerHTML = $scope.discount1;
-        var elem1d = document.getElementById("desc1ID");
-        elem1d.innerHTML = $scope.desc1;
-        var update1 = document.getElementById("status1ID");
-        update1.innerHTML = $scope.status1;
-        var image1 = document.getElementById("image1ID");
-        image1.setAttribute('src', $scope.art1);
-        
-        var elem2a = document.getElementById("title2ID");
-        elem2a.innerHTML = $scope.title2;
-        var elem2b = document.getElementById("price2ID");
-        elem2b.innerHTML = $scope.price2;
-        //var elem2c = document.getElementById("discount2ID");
-        //elem2c.innerHTML = $scope.discount2;
-        var elem2d = document.getElementById("desc2ID");
-        elem2d.innerHTML = $scope.desc2;
-        var update2 = document.getElementById("status2ID");
-        update2.innerHTML = $scope.status2;
-        var image2 = document.getElementById("image2ID");
-        image2.setAttribute('src', $scope.art2);
-        
-        // TEST
-        //var image = "css/images/slider4.jpg"
-        //console.log('Image2ID path is: ', image)
-        //var image2 = document.getElementById("image2ID");
-        //image2.setAttribute('src',image);
-        
-        
-        var elem3a = document.getElementById("title3ID");
-        elem3a.innerHTML = $scope.title3;
-        var elem3b = document.getElementById("price3ID");
-        elem3b.innerHTML = $scope.price3;
-        //var elem3c = document.getElementById("discount3ID");
-        //elem3c.innerHTML = $scope.discount3;
-        var elem3d = document.getElementById("desc3ID");
-        elem3d.innerHTML = $scope.desc3;
-        var update3 = document.getElementById("status3ID");
-        update3.innerHTML = $scope.status3;
-        var image3 = document.getElementById("image3ID");
-        image3.setAttribute('src', $scope.art3);
-        
-        var elem4a = document.getElementById("title4ID");
-        elem4a.innerHTML = $scope.title4;
-        var elem4b = document.getElementById("price4ID");
-        elem4b.innerHTML = $scope.price4;
-        //var elem4c = document.getElementById("discount4ID");
-        //elem4c.innerHTML = $scope.discount4;
-        var elem4d = document.getElementById("desc4ID");
-        elem4d.innerHTML = $scope.desc4; 
-        var update4 = document.getElementById("status4ID");
-        console.log('update4-status4ID is: ', update4);
-        update4.innerHTML = $scope.status4;
-        var image4 = document.getElementById("image4ID");
-        image4.setAttribute('src', $scope.art4);
-        
-        console.log('TEST: $scope.title5 is: ', $scope.title5);
-        
-        var elem5a = document.getElementById("title5ID");
-        console.log('elem5a=title5ID is: ', elem5a);
-        elem5a.innerHTML = $scope.title5;
-        var elem5b = document.getElementById("price5ID");
-        elem5b.innerHTML = $scope.price5;
-        //var elem5c = document.getElementById("discount5ID");
-        //elem5c.innerHTML = $scope.discount5;
-        var elem5d = document.getElementById("desc5ID");
-        elem5d.innerHTML = $scope.desc5;
-        var update5 = document.getElementById("status5ID");
-        update5.innerHTML = $scope.status5;
-        var image5 = document.getElementById("image5ID");
-        image5.setAttribute('src', $scope.art5);
-        
-    };
-
-
     // Disable the nextpage button if there are no more games to get.
     $scope.disablednextpage = function disablednextpage() {
        
@@ -561,16 +477,6 @@ GameGarage.controller('GarageController', function($scope){
         
         return false;
     };
-    
-    
-    //
-    //angular.element(document).ready(function () {
-
-    // your code here
-
-    //});
-    //angular.element($window).bind('load', function() {});
-    // angular.element($window)
 
     // Attempt to load the next page of game data.
     $scope.nextpage = function nextpage() {
@@ -624,8 +530,6 @@ GameGarage.controller('GarageController', function($scope){
         $scope.direction = 'next';
         // Call the method that loads the current webpage's games.
         $scope.updatePageGames();
-        // Send over the next page of game data to the webpage.
-        $scope.sendinnerHTML();
     };
     
     
@@ -680,11 +584,9 @@ GameGarage.controller('GarageController', function($scope){
         $scope.art5 = '';
         $scope.status5 = '';
         
-        $scope.direction = 'prev'
+        $scope.direction = 'prev';
         // Call the method that loads the current webpage's games.
         $scope.updatePageGames();
-        // Send over the next page of game data to the webpage.
-        $scope.sendinnerHTML();
         
     };
     
@@ -1081,8 +983,6 @@ GameGarage.controller('GarageController', function($scope){
         
         // Means unlocked button
         return false;
-        
-        
     };    
     
     
@@ -1132,18 +1032,18 @@ GameGarage.controller('GarageController', function($scope){
         var index2=0;
         for(index2=0; index2 < $scope.sidebarList.length; index2++) {
             if(index2 < 3) {
-                var tempObject = $scope.sidebarList[index2];
-                console.log('Title: ', tempObject.title);
-                console.log('Artpath: ', tempObject.artpath);
-                console.log('Votes: ', tempObject.votes);
+                var testObject = $scope.sidebarList[index2];
+                console.log('Title: ', testObject.title);
+                console.log('Artpath: ', testObject.artpath);
+                console.log('Votes: ', testObject.votes);
             }
             else {
-                var tempObject = $scope.sidebarList[index2];
-                console.log('Username: ', tempObject.username);
-                console.log('Month: ', tempObject.month);
-                console.log('Day: ', tempObject.day);
-                console.log('Comment: ', tempObject.comment);
-                console.log('Color: ', tempObject.color);
+                var testObject2 = $scope.sidebarList[index2];
+                console.log('Username: ', testObject2.username);
+                console.log('Month: ', testObject2.month);
+                console.log('Day: ', testObject2.day);
+                console.log('Comment: ', testObject2.comment);
+                console.log('Color: ', testObject2.color);
             }
         }
         
@@ -1268,4 +1168,50 @@ GameGarage.controller('GarageController', function($scope){
         comment3.innerHTML = tempObject3.comment;
 
     }; 
+    
+    $scope.countInit = function() {
+        
+        //console.log('gamePageListSize is: ', $scope.gamePageListSize);
+
+        $scope.ngIndex = $scope.ngIndex + 1;
+        
+        console.log('ngIndex is now: ', $scope.ngIndex);
+        
+        return $scope.ngIndex;
+    };
+   
+    $scope.updateImage1 = function() {
+        
+        var image1 = document.getElementById("image1ID");
+        image1.setAttribute('src', $scope.art1);
+
+    };   
+  
+    $scope.updateImage2 = function() {
+        
+        var image2 = document.getElementById("image2ID");
+        image2.setAttribute('src', $scope.art2);
+
+    };    
+    
+    $scope.updateImage3 = function() {
+        
+        var image3 = document.getElementById("image3ID");
+        image3.setAttribute('src', $scope.art3);
+
+    };     
+    
+     $scope.updateImage4 = function() {
+        
+        var image4 = document.getElementById("image4ID");
+        image4.setAttribute('src', $scope.art4);
+
+    };     
+    
+    
+    $scope.updateImage5 = function() {
+        
+        var image5 = document.getElementById("image5ID");
+        image5.setAttribute('src', $scope.art5);
+    };      
 });

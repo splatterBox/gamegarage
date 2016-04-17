@@ -49,48 +49,18 @@ GameGarage.controller('GarageController', function($scope){
     // Size of page list.
     $scope.gamePageListSize = '';
     // Variables for game content.
-    $scope.gimage1 = '';
-    $scope.gid1 = '';
-    $scope.title1 = '';
-    $scope.price1 = '';
-    //$scope.discount1 = '';
-    $scope.desc1 = '';
     $scope.art1 = '';
     $scope.status1 = '';
     
-    $scope.gimage2 = '';
-    $scope.gid2 = '';
-    $scope.title2 = '';
-    $scope.price2 = '';
-    //$scope.discount2 = '';
-    $scope.desc2 = '';
     $scope.art2 = '';
     $scope.status2 = '';
     
-    $scope.gimage3 = '';
-    $scope.gid3 = '';
-    $scope.title3 = '';
-    $scope.price3 = '';
-    //$scope.discount3 = '';
-    $scope.desc3 = '';
     $scope.art3 = '';
     $scope.status3 = '';
     
-    $scope.gimage4 = '';
-    $scope.gid4 = '';
-    $scope.title4 = '';
-    $scope.price4 = '';
-    //$scope.discount4 = '';
-    $scope.desc4 = '';
     $scope.art4 = '';
     $scope.status4 = '';
     
-    $scope.gimage5 = '';
-    $scope.gid5 = '';
-    $scope.title5 = '';
-    $scope.price5 = '';
-    //$scope.discount5 = '';
-    $scope.desc5 = '';
     $scope.art5 = '';
     $scope.status5 = '';
     // Variable that tracks what game we are at in the game inventory loop.
@@ -107,8 +77,6 @@ GameGarage.controller('GarageController', function($scope){
     $scope.startindex=0;
     // Variable to track page movement request.
     $scope.direction='';
-    // Variable to track number of games on page.
-    //$scope.numberofgames=0;
 
 
     // Variables for checkout functionality.
@@ -123,20 +91,22 @@ GameGarage.controller('GarageController', function($scope){
     $scope.expyear='';
     // Feedback to user for data checking.
     $scope.checkoutstatus='';
-    $scope.ccmessage=''
+    $scope.ccmessage='';
 
     // Variables for game voting.
-    $scope.favorite=''
+    $scope.favorite='';
     $scope.comment='';
     $scope.color='none';
     $scope.votecount=0;
     // Variables for handling sidebar voting/mini-blog data.
-    $scope.sidebarList = [];
+    $scope.sidebarGamesList = [];
+    $scope.sidebarCommentsList = [];
     $scope.dynamicFlag = 0;
-    $scope.colorOne='';
-    $scope.colorTwo='';
-    $scope.colorThree='';
-
+    // $scope.colorOne='';
+    // $scope.colorTwo='';
+    // $scope.colorThree='';
+    // Variable that tracks what object we are in during the sidebar load.
+    $scope.sidebarIndex = 0;
 
 
     // If connect on the socket, run a function.
@@ -897,8 +867,8 @@ GameGarage.controller('GarageController', function($scope){
             }
             else
             {
-                console.log('New create card data is OK.')
-                $scope.checkoutstatus = 'New credit card data is valid.'
+                console.log('New create card data is OK.');
+                $scope.checkoutstatus = 'New credit card data is valid.';
                 return false;
             }
         }   
@@ -910,8 +880,8 @@ GameGarage.controller('GarageController', function($scope){
         }
         else
         {
-            console.log('New create card data is OK.')
-            $scope.checkoutstatus = 'New credit card data is valid.'
+            console.log('New create card data is OK.');
+            $scope.checkoutstatus = 'New credit card data is valid.';
             return false;
         }
 
@@ -958,7 +928,10 @@ GameGarage.controller('GarageController', function($scope){
       // Method that disable/enables the 'Checkout' button
     // based on some BUT not all data checks.
     $scope.actualCheckout = function actualCheckout() {
-        
+
+        // Set the cartcount value, so we can pass the value into checkout2.
+        document.getElementById('cartcountID').value = $scope.cartSize;
+
         if((($scope.ccmessage != '') || ($scope.ccstatus == 'true') || ($scope.ccmessage == 'Successfully added credit card.') || ($scope.ccmessage == 'Successfully updated credit card.')) && ($scope.cartSize != 0))
         {
             //console.log('cartSize is: ', $scope.cartSize);
@@ -973,9 +946,16 @@ GameGarage.controller('GarageController', function($scope){
         console.log('Voting for: ', $scope.favorite);
         console.log('Comment: ', $scope.comment);
         console.log('Text color: ', $scope.color);
-  
+        console.log('Vote count: ', $scope.votecount);
+        
+        // Display the number of votes available.
+        var votestring = 'Number of Votes Remaining: ' + $scope.votecount;
+        var votesremaining = document.getElementById("cartID");
+        votesremaining.innerHTML = votestring;
 
-        if(($scope.favorite == '') || ($scope.comment == '') || ($scope.votecount == 1))
+        // Note: Make comments optional.
+        //if(($scope.favorite == '') || ($scope.comment == '') || ($scope.votecount <= 0))
+        if(($scope.favorite == '') || ($scope.votecount <= 0))
         {
             // Means locked button
             return true;
@@ -989,26 +969,23 @@ GameGarage.controller('GarageController', function($scope){
      // Vote for a game.
     $scope.vote = function vote() {
 
-        if($scope.votecount < 1)
-        {
-            $scope.votecount = $scope.votecount + 1;
+        $scope.votecount = $scope.votecount - 1;
             
-            console.log('Emitting the following voting data:');
-            console.log('username: ', $scope.loggedinusername);
-            console.log('favorite: ', $scope.favorite);
-            console.log('comment: ', $scope.comment);
-            console.log('color: ', $scope.color);
-            // Create a list.
-            var voteList = [];
-            // Add vote data to list.
-            voteList[0] = $scope.loggedinusername;
-            voteList[1] = $scope.favorite;
-            voteList[2] = $scope.comment;
-            voteList[3] = $scope.color;
+        console.log('Emitting the following voting data:');
+        console.log('username: ', $scope.loggedinusername);
+        console.log('favorite: ', $scope.favorite);
+        console.log('comment: ', $scope.comment);
+        console.log('color: ', $scope.color);
+        // Create a list.
+        var voteList = [];
+        // Add vote data to list.
+        voteList[0] = $scope.loggedinusername;
+        voteList[1] = $scope.favorite;
+        voteList[2] = $scope.comment;
+        voteList[3] = $scope.color;
             
-            // Emit the list.
-            socket.emit('voteList', voteList);
-        }
+        // Emit the list.
+        socket.emit('voteList', voteList);
    
     };
 
@@ -1017,156 +994,120 @@ GameGarage.controller('GarageController', function($scope){
     socket.on('sidebarData', function(sidebarData){
         
         //console.log('Inside sidebarData method'); 
+        // Reset lists.
+        $scope.sidebarGamesList.length = 0;
+        $scope.sidebarCommentsList.length = 0;
         
         // Add the data to the local list.
         var index=0;
         for(index=0; index < sidebarData.length; index++) {
             var tempObject = sidebarData[index];
-            //console.log(tempObject);
-            $scope.sidebarList.push(tempObject);
+            
+            if(index < 3){
+                $scope.sidebarGamesList.push(tempObject);
+            }
+            else {
+                $scope.sidebarCommentsList.push(tempObject);
+            }
         }
 
         // TEST the data.
         console.log('\nEmitted Sidebar Data:');
-        //console.log('SidebarList length is: ', $scope.sidebarList.length);
         var index2=0;
-        for(index2=0; index2 < $scope.sidebarList.length; index2++) {
-            if(index2 < 3) {
-                var testObject = $scope.sidebarList[index2];
+        for(index2=0; index2 < $scope.sidebarGamesList.length; index2++) {
+            var testObject = $scope.sidebarGamesList[index2];
                 console.log('Title: ', testObject.title);
                 console.log('Artpath: ', testObject.artpath);
                 console.log('Votes: ', testObject.votes);
-            }
-            else {
-                var testObject2 = $scope.sidebarList[index2];
-                console.log('Username: ', testObject2.username);
-                console.log('Month: ', testObject2.month);
-                console.log('Day: ', testObject2.day);
-                console.log('Comment: ', testObject2.comment);
-                console.log('Color: ', testObject2.color);
-            }
+        }
+        
+        var index3=0;
+        for(index3=0; index3 < $scope.sidebarCommentsList.length; index3++) {
+            var testObject2 = $scope.sidebarCommentsList[index3];
+            console.log('Username: ', testObject2.username);
+            console.log('Month: ', testObject2.month);
+            console.log('Day: ', testObject2.day);
+            console.log('Comment: ', testObject2.comment);
+            console.log('Color: ', testObject2.color);
         }
         
         $scope.dynamicFlag = 1;
-        
-        // Grab the objects.
-        var tempObject1 = $scope.sidebarList[3]; 
-        var tempObject2 = $scope.sidebarList[4];
-        var tempObject3 = $scope.sidebarList[5];
-        // Set the color variables.
-        $scope.colorOne = tempObject1.color;
-        $scope.colorTwo = tempObject2.color;
-        $scope.colorThree = tempObject3.color;
-        
+     
+        // Reset the input variables.
+        $scope.favorite='';
+        $scope.comment='';
+        $scope.color='none';     
         
         // Update the view for that variable.
         $scope.$apply();
     });
 
-
-     // Display dynamic sidebar data for top games.
-    $scope.getSideBarTopGames = function getSideBarTopGames() {
-
-       //console.log('Inside getSideBardata method');
+     $scope.indexInit = function() {
+        
+        // Reset the value.
+        if($scope.sidebarIndex == 3){
+            $scope.sidebarIndex = 0;
+        }
+        
+        $scope.sidebarIndex = $scope.sidebarIndex + 1;
+        
+        console.log('sidebarIndex is now: ', $scope.sidebarIndex);
+        
+        return $scope.sidebarIndex;
+    }; 
     
-        // Top Game #1
-        var tempObject1 = $scope.sidebarList[0];
-        var image1 = document.getElementById("tpgmimageID1");
-        image1.setAttribute('src', tempObject1.artpath);
+    $scope.updatetpgImage1 = function() {
         
-        var title1 = document.getElementById("tpgmtitleID1");
-        title1.innerHTML = tempObject1.title;
-        
-        var tempVotes1 = tempObject1.votes;
-        var votes1String = tempVotes1.toString();
-        var votes1header = "Winning Votes: ";
-        var finalvotes1 = votes1header.concat(votes1String);
-        var votes1 = document.getElementById("tpgmvotesID1");
-        votes1.innerHTML = finalvotes1;
-  
-        // Top Game #2
-        var tempObject2 = $scope.sidebarList[1];
-        var image2 = document.getElementById("tpgmimageID2");
-        image2.setAttribute('src', tempObject2.artpath);
-        
-        var title2 = document.getElementById("tpgmtitleID2");
-        title2.innerHTML = tempObject2.title;
-        
-        var tempVotes2 = tempObject2.votes;
-        var votes2String = tempVotes2.toString();
-        var votes2header = "Winning Votes: ";
-        var finalvotes2 = votes2header.concat(votes2String);
-        var votes2 = document.getElementById("tpgmvotesID2");
-        votes2.innerHTML = finalvotes2;
-  
-        // Top Game #3
-        var tempObject3 = $scope.sidebarList[2];
-        var image3 = document.getElementById("tpgmimageID3");
-        image3.setAttribute('src', tempObject3.artpath);
-        
-        var title3 = document.getElementById("tpgmtitleID3");
-        title3.innerHTML = tempObject3.title;
-        
-        var tempVotes3 = tempObject3.votes;
-        var votes3String = tempVotes3.toString();
-        var votes3header = "Winning Votes: ";
-        var finalvotes3 = votes3header.concat(votes3String);
-        var votes3 = document.getElementById("tpgmvotesID3");
-        votes3.innerHTML = finalvotes3;
-   
+        var localObject = $scope.sidebarGamesList[0];
+        var image1 = document.getElementById("tpgimageID1");
+        image1.setAttribute('src', localObject.artpath);
+
     };  
     
+    $scope.updatetpgImage2 = function() {
+        
+        var localObject = $scope.sidebarGamesList[1];
+        var image2 = document.getElementById("tpgimageID2");
+        image2.setAttribute('src', localObject.artpath);
+
+    }; 
     
-    // Display dynamic sidebar data for top comments.
-    $scope.getSideBarTopComments = function getSideBarTopComments() {
+    $scope.updatetpgImage3 = function() {
+        
+        var localObject = $scope.sidebarGamesList[2];
+        var image3 = document.getElementById("tpgimageID3");
+        image3.setAttribute('src', localObject.artpath);
 
-       //console.log('Inside getSideBardata method');
-       
-        // Grab the objects.
-        var tempObject1 = $scope.sidebarList[3]; 
-        var tempObject2 = $scope.sidebarList[4];
-        var tempObject3 = $scope.sidebarList[5];
+    };     
 
-        
-        // Top Comment #1
-        var month1 = document.getElementById("tpmonthID1");
-        month1.innerHTML = tempObject1.month;
-        
-        var day1 = document.getElementById("tpdayID1");
-        day1.innerHTML = tempObject1.day;
-        
-        var username1 = document.getElementById("tpusrnameID1");
-        username1.innerHTML = tempObject1.username;
-
-        var comment1 = document.getElementById("tpcommentID1");
-        comment1.innerHTML = tempObject1.comment;
-        
-        // Top Comment #2
-        var month2 = document.getElementById("tpmonthID2");
-        month2.innerHTML = tempObject2.month;
-        
-        var day2 = document.getElementById("tpdayID2");
-        day2.innerHTML = tempObject2.day;
-        
-        var username2 = document.getElementById("tpusrnameID2");
-        username2.innerHTML = tempObject2.username;
-
-        var comment2 = document.getElementById("tpcommentID2");
-        comment2.innerHTML = tempObject2.comment;
+    $scope.updatevotes1 = function() {
+        var localObject = $scope.sidebarGamesList[0];
+        var tempVotes = localObject.votes;
+        var stringVotes = tempVotes.toString();
+        var header = "Winning Votes: ";
+        var finalVotes = header.concat(stringVotes);
+        var votes = document.getElementById("tpgmvotesID1");
+        votes.innerHTML = finalVotes;
+    };
   
-        // Top Comment #3
-        var month3 = document.getElementById("tpmonthID3");
-        month3.innerHTML = tempObject3.month;
-        
-        var day3 = document.getElementById("tpdayID3");
-        day3.innerHTML = tempObject3.day;
-        
-        var username3 = document.getElementById("tpusrnameID3");
-        username3.innerHTML = tempObject3.username;
-
-        var comment3 = document.getElementById("tpcommentID3");
-        comment3.innerHTML = tempObject3.comment;
-
+    $scope.updatevotes2 = function() {
+        var localObject = $scope.sidebarGamesList[1];
+        var tempVotes = localObject.votes;
+        var stringVotes = tempVotes.toString();
+        var header = "Winning Votes: ";
+        var finalVotes = header.concat(stringVotes);
+        var votes = document.getElementById("tpgmvotesID2");
+        votes.innerHTML = finalVotes;
+    }; 
+  
+    $scope.updatevotes3 = function() {
+        var localObject = $scope.sidebarGamesList[2];
+        var tempVotes = localObject.votes;
+        var stringVotes = tempVotes.toString();
+        var header = "Winning Votes: ";
+        var finalVotes = header.concat(stringVotes);
+        var votes = document.getElementById("tpgmvotesID3");
+        votes.innerHTML = finalVotes;
     }; 
     
     $scope.countInit = function() {
@@ -1179,6 +1120,7 @@ GameGarage.controller('GarageController', function($scope){
         
         return $scope.ngIndex;
     };
+ 
    
     $scope.updateImage1 = function() {
         
@@ -1208,10 +1150,13 @@ GameGarage.controller('GarageController', function($scope){
 
     };     
     
-    
     $scope.updateImage5 = function() {
         
         var image5 = document.getElementById("image5ID");
         image5.setAttribute('src', $scope.art5);
-    };      
+    }; 
+
+
+    
+
 });

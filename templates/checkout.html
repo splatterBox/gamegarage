@@ -116,9 +116,10 @@
               {% if ccstatus == 'true' %}
                 <div ng-if="cartSize > 0">
                   <form method="post" action="/checkout2">
-                   <p align="middle">
-                     <input type="submit" value="checkout" name="checkout"  ng-disabled="actualCheckout()"/>
-                  </p>
+                    <input type="number" name="cartcount" id="cartcountID" value="0" readonly="readonly" hidden>
+                    <p align="middle">
+                       <input type="submit" value="checkout" name="checkout"  ng-disabled="actualCheckout()"/>
+                    </p>
                   </form>
                 </div>
               {% endif %}
@@ -183,6 +184,7 @@
                <form method="post" action="/checkout2">
                  <p>
                      </br>
+                    <input type="number" name="cartcount" id="cartcountID" value="0" readonly="readonly" hidden>
                     <input type="submit" value="checkout" name="checkout" ng-disabled="actualCheckout()"/>
                 </p>
               </form>               

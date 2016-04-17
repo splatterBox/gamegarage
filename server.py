@@ -991,6 +991,10 @@ def Check_Complete():
             
             print('TEST: Inside checkout2 POST')
             
+            # Grab the cartcount and print it.
+            localCartCount = request.form['cartcount']
+            print 'localCartCartCount: %s' % localCartCount
+            
             if 'userName' in session:
                 localName=session['userName']
                 avatarValue=session['avatarpath']
@@ -1051,7 +1055,7 @@ def Check_Complete():
             conn.commit()
 
             originalname = [localName]
-            return render_template('checkout2.html', originalUser=originalname, sessionUser = name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'checkout')   
+            return render_template('checkout2.html', originalUser=originalname, sessionUser = name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'checkout', cartcount = localCartCount)   
 
 
 @socketio.on('deletecart', namespace='/gg')
@@ -1419,18 +1423,20 @@ def vote(voteList):
                     conn.rollback()
                 conn.commit()
                 
-                # Add the comment data to the database.
-                try:
-                    print(cur.mogrify("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
-                    (localUserID, actualmonth, actualday, actualyear, color, comment)))
-                    
-                    cur.execute("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
-                    (localUserID, actualmonth, actualday, actualyear, color, comment))
-    
-                except:
-                    print("Error inserting new comment into comments table.")
-                    conn.rollback()
-                conn.commit()           
+                # Note: Comments are now optional.
+                if comment != '':
+                    # Add the comment data to the database.
+                    try:
+                        print(cur.mogrify("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
+                        (localUserID, actualmonth, actualday, actualyear, color, comment)))
+                        
+                        cur.execute("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
+                        (localUserID, actualmonth, actualday, actualyear, color, comment))
+        
+                    except:
+                        print("Error inserting new comment into comments table.")
+                        conn.rollback()
+                    conn.commit()           
 
                 # Now get the (1) updated votes and (2) updated blog comments and send them over to the js controller.
     

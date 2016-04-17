@@ -302,45 +302,50 @@
             
             </div>
             
-            <div ng-if="dynamicFlag == 1">
-
-              <div ng-controller="getSideBarTopGames">
+            <div ng-if="dynamicFlag == 1" ng-repeat="x in sidebarGamesList" ng-init="number = indexInit()">
                 
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image"> <a href="#"><img id="tpgmimageID1" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpgmtitleID1"></a></h4>
-                    </br>
+              <div class="article">
+                <!--<div class="c1">&nbsp;</div>-->
+                
+                <div class="image" ng-if="number == 1">
+                  <a href="#"><img id="tpgimageID1" src="" /></a>
+                  <p hidden ng-init="updatetpgImage1()"></p>
+                </div>
+                
+                <div class="image" ng-if="number == 2">
+                  <a href="#"><img id="tpgimageID2" src="" /></a>
+                  <p hidden ng-init="updatetpgImage2()"></p>
+                </div>
+                
+                <div class="image" ng-if="number == 3">
+                  <a href="#"><img id="tpgimageID3" src="" /></a>
+                  <p hidden ng-init="updatetpgImage3()"></p>
+                </div>
+                
+                <div class="cnt">
+                  <h4 ng-bind="x.title"><a href="#!"></a></h4>
+                  </br>
+                  
+                  <div ng-if="number == 1">
                     <h3 id="tpgmvotesID1"></h3>
-                </div>
-                <div class="cl">&nbsp;</div>
-                </div>
-                
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image"> <a href="#"><img id="tpgmimageID2" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpgmtitleID2"></a></h4>
-                    </br>
+                    <p hidden ng-init="updatevotes1()"></p>
+                  </div>
+                  
+                  <div ng-if="number == 2">
                     <h3 id="tpgmvotesID2"></h3>
-                </div>
-                <div class="cl">&nbsp;</div>
-                </div>   
-                
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image"> <a href="#"><img id="tpgmimageID3" src="css/images/img3.gif" alt="css/images/img3.gif" /></a> </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpgmtitleID3"></a></h4>
-                    </br>
+                    <p hidden ng-init="updatevotes2()"></p>
+                  </div>                  
+
+                  <div ng-if="number == 3">
                     <h3 id="tpgmvotesID3"></h3>
+                    <p hidden ng-init="updatevotes3()"></p>
+                  </div>
                 </div>
+                
                 <div class="cl">&nbsp;</div>
-                </div>          
                 
               </div>
-              
+      
             </div>
             
             <p class="view-all" style="font-size:0px">&nbsp;</p>
@@ -420,50 +425,27 @@
             
             </div>
             
-            <div ng-if="dynamicFlag == 1">
-              <div ng-controller="getSideBarTopComments">
+            <div ng-if="dynamicFlag == 1" ng-repeat="y in sidebarCommentsList">           
             
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image">
-                    <div class="blog"><h2 id="tpmonthID1"></h2><h3 id="tpdayID1"></h3></div>
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+               
+                <div class="image">
+                  <div class="blog">
+                    <h2 ng-bind="y.month"></h2>
+                    <h3 ng-bind="y.day"></h3>
                   </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpusrnameID1"></a></h4>
-                    </br>
-                    <h3 ng-style="{'color':colorOne}" id="tpcommentID1"></h3>
-                  </div>
-                 <div class="cl">&nbsp;</div>
-                </div>    
-    
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image">
-                    <div class="blog"><h2 id="tpmonthID2"></h2><h3 id="tpdayID2"></h3></div>
-                  </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpusrnameID2"></a></h4>
-                    </br>
-                    <h3 ng-style="{'color':colorTwo}" id="tpcommentID2"></h3>
-                  </div>
-                 <div class="cl">&nbsp;</div>
-                </div>    
-    
-                <div class="article">
-                  <div class="cl">&nbsp;</div>
-                  <div class="image">
-                    <div class="blog"><h2 id="tpmonthID3"></h2><h3 id="tpdayID3"></h3></div>
-                  </div>
-                  <div class="cnt">
-                    <h4><a href="#!" id="tpusrnameID3"></a></h4>
-                    </br>
-                    <h3 ng-style="{'color':colorThree}" id="tpcommentID3"></h3>
-                  </div>
-                 <div class="cl">&nbsp;</div>
-                </div>    
-    
+                </div> 
+                <div class="cnt">
+                  <h4><a href="#!" ng-bind="y.username"></a></h4>
+                  </br>
+                   <h3 ng-style="{'color':y.color}" ng-bind="y.comment"></h3>
+                </div>
+                <div class="cl">&nbsp;</div>
               </div>
+
             </div>
+    
  
             <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>

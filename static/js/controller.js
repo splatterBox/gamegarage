@@ -788,6 +788,12 @@ GameGarage.controller('GarageController', function($scope){
          });
     });
     
+    $(document).ready(function(){
+        $("#deletegamesBtn").click(function(){
+            $("#delModal").modal();
+         });
+    });
+    
     // Method to delete all games in the logged in user's cart
     // (that are flagged as in the cart (NOT purchased))
     $scope.deletegames = function deletegames(){

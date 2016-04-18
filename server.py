@@ -29,42 +29,139 @@ def connectToDB():
     except:
         print("Can't connect to database")
 
+# Global flag for game sale price reset.
+resetFlag=0
+
+#@app.before_first_request
+# Runs before EACH request.
+@app.before_request
+def resetgamesonsale():
+    
+    # Change the time zone to Eastern Standard Time.
+    os.environ['TZ'] = 'US/Eastern'
+    time.tzset()
+    
+    day = time.strftime('%A')
+    print 'DAY: %s' % day
+
+    global resetFlag
+    # If today is NOT reset day, reset the global to zero.
+    # if day != 'Saturday'
+    if day != 'Sunday':
+        resetFlag == 0
+        print('Sorry, today is not reset day.')
+
+        # If today is reset day, only run reset once.  
+        # elif day == 'Saturday':
+    elif day == 'Sunday':      
+        
+        localFlag = resetFlag
+        
+        if localFlag == 0:
+            print 'resetFlag is: %s' % resetFlag
+            print 'Today is %s.  You are executing the reset method.' % day
+            
+            # If today is Sunday:
+            # 1. Reset all games to retail price.
+            # 2. Grab the top 3 voted games.
+            # 3. Set the top 3 voted games on discount.
+            # 4. Reset the top 3 games voted for discount, by setting 1 vote to all games.
+    
+            # Connect to the database.
+            conn = connectToDB()
+            # Create a database cursor object (dictionary style).
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+            # 1. Reset all games to retail price.
+            try:
+              print(cur.mogrify("UPDATE games SET onsale = %s;", (False,)))
+              cur.execute("UPDATE games SET onsale = %s;", (False,))
+            except:
+                print('Could not wipe all games of discount price flag.')
+                conn.rollback()
+            conn.commit()
+    
+             #  2. Get top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()    
+    
+            # 3. Set the top 3 voted games on discount.
+    
+            for game in votedgames:
+                tempName = game.get('title')
+                print 'Game name: %s' % tempName
+    
+                try:
+                    print(cur.mogrify("UPDATE games SET onsale = %s WHERE title = %s;", (True, tempName)))
+                    cur.execute("UPDATE games SET onsale = %s WHERE title = %s;", (True, tempName))
+                except:
+                    print('Could not set game to discount price.')
+                    conn.rollback()
+                conn.commit()
+                
+            # 4. Reset the top 3 games voted for discount, by setting 1 vote to all games.
+             
+            try:
+                print(cur.mogrify("UPDATE gamedetails SET votes = %s;", (1,)))
+                cur.execute("UPDATE gamedetails SET votes = %s;", (1,))
+            except:
+                print('Could not reset all game votes.')
+                conn.rollback()
+            conn.commit()
+            
+            resetFlag = 1
+            print 'resetFlag is now: %s' % resetFlag
+
+        else:
+            print 'resetFlag is: %s' % resetFlag
 
 # Decorator.  When a socket connect event happens, do this.
 @socketio.on('connect', namespace='/gg')
 def makeConnection():
     # Print debug message.
     print('connected')
+    
 
-
-
+        
+         
+ 
 # A python decorator.  Whenever route('/') run the layout/index webpage.
 @app.route('/')
 def mainIndex():
+    
+    print 'in hello world'
     
     # Connect to the database.
     conn = connectToDB()
     # Create a database cursor object (dictionary style).
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
- 
-    #Find out from the database if the username is already taken.
+    
+    # Get top 3 voted games.
     try:
-        cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+        print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+        cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+
     except:
-        print("Error executing SELECT for username lookup.")
-    games=cur.fetchall()
-        
-    # test
-    """
-    for entry in games:
-        temptitle = entry.get('title')
-        tempdesc = entry.get('gdesc')
-        print "Title: %s" % temptitle
-        print "Description: %s" % tempdesc
-        print "\n"
-    """
-            
-    print 'in hello world'
+        print('Could not SELECT top 3 voted games.')
+    votedgames = cur.fetchall()
+    
+    # TEST
+    # print('Printing top 3 voted games.')
+    # for game in votedgames:
+    #     print(game)
+    
+    # Get top 3 user blog data.
+    try:
+        print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+        cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+    except:
+        print('Could not SELECT top 3 comments.')
+    topcomments = cur.fetchall() 
+ 
     
     if 'userName' in session:
         tempName=session['userName']
@@ -78,13 +175,33 @@ def mainIndex():
         avatarValue = ''
         print "(Root) No one is logged in."
     name = [newName]    
-    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
-    #return render_template('index-backup.html', sessionUser=name)
-    #return app.send_static_file('index-backup.html')
+    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, votedgames = votedgames, topcomments=topcomments, selected = 'home')
+
 
 # A python decorator.  Whenever '/allgames' run the 'displaygames' webpage.
 @app.route('/allgames')
 def displayAllGames():
+
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    try:
+        print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+        cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+
+    except:
+        print('Could not SELECT top 3 voted games.')
+    votedgames = cur.fetchall()
+    
+    # Get top 3 user blog data.
+    try:
+        print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+        cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+    except:
+        print('Could not SELECT top 3 comments.')
+    topcomments = cur.fetchall() 
     
     if 'userName' in session:
         tempName=session['userName']
@@ -106,9 +223,8 @@ def displayAllGames():
     # Search for all games.
     searchtype = 'all'
     
-    return render_template('displaygames.html', originalUser=originalname, avatarValue=avatarValue, sessionUser=name, games=searchtype, selected = 'allgames')
-    #return render_template('index-backup.html', sessionUser=name)
-    #return app.send_static_file('index-backup.html')
+    return render_template('displaygames.html', originalUser=originalname, avatarValue=avatarValue, votedgames = votedgames, topcomments=topcomments, sessionUser=name, games=searchtype, selected = 'allgames')
+
 
 # Decorator.  When a game search request happens, do this.
 @socketio.on('searchtype', namespace='/gg')
@@ -128,7 +244,7 @@ def findGames(searchtype):
         
         # Get data for all games.
         try:
-            cur.execute("SELECT * FROM games NATURAL JOIN gamedetails;")
+            cur.execute("SELECT * FROM games NATURAL JOIN gamedetails ORDER BY gid;")
             #cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
         except:
             print("Error executing SELECT for all games lookup.")
@@ -278,6 +394,27 @@ def addtocart(cartdata):
 @app.route('/register')
 def registerPage():
 
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    try:
+        print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+        cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+
+    except:
+        print('Could not SELECT top 3 voted games.')
+    votedgames = cur.fetchall()
+    
+    # Get top 3 user blog data.
+    try:
+        print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+        cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+    except:
+        print('Could not SELECT top 3 comments.')
+    topcomments = cur.fetchall() 
+    
     if 'userName' in session:
         tempName=session['userName']
         avatarValue = session['avatarpath']
@@ -290,7 +427,7 @@ def registerPage():
         print "(Register) No one is logged in."
     
     name = [newName]
-    return render_template('register.html', sessionUser=name, avatarValue=avatarValue, selected = 'register')
+    return render_template('register.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'register')
     #return app.send_static_file('index.html')
 
 # Decorator.  When a socket registration event happens, do this.
@@ -378,14 +515,27 @@ def loginEvaluate():
         # Create a database cursor object (dictionary style).
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-        #Find out from the database if the username is already taken.
-        
-        # **************Getting games for  front page here.  Will remove when frontpage is restored/replaced **************
+        # Get top 3 voted games.
         try:
-            cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+            print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+            cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+    
         except:
-            print("Error executing SELECT for username lookup.")
-        games=cur.fetchall()
+            print('Could not SELECT top 3 voted games.')
+        votedgames = cur.fetchall()
+        
+        # TEST
+        # print('Printing top 3 voted games.')
+        # for game in votedgames:
+        #     print(game)
+        
+        # Get top 3 user blog data.
+        try:
+            print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+            cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+        except:
+            print('Could not SELECT top 3 comments.')
+        topcomments = cur.fetchall() 
     
         # Grab the credentials.
         localName = request.form['username']
@@ -422,57 +572,80 @@ def loginEvaluate():
                     session['userName'] = localName
                     session['userPassword'] = localPass
                     session['avatarpath'] = avatarValue
+
                     # Capitalize the name for HTML print.
                     newName = localName.capitalize()
                     name = [newName]
-                    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
+                    return render_template('index.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'home')
             
                 elif count == 0:
                     # For anyone already logged in on this machine, log them out.
                     if 'userName' in session:
                         del session['userName']
                         del session['userPassword']
+                        del session['avatarpath']
+
                     print("Failed to log in.")
                     #emit('loggedinStatus', failed)
                     name = ['']
                     avatarValue=''
-                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
+                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'home')
             else:
                 # For anyone already logged in on this machine, log them out.
                 if 'userName' in session:
                     del session['userName']
                     del session['userPassword']
+                    del session['avatarpath']
+
                 name = ['']
                 avatarValue=''
-                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
+                return render_template('index.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'home')
         else:
             # For anyone already logged in on this machine, log them out.
             if 'userName' in session:
                 del session['userName']
                 del session['userPassword']
+                del session['avatarpath']
+
             name = ['']
             avatarValue=''
-            return render_template('index.html', sessionUser=name, avatarValue=avatarValue, games=games, selected = 'home')
+            return render_template('index.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'home')
 
-# A python decorator.  Login.
+# A python decorator.  Logout.
 @app.route('/logout', methods=['GET', 'POST'])
 def logoutEvaluate():
     # Connect to the database.
     conn = connectToDB()
     # Create a database cursor object (dictionary style).
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # Get top 3 voted games.
     try:
-        cur.execute("SELECT games.title, gamedetails.gdesc FROM games NATURAL JOIN gamedetails;")
+        print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+        cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+
     except:
-        print("Error executing SELECT for username lookup.")
-    games=cur.fetchall()
+        print('Could not SELECT top 3 voted games.')
+    votedgames = cur.fetchall()
+ 
+    # Get top 3 user blog data.
+    try:
+        print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+        cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+    except:
+        print('Could not SELECT top 3 comments.')
+    topcomments = cur.fetchall()   
+    
+    
     
     # For anyone already logged in on this machine, log them out.
     if 'userName' in session:
         del session['userName']
         del session['userPassword']
+        del session['avatarpath']
+
         name = ['']
-        return render_template('index.html', sessionUser=name, games=games, selected = 'home')
+        return render_template('index.html', sessionUser=name, votedgames=votedgames, topcomments=topcomments, selected = 'home')
 
 
 # A python decorator for a logged in user to purchase games in their shopping cart.
@@ -497,6 +670,23 @@ def Checkout():
         # Create a database cursor object (dictionary style).
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+        # Grab the top 3 voted games.
+        try:
+            print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+            cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+    
+        except:
+            print('Could not SELECT top 3 voted games.')
+        votedgames = cur.fetchall()    
+   
+        # Get top 3 user blog data.
+        try:
+            print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+            cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+        except:
+            print('Could not SELECT top 3 comments.')
+        topcomments = cur.fetchall()  
+
         # Get the logged in user's userid.
         try:
             cur.execute("SELECT userid FROM users WHERE username = %s;", (localName,))
@@ -672,7 +862,7 @@ def Checkout():
 
         print 'cartSize is: %s' % cartSize
         
-        return render_template('checkout.html', cartSize=cartSize, cart=gamesList, avatarValue=avatarValue, price=finalprice, ccstatus=ccstatus, ccmessage=ccmessage, currentmonth = digitMonth, currentyear = fullYear, sessionUser=name, selected='checkout')
+        return render_template('checkout.html', cartSize=cartSize, cart=gamesList, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, price=finalprice, ccstatus=ccstatus, ccmessage=ccmessage, currentmonth = digitMonth, currentyear = fullYear, sessionUser=name, selected='checkout')
 
 # Decorator.  When a socket credit card update event happens, do this.
 @socketio.on('updatecc', namespace='/gg')
@@ -801,6 +991,10 @@ def Check_Complete():
             
             print('TEST: Inside checkout2 POST')
             
+            # Grab the cartcount and print it.
+            localCartCount = request.form['cartcount']
+            print 'localCartCartCount: %s' % localCartCount
+            
             if 'userName' in session:
                 localName=session['userName']
                 avatarValue=session['avatarpath']
@@ -813,6 +1007,23 @@ def Check_Complete():
             conn = connectToDB()
             # Create a database cursor object (dictionary style).
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+          
+            # Grab the top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+        
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()          
+          
+            # Get top 3 user blog data.
+            try:
+                print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+            except:
+                print('Could not SELECT top 3 comments.')
+            topcomments = cur.fetchall()        
             
             # Get the logged in user's userid.
             try:
@@ -843,7 +1054,9 @@ def Check_Complete():
                 conn.rollback()
             conn.commit()
 
-            return render_template('checkout2.html', sessionUser = name, avatarValue=avatarValue, selected = 'checkout')   
+            originalname = [localName]
+            return render_template('checkout2.html', originalUser=originalname, sessionUser = name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'checkout', cartcount = localCartCount)   
+
 
 @socketio.on('deletecart', namespace='/gg')
 def deletecart(name):
@@ -894,6 +1107,22 @@ def changeInfo():
     conn = connectToDB()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
+    # Grab the top 3 voted games.
+    try:
+        print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+        cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+    except:
+        print('Could not SELECT top 3 voted games.')
+    votedgames = cur.fetchall()
+    
+    # Get top 3 user blog data.
+    try:
+        print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+        cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+    except:
+        print('Could not SELECT top 3 comments.')
+    topcomments = cur.fetchall() 
+    
     if 'userName' in session:
         tempName=session['userName']
         # Capitalize the name for HTML print.
@@ -918,7 +1147,7 @@ def changeInfo():
         conn.rollback()
     conn.commit()
     results = cur.fetchall()
-    return render_template('changeInfo.html', sessionUser=name, info=results, avatarValue=avatarValue, selected = 'changeinfo')
+    return render_template('changeInfo.html', sessionUser=name, info=results, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'changeinfo')
     #return app.send_static_file('index.html')
 
 @app.route('/updateinformation', methods=['GET', 'POST'])
@@ -930,6 +1159,23 @@ def updateinformation():
             conn = connectToDB()
             # Create a database cursor object (dictionary style).
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+            # Grab the top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+        
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()
+    
+            # Get top 3 user blog data.
+            try:
+                print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+            except:
+                print('Could not SELECT top 3 comments.')
+            topcomments = cur.fetchall() 
     
             try:
                 newusername = request.form['username']
@@ -968,7 +1214,7 @@ def updateinformation():
     tempName=session['userName']
     newName = tempName.capitalize()
     name = [newName]
-    return render_template('updateinformation.html', sessionUser=name, avatarValue=avatarValue, selected = 'updateinformation')
+    return render_template('updateinformation.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'updateinformation')
     #return app.send_static_file('index.html')
     
 @app.route('/updatecreditcard', methods=['GET', 'POST'])
@@ -981,6 +1227,25 @@ def updatecreditcard():
             conn = connectToDB()
             # Create a database cursor object (dictionary style).
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            
+            # Grab the top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+        
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()
+            
+            # Get top 3 user blog data.
+            try:
+                print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+            except:
+                print('Could not SELECT top 3 comments.')
+            topcomments = cur.fetchall()             
+            
+            
             cur2 = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
             try:
                 print(cur.mogrify(("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")))
@@ -998,7 +1263,7 @@ def updatecreditcard():
     tempName=session['userName']
     newName = tempName.capitalize()
     name = [newName]
-    return render_template('updatecreditcard.html', cart=cart, price = price, avatarValue=avatarValue, sessionUser = name, selected = 'updatecreditcard')
+    return render_template('updatecreditcard.html', cart=cart, price = price, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, sessionUser = name, selected = 'updatecreditcard')
             
 @app.route('/updateavatar', methods=['GET', 'POST'])
 def updateavatar():
@@ -1007,6 +1272,24 @@ def updateavatar():
             conn = connectToDB()
             # Create a database cursor object (dictionary style).
             cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            
+            # Grab the top 3 voted games.
+            try:
+                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+        
+            except:
+                print('Could not SELECT top 3 voted games.')
+            votedgames = cur.fetchall()
+            
+            # Get top 3 user blog data.
+            try:
+                print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+            except:
+                print('Could not SELECT top 3 comments.')
+            topcomments = cur.fetchall() 
+            
             tempName=session['userName']
             try:
                 newavatar = request.form['avatar']
@@ -1025,7 +1308,178 @@ def updateavatar():
     tempName=session['userName']
     newName = tempName.capitalize()
     name = [newName]
-    return render_template('updateavatar.html', avatarValue=avatarValue, sessionUser = name, selected = 'updateavatar')
+    return render_template('updateavatar.html', avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, sessionUser = name, selected = 'updateavatar')
+
+
+# Update the database vote count and post the user's comment to the mini-blog.
+@socketio.on('voteList', namespace='/gg')
+def vote(voteList):
+    user = voteList[0];
+    favorite = voteList[1];
+    comment = voteList[2];
+    color = voteList[3];
+
+    print('Received voting data:')
+    print 'user: %s' % user
+    print 'favorite: %s' % favorite
+    print 'comment: %s' % comment
+    print 'color: %s' % color
+    
+    # Change the time zone to Eastern Standard Time.
+    os.environ['TZ'] = 'US/Eastern'
+    time.tzset()
+
+    # Grab the numerical day of the week.
+    day = time.strftime('%e')
+    actualday = int(day)
+    # Grab the abbreviated month.
+    actualmonth = time.strftime('%b')
+    # Grab the year.
+    year = time.strftime('%Y')
+    actualyear = int(year)
+    
+    # TEST
+    print 'Day of the week: %s' % actualday
+    print 'Abbreviated Month: %s' % actualmonth
+    print 'Year: %s' % actualyear
+    
+
+    
+    # Connect to the database.
+    conn = connectToDB()
+    # Create a database cursor object (dictionary style).
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # Get the logged in user's userid.
+    try:
+        cur.execute("SELECT userid FROM users WHERE username = %s;", (user,))
+    except:
+        print("Error executing SELECT for username lookup.")
+    usans=cur.fetchall()
+           
+    # Find out if the result set is empty.
+    countu=0
+    for row in usans:
+        countu = countu + 1
+            
+    if countu == 0:
+        print('Username does not exist.')
+
+    if countu == 1:
+        # Get the userid.
+        for entry in usans:
+            localUserID = entry.get('userid')
+            print 'Userid is: %s' % localUserID    
+    
+        # Get the game id.
+        try:
+            print(cur.mogrify("SELECT gid FROM games WHERE title = %s;", (favorite,)))
+            cur.execute("SELECT gid FROM games WHERE title = %s;", (favorite,))
+        except:   
+            print('Could not SELECT game id.')
+        answer = cur.fetchall()
+    
+        # Find out if the result set is empty.
+        count=0
+        for row in answer:
+            count = count + 1
+        
+        if count == 0:
+            print 'Game ID does not exist.'
+        elif count == 1:
+            for row in answer:
+                localgid = row.get('gid')
+                print localgid
+        
+            # Find out the vote count for this game.
+            try:
+                print(cur.mogrify("SELECT votes FROM gamedetails WHERE gid = %s;", (localgid,)))
+                cur.execute("SELECT votes FROM gamedetails WHERE gid = %s;", (localgid,)) 
+            except:
+                print('Could not SELECT votes.')
+            answertwo = cur.fetchall()
+            
+            # Find out if the result set is empty.
+            counttwo = 0
+            for entry in answertwo:
+                counttwo = counttwo + 1
+                
+            if counttwo == 0:
+                print 'Game votes does not exist.'
+            elif counttwo == 1:
+                for entrytwo in answertwo:
+                    votes = entrytwo.get('votes')
+                    print votes
+                
+                # Increment votes
+                votes = votes + 1
+                print 'Votes is now: %s' % votes
+                # Update the database.
+                try:
+                    print(cur.mogrify("UPDATE gamedetails SET votes = %s WHERE gid = %s;", (votes, localgid)))
+                    cur.execute("UPDATE gamedetails SET votes = %s WHERE gid = %s;", (votes, localgid))
+                except:
+                    print("Error executing UPDATE for votes.")
+                    conn.rollback()
+                conn.commit()
+                
+                # Note: Comments are now optional.
+                if comment != '':
+                    # Add the comment data to the database.
+                    try:
+                        print(cur.mogrify("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
+                        (localUserID, actualmonth, actualday, actualyear, color, comment)))
+                        
+                        cur.execute("INSERT INTO comments (userid, month, day, year, color, comment) VALUES (%s, %s, %s, %s, %s, %s);", 
+                        (localUserID, actualmonth, actualday, actualyear, color, comment))
+        
+                    except:
+                        print("Error inserting new comment into comments table.")
+                        conn.rollback()
+                    conn.commit()           
+
+                # Now get the (1) updated votes and (2) updated blog comments and send them over to the js controller.
+    
+                # Get top 3 voted games.
+                try:
+                    print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+                    cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+            
+                except:
+                    print('Could not SELECT top 3 voted games.')
+                votedgames = cur.fetchall()
+                
+                # TEST
+                # print('Printing top 3 voted games.')
+                # for game in votedgames:
+                #     print(game)
+                
+                # Get top 3 user blog data.
+                try:
+                    print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+                    cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+                except:
+                    print('Could not SELECT top 3 comments.')
+                topcomments = cur.fetchall() 
+    
+                sidebarData = []
+                
+                # Add the data to the list as a dictionary.
+                for abc in votedgames:
+                    game = {'title': abc.get('title'), 'artpath': abc.get('artpath'), 'votes': abc.get('votes')}
+                    sidebarData.append(game)
+                for cba in topcomments:
+                    comment = {'username': cba.get('username'), 'month': cba.get('month'), 'day': cba.get('day'), 'comment': cba.get('comment'), 'color': cba.get('color')} 
+                    sidebarData.append(comment)
+                
+                # TEST
+                print('Sidebar Data:')
+                for xyz in sidebarData:
+                    print(xyz)
+                    
+                # Send the data over to controller.js.
+                emit('sidebarData', sidebarData)
+
 
 
 
@@ -1035,4 +1489,8 @@ if __name__ == '__main__':
     # Use the PORT address.  If not present, use 8080.
     #app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
     socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port =int(os.getenv('PORT', 8080)), debug=True)
+    
+    
+    
+    
     

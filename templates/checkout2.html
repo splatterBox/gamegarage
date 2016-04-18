@@ -19,13 +19,11 @@
               &nbsp;<br />
               &nbsp;<br />
 
-
-
-
-
-
-
-
+              <!-- If user is logged in, add their name to the js controller for userid lookup. //-->
+              {% if sessionUser[0] != '' %}
+                <p hidden type="text" ng-model="loggedinusername" ng-init="loggedinusername='{{originalUser[0]}}'"></p>
+                <p hidden type="text" ng-model="votecount" ng-init="votecount='{{cartcount}}'"></p>
+              {% endif %}
 
               <div align="middle">
                 <h3>
@@ -33,6 +31,7 @@
           	       <br><br><br>
                   <a href="download.txt" download="_blank">Download Game(s)</a>
                 </h3>
+                </br>
               </div>
 
               
@@ -43,7 +42,83 @@
 
             <div class="article last-article">
               <div class="cl">&nbsp;</div>
+                </br>
+                <h2 align="middle">Before You Go:</h2>
+                </br>
+                <h2 align="middle">Vote For A Game To Go On Sale Next Week!</h2>
+                </br>
+                <h2 id="cartID" align="middle"></h2>
+                </br>
+                
+                <div class="float_center">
+                  </br>
+                <form ng-submit="vote()">
+                  
+                  <table>
+                    
+                    <tr><td>Game Selection</td>
+                    <td><select name="favorite" ng-model="favorite" id="favorite">
+                      <option value="" selected="selected" disabled="disabled">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Select Game</option>
+                      <option>Analogue: A Hate Story</option>
+                      <option>Antichamber</option>
+                      <option>Bastion</option>
+                      <option>Cave Story</option>
+                      <option>FEAR2</option>
+                      <option>Hotline Miami</option>
+                      <option>Juniper's Knot</option>
+                      <option>LIMBO</option>
+                      <option>Long Live the Queen</option>
+                      <option>Portal</option>
+                      <option>Space Pirates and Zombies (S.P.A.Z.)</option>
+                      <option>Superbrothers: Sword & Sworcery EP</option>
+                      <option>Thomas Was Alone</option>
+                      <option>Touhou Gensoukyou ~ Lotus Land Story</option>
+                      <option>Transistor</option>
+                      <option>140</option>
+                    </select></td>
+                    </tr>
+                    <tr><td></br></td></tr>
+                    <tr><td>Comment For All To See&nbsp;&nbsp;</td><td><input type="text" ng-model="comment" id="comment" name="newcomment" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Optional Comment" size="30" maxlength="55" pattern=".{0,55}" title="up to 55 characters"/></td></tr>
+              
+                    <tr><td></br>Select Text Color:</td></tr>
+                  </table>
+                  </br>
+                  <table width=350 height=50 align=center>
+                    <tr>
+                      <td><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>
+                      <td><input type="radio" ng-model="color" name="color" value="yellow">
+                      yellow </td>
+                      <td><input type="radio" ng-model="color" name="color" value="red"> 
+                      red </td>
+                      <td><input type="radio" ng-model="color" name="color" value="limegreen">
+                      limegreen </td>
+                      <td><input type="radio" ng-model="color" name="color" value="blue">
+                      blue </td>
+                    </tr>
+                    <tr>
+                      <td><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>
+                      <td><input type="radio" ng-model="color" name="color" value="peachpuff">
+                      peachpuff </td>
+                      <td><input type="radio" ng-model="color" name="color" value="orange">
+                      orange </td>
+                      <td><input type="radio" ng-model="color" name="color" value="darkviolet">
+                      darkviolet </td>
+                      <td><input type="radio" ng-model="color" name="color" value="none" checked="checked">
+                      gray </td>
+                    </tr>
+                  </table>
+                 
+                
+                <tr><td></br></td></tr>
+                  <p><input type="submit" value="&nbsp;&nbsp;Vote&nbsp;&nbsp;" style="margin-left: 158px;" ng-disabled="disabledVote()"/></p>
+                </form> 
+                </div>
+                  
+                  
+                  
+                  
               <p>
+
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
@@ -116,6 +191,7 @@
             </div>
             <div class="cl">&nbsp;</div>
           </div>
+
         </div>
       </div>
       <!-- / Editor's Pick -->

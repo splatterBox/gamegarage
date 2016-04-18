@@ -47,19 +47,19 @@
   <div id="header">
     
     <!-- Top Navigation -->
-    <div id="top-nav">
-      <ul>
-        <li class="home"><a href="/">home</a></li>
-        <li><a href="#">pc</a></li>
-        <li><a href="#">xbox</a></li>
-        <li><a href="#">360</a></li>
-        <li><a href="#">wii</a></li>
-        <li><a href="#">ps3</a></li>
-        <li><a href="#">ps2</a></li>
-        <li><a href="#">psp</a></li>
-        <li class="last"><a href="#">ds</a></li>
-      </ul>
-    </div>
+    <!--<div id="top-nav">-->
+    <!--  <ul>-->
+    <!--    <li class="home"><a href="/">home</a></li>-->
+    <!--    <li><a href="#">pc</a></li>-->
+    <!--    <li><a href="#">xbox</a></li>-->
+    <!--    <li><a href="#">360</a></li>-->
+    <!--    <li><a href="#">wii</a></li>-->
+    <!--    <li><a href="#">ps3</a></li>-->
+    <!--    <li><a href="#">ps2</a></li>-->
+    <!--    <li><a href="#">psp</a></li>-->
+    <!--    <li class="last"><a href="#">ds</a></li>-->
+    <!--  </ul>-->
+    <!--</div>-->
     <!-- / Top Navigation -->
     
     <div class="cl">&nbsp;</div>
@@ -268,90 +268,186 @@
       
       
       
-       <!-- Top Games Sidebar -->
+       <!-- Top Game Votes Sidebar -->
+      <p hidden type="number" ng-model="dynamicFlag" ng-init="dynamicFlag=0"></p>
+      
       <div class="block">
         <div class="block-bot">
           <div class="head">
             <div class="head-cnt">
-              <h3>Top Games</h3>
+              <h3>Top Voted Games To Slash</h3>
             </div>
           </div>
+          
+          
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">TMNT</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            <div ng-if="dynamicFlag == 0">
+            
+            {% for game in votedgames %}
+            
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+                <div class="image"> <a href="#"><img src={{game.artpath}} alt="css/images/img3.gif" /></a> </div>
+                <div class="cnt">
+                  <h4><a href="#!">{{game.title}}</a></h4>
+                  </br>
+                  <h3>Winning Votes: {{game.votes}}</h3>
+                </div>
+                <div class="cl">&nbsp;</div>
               </div>
-              <div class="cl">&nbsp;</div>
+            
+            {% endfor %}
+            
             </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">F.E.A.R.2</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            <div ng-if="dynamicFlag == 1" ng-repeat="x in sidebarGamesList" ng-init="number = indexInit()">
+                
+              <div class="article">
+                <!--<div class="c1">&nbsp;</div>-->
+                
+                <div class="image" ng-if="number == 1">
+                  <a href="#"><img id="tpgimageID1" src="" /></a>
+                  <p hidden ng-init="updatetpgImage1()"></p>
+                </div>
+                
+                <div class="image" ng-if="number == 2">
+                  <a href="#"><img id="tpgimageID2" src="" /></a>
+                  <p hidden ng-init="updatetpgImage2()"></p>
+                </div>
+                
+                <div class="image" ng-if="number == 3">
+                  <a href="#"><img id="tpgimageID3" src="" /></a>
+                  <p hidden ng-init="updatetpgImage3()"></p>
+                </div>
+                
+                <div class="cnt">
+                  <h4 ng-bind="x.title"><a href="#!"></a></h4>
+                  </br>
+                  
+                  <div ng-if="number == 1">
+                    <h3 id="tpgmvotesID1"></h3>
+                    <p hidden ng-init="updatevotes1()"></p>
+                  </div>
+                  
+                  <div ng-if="number == 2">
+                    <h3 id="tpgmvotesID2"></h3>
+                    <p hidden ng-init="updatevotes2()"></p>
+                  </div>                  
+
+                  <div ng-if="number == 3">
+                    <h3 id="tpgmvotesID3"></h3>
+                    <p hidden ng-init="updatevotes3()"></p>
+                  </div>
+                </div>
+                
+                <div class="cl">&nbsp;</div>
+                
               </div>
-              <div class="cl">&nbsp;</div>
+      
             </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">Steel Fury</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
+            
+            <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>
-            <a href="#" class="view-all">view all</a>
-            <div class="cl">&nbsp;</div>
+            
           </div>
+          
+          
+          
         </div>
       </div>
       <!-- / Top Games Sidebar -->
       
-      <!-- Top Videos Sidebar -->
+      <!-- Most Recent Comments Sidebar -->
       <div class="block">
         <div class="block-bot">
           <div class="head">
             <div class="head-cnt">
-              <h3>Top Videos</h3>
+              <h3>Recent Comments</h3>
             </div>
           </div>
+          
           <div class="image-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img1.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">FALLOUT3</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            <div ng-if="dynamicFlag == 0">
+              
+            {% for comment in topcomments %}
+            
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+                <!--<div class="blog"><h2>{{comment.month}}</h2><h3>{{comment.day}}</h3></div>-->
+                <div class="image">
+                  <div class="blog"><h2>{{comment.month}}</h2><h3>{{comment.day}}</h3></div>
+                </div>
+                <div class="cnt">
+                  <h4><a href="#!">{{comment.username}}</a></h4>
+                  </br>
+                  
+                  {% if comment.color == 'none' %}
+                    <h3>{{comment.comment}}</h3>
+                  {% else %}
+                   {% if comment.color == 'yellow' %}
+                     <h3><font color = "yellow">{{comment.comment}}</font></h3> 
+                   {% else %}
+                     {% if comment.color == 'red' %}
+                       <h3><font color = "red">{{comment.comment}}</font></h3> 
+                     {% else %}
+                       {% if comment.color == 'limegreen' %}
+                         <h3><font color = "limegreen">{{comment.comment}}</font></h3> 
+                       {% else %}
+                         {% if comment.color == 'blue' %}
+                           <h3><font color = "blue">{{comment.comment}}</font></h3> 
+                         {% else %}
+                           {% if comment.color == 'peachpuff' %}
+                             <h3><font color = "peachpuff">{{comment.comment}}</font></h3> 
+                           {% else %}
+                             {% if comment.color == 'orange' %}
+                               <h3><font color = "orange">{{comment.comment}}</font></h3> 
+                             {% else %}
+                               {% if comment.color == 'darkviolet' %}
+                                 <h3><font color = "darkviolet">{{comment.comment}}</font></h3> 
+                               {% endif %} 
+                              {% endif %} 
+                            {% endif %} 
+                           {% endif%} 
+                         {% endif %} 
+                       {% endif %} 
+                      {% endif %} 
+                     {% endif %} 
+                  
+                </div>
+               <div class="cl">&nbsp;</div>
               </div>
-              <div class="cl">&nbsp;</div>
+                
+            {% endfor %}
+            
             </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img2.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">Crysis</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
+            
+            <div ng-if="dynamicFlag == 1" ng-repeat="y in sidebarCommentsList">           
+            
+              <div class="article">
+                <div class="cl">&nbsp;</div>
+               
+                <div class="image">
+                  <div class="blog">
+                    <h2 ng-bind="y.month"></h2>
+                    <h3 ng-bind="y.day"></h3>
+                  </div>
+                </div> 
+                <div class="cnt">
+                  <h4><a href="#!" ng-bind="y.username"></a></h4>
+                  </br>
+                   <h3 ng-style="{'color':y.color}" ng-bind="y.comment"></h3>
+                </div>
+                <div class="cl">&nbsp;</div>
               </div>
-              <div class="cl">&nbsp;</div>
+
             </div>
-            <div class="article">
-              <div class="cl">&nbsp;</div>
-              <div class="image"> <a href="#"><img src="css/images/img3.gif" alt="" /></a> </div>
-              <div class="cnt">
-                <h4><a href="#">F.E.A.R.2</a></h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum molestie </p>
-              </div>
-              <div class="cl">&nbsp;</div>
-            </div>
-            <div class="cl">&nbsp;</div>
-            <a href="#" class="view-all">view all</a>
+    
+ 
+            <p class="view-all" style="font-size:0px">&nbsp;</p>
             <div class="cl">&nbsp;</div>
           </div>
         </div>
@@ -406,24 +502,24 @@
         <div class="navs-bot">
           <div class="cl">&nbsp;</div>
           <ul>
-            <li><a href="#">community</a></li>
-            <li><a href="#">forum</a></li>
-            <li><a href="#">video</a></li>
-            <li><a href="#">cheats</a></li>
-            <li><a href="#">features</a></li>
-            <li><a href="#">downloads</a></li>
-            <li><a href="#">sports</a></li>
-            <li><a href="#">tech</a></li>
+            <!--<li><a href="#">community</a></li>-->
+            <!--<li><a href="#">forum</a></li>-->
+            <!--<li><a href="#">video</a></li>-->
+            <!--<li><a href="#">cheats</a></li>-->
+            <!--<li><a href="#">features</a></li>-->
+            <!--<li><a href="#">downloads</a></li>-->
+            <!--<li><a href="#">sports</a></li>-->
+            <!--<li><a href="#">tech</a></li>-->
           </ul>
           <ul>
-            <li><a href="#">pc</a></li>
-            <li><a href="#">xbox</a></li>
-            <li><a href="#">360</a></li>
-            <li><a href="#">wii</a></li>
-            <li><a href="#">ps3</a></li>
-            <li><a href="#">ps2</a></li>
-            <li><a href="#">psp</a></li>
-            <li><a href="#">ds</a></li>
+            <!--<li><a href="#">pc</a></li>-->
+            <!--<li><a href="#">xbox</a></li>-->
+            <!--<li><a href="#">360</a></li>-->
+            <!--<li><a href="#">wii</a></li>-->
+            <!--<li><a href="#">ps3</a></li>-->
+            <!--<li><a href="#">ps2</a></li>-->
+            <!--<li><a href="#">psp</a></li>-->
+            <!--<li><a href="#">ds</a></li>-->
           </ul>
           <div class="cl">&nbsp;</div>
         </div>

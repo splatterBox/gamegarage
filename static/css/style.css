@@ -256,3 +256,81 @@ input
     /* color: #007BFF; --*/
     text-align: center;
 }
+
+aleft {
+  float: left;
+  width: 60%;
+}
+	
+aright {
+    float: right;
+	width: 40%;
+}
+
+acenter {
+    margin: auto;
+    width: 60%;
+}
+
+.centervote {
+    margin: auto;
+    width: 60%;
+    border: 3px solid #73AD21;
+    padding: 10px;
+}
+
+.float_center {
+  float: right;
+
+  position: relative;
+  right: 22%; /* or right 50% */
+  text-align: left;
+}
+.float_center > .child {
+  position: relative;
+  left: 65%;
+}
+
+/* styling for the blog page */
+#blog_container h4 {
+  font: normal 200% 'Yanone Kaffeesatz', arial, sans-serif;
+  margin: 0 0 15px 0;
+  padding: 5px 0;}
+
+#blog_container h4.select {
+  width: 475px;}
+
+.blog {
+  background: url(../css/images/calendar.png) no-repeat;
+  width: 54px;
+  height: 46px;
+  float: left;
+  margin: 0 15px 0 0;}
+
+.blog h2 {
+  font: bold 90% arial, sans-serif;
+  font-weight: bold;
+  color:#0099FF  !important;
+  text-shadow: none;
+  text-align: center;
+  margin: 0;
+  padding: 13px 8px 0 0;}
+  
+.blog h3 {
+  font: 140% arial, sans-serif;
+  font-weight: bold;
+  color:#0099FF  !important;
+  text-shadow: none;
+  margin: 0;
+  text-align: center;
+  padding: 0px 8px 0 0;}
+  
+#blog_text {
+  padding: 20px;
+  overflow: auto;
+  height: 100%;}
+
+#blog_text h1 {
+  font: normal 190% 'Yanone Kaffeesatz', arial, sans-serif;;
+  margin: 0 0 15px 0;
+  padding: 5px 0;}

@@ -26,6 +26,14 @@
                 <p hidden type="text" ng-model="gamePageListSize" ng-init="gamePageListSize=0"></p>
               {% endif %}
               
+              {% if games == 'Search' %}
+                <h3 type="text" ng-model="searchtype" ng-init="searchtype='Search'">Found Games</h3>
+                <p hidden type="text" ng-model="gamePageListSize" ng-init="gamePageListSize=0"></p>
+                <p hidden type="text" ng-model="searchString" ng-init="searchString='{{Search}}'"></p>
+                
+              {% endif %}              
+              
+              
               <div class="cl">&nbsp;</div>
             </div>
           </div>

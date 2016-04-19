@@ -8,12 +8,12 @@ CREATE ROLE limited LOGIN PASSWORD 'limited762*';
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   userid BIGSERIAL PRIMARY KEY NOT NULL,
-  username text NOT NULL,
-  firstname text NOT NULL,
-  lastname text NOT NULL,
+  username text UNIQUE NOT NULL CONSTRAINT no_name CHECK (LENGTH(username)<100),
+  firstname text NOT NULL CONSTRAINT no_first CHECK (LENGTH(firstname)<100),
+  lastname text NOT NULL CONSTRAINT no_last CHECK (LENGTH(lastname)<100),
   password text NOT NULL,
-  favgenre text NOT NULL DEFAULT 'none',
-  favgame text NOT NULL DEFAULT 'none',
+  favgenre text NOT NULL CONSTRAINT no_genre CHECK (favgenre ~ '\A[A-Za-z\s]+\Z') DEFAULT 'none',
+  favgame text NOT NULL CONSTRAINT no_game CHECK (favgame ~ '\A[A-Za-z\s]+\Z') DEFAULT 'none',
   avatarpath text NOT NULL DEFAULT 'none',
   voted boolean NOT NULL DEFAULT FALSE);
 
@@ -44,6 +44,8 @@ CREATE TABLE games (
   discountprice decimal(10,2) NOT NULL DEFAULT 0.00,
   onsale boolean NOT NULL DEFAULT FALSE);
   
+CREATE INDEX titleindex ON games(title);  
+  
 INSERT INTO games (title, price, discountprice, onsale) VALUES ('FEAR2', 19.99, 9.99, 'TRUE');
 INSERT INTO games (title, price, discountprice) VALUES ('Juniper''s Knot', 0, 0);
 INSERT INTO games (title, price, discountprice) VALUES ('140', 4.99, 2.99);
@@ -67,6 +69,8 @@ CREATE TABLE gamedetails (
   gdesc text NOT NULL,
   votes int NOT NULL DEFAULT 1,
   artpath text NOT NULL); 
+  
+CREATE INDEX gdescindex ON gamedetails(gdesc);
 
 INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (1, 'Confront terrors both known and unknown in a explosive battle for survival with F.E.A.R 2: Project Origin for PC. This action-packed follow-up to Monolith Productions''s award-winning supernatural shooter F.E.A.R. begins where the previous game left off. This time, you''ll come up against Alma''s powers from the perspective of special forces operator Michael Becket. After an enormous explosion has devastated the city of Auburn, you''ll quickly discover that what seemed like an ordinary mission to retrieve and interrogate Genevieve Aristide is anything but.', 'css/images/img7.jpg');
 INSERT INTO gamedetails (gid, gdesc, artpath) VALUES (2, 'Juniper''s Knot is a short kinetic visual novel developed by Dischan Media. Created in under a month, Juniper''s Knot revolves around a lost boy and an imprisoned demon, as they help overcome each other''s obstacles through wit and memory, respectively.  In the world of Juniper''s Knot, fiends (demons) unconsciously drain the life of those around them to keep themselves alive; this results in a barren, run-down town that surrounds the manor in which the fiend is trapped.  The manner of dress, and details about the daily life of the boy would hint that the story is set around the Industrial Revolution.', 'css/images/Junipers_Knot.jpg');

@@ -1199,7 +1199,7 @@ def changeInfo():
         # Capitalize the name for HTML print.
         avatarValue=session['avatarpath']
         newName = tempName.capitalize()
-        print "(Register) Logged in user is: %s" % newName
+        print "(Register) Logged in user is: %s" % tempName
     else:
         print("OOPS")
         
@@ -1208,29 +1208,53 @@ def changeInfo():
         avatarValue = ''
         print "(Register) No one is logged in."    
     
-    tempName=session['userName']
-    newName = tempName.capitalize()
+    # tempName=session['userName']
+    # newName = tempName.capitalize()
     name = [newName]
     try:
-        cur.execute("SELECT username, firstname, lastname, password, favgame, favgenre from users WHERE username= '%s'" % (tempName))
+        print(cur.mogrify("SELECT username, firstname, lastname, password, favgame, favgenre from users WHERE username= %s", (tempName,)))
+        cur.execute("SELECT username, firstname, lastname, password, favgame, favgenre from users WHERE username= %s", (tempName,))
     except:
         print("ERROR")
-        conn.rollback()
-    conn.commit()
     results = cur.fetchall()
+ 
     return render_template('changeInfo.html', sessionUser=name, info=results, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'changeinfo')
     #return app.send_static_file('index.html')
 
 @app.route('/updateinformation', methods=['GET', 'POST'])
 def updateinformation():
     if (request.method == 'POST' or request.method == 'GET'):
-            
+        
+        # Get the logged in user's name  
+        if 'userName' in session:
             currentname=session['userName']
-            # Connect to the database.
-            conn = connectToDB()
-            # Create a database cursor object (dictionary style).
-            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
+            avatarValue=session['avatarpath']
+            
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)     
+            
+        try:
+            cur.execute("SELECT userid FROM users WHERE username = %s;", (currentname,))
+        except:
+            print("Error executing SELECT for userid lookup.")
+        answer=cur.fetchall()
+        
+        # Find out if the result set is empty.
+        count=0
+        for row in answer:
+            count = count + 1
+        
+        if count == 0:
+            print 'Userid does not exist.'
+        elif count == 1:    
+        
+            # Get the userid.
+            for entry in answer:
+                localUserID = entry.get('userid')
+                print 'UserID is: %s' % localUserID         
+   
             # Grab the top 3 voted games.
             try:
                 print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
@@ -1250,6 +1274,7 @@ def updateinformation():
     
             try:
                 newusername = request.form['username']
+                #print 'TEST: New user name is: %s' % newusername
                 newfirst = request.form['firstname']
                 newlast = request.form['lastname']
                 newgenre = request.form['favgenre']
@@ -1259,23 +1284,30 @@ def updateinformation():
                 
                 # print(newpass)
                 # print(cur.mogrify("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
+                if newusername != '':
+                    print(cur.mogrify("UPDATE users SET username = %s WHERE userid = %s;", (newusername, localUserID)))
+                    cur.execute("UPDATE users SET username = %s WHERE userid = %s;", (newusername, localUserID))
+                    session['userName'] = newusername
                 if newfirst != '': 
-                    cur.execute("UPDATE users SET firstname = '%s' WHERE username= '%s'" % (newfirst, currentname))
+                    print(cur.mogrify("UPDATE users SET firstname = %s WHERE userid = %s;", (newfirst, localUserID)))
+                    cur.execute("UPDATE users SET firstname = %s WHERE userid = %s;", (newfirst, localUserID))
                 if newlast != '': 
-                    cur.execute("UPDATE users SET lastname = '%s' WHERE username= '%s'" % (newlast, currentname))                    
+                    print(cur.mogrify("UPDATE users SET lastname = %s WHERE userid= %s;", (newlast, localUserID)))
+                    cur.execute("UPDATE users SET lastname = %s WHERE userid= %s;", (newlast, localUserID))                    
                 if newgenre != '': 
-                    cur.execute("UPDATE users SET favgenre = '%s' WHERE username= '%s'" % (newgenre, currentname))
+                    print(cur.mogrify("UPDATE users SET favgenre = %s WHERE userid= %s;", (newgenre, localUserID)))
+                    cur.execute("UPDATE users SET favgenre = %s WHERE userid= %s;", (newgenre, localUserID))
                 if newgame != '': 
-                    cur.execute("UPDATE users SET favgame = '%s' WHERE username= '%s'" % (newgame, currentname))
+                    print(cur.mogrify("UPDATE users SET favgame = %s WHERE userid= %s;", (newgame, localUserID)))
+                    cur.execute("UPDATE users SET favgame = %s WHERE userid= %s;", (newgame, localUserID))
                 if newpass != '':
-                    # if newpassretype == newpass:
-                    cur.execute("UPDATE users SET password = crypt('%s', gen_salt('bf')) WHERE username= '%s'" % (newpass, currentname))
-                print(newpass)
-                print(newpassretype)
-
-                # cur.execute("INSERT INTO users (username, firstname, lastname, password, avatarpath) VALUES (%s, %s, %s, crypt(%s, gen_salt('bf')), %s);", (localUser, localFirstName, localLastName, localPass, localPath))
-
-            # cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
+                    if newpass == newpassretype:
+                        print('Retyped password matches new password.  Updating the database.')
+                        print(cur.mogrify("UPDATE users SET password = crypt(%s, gen_salt('bf')) WHERE userid = %s;", (newpass, localUserID)))
+                        cur.execute("UPDATE users SET password = crypt(%s, gen_salt('bf')) WHERE userid = %s;", (newpass, localUserID))
+                        session['userPassword'] = newpass
+                    else:
+                        print('ERROR: Retyped password does NOT match new password.  Try again!')
             
             except:
                 print("Error updating Information.")
@@ -1366,11 +1398,9 @@ def updateavatar():
                 newavatar = request.form['avatar']
                 print(tempName)
                 print(newavatar)
-                # print(cur.mogrify("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
+
+                cur.execute("UPDATE users SET avatarpath = %s WHERE username= %s", (newavatar, tempName))
                 session['avatarpath']=newavatar
-                cur.execute("UPDATE users SET avatarpath = '%s' WHERE username= '%s'" % (newavatar, tempName))
-            # cur.execute("INSERT INTO userlibrary (gid, userid) VALUES (%s, %s);", (localGameID, localUserID))
-            
             except:
                 print("Error updating Avatar.")
                 conn.rollback()

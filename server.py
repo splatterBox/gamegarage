@@ -225,15 +225,71 @@ def displayAllGames():
     
     return render_template('displaygames.html', originalUser=originalname, avatarValue=avatarValue, votedgames = votedgames, topcomments=topcomments, sessionUser=name, games=searchtype, selected = 'allgames')
 
+# A python decorator.  Whenever '/searchgames' run the 'displaygames' webpage.
+@app.route('/searchgames', methods=['GET', 'POST'])
+def displaySearchGames():
+
+    if request.method == 'POST':
+        Search = request.form['Search']
+        # TEST
+        print 'Game search string is: %s' % Search
+
+
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        
+        try:
+            print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+            cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+    
+        except:
+            print('Could not SELECT top 3 voted games.')
+        votedgames = cur.fetchall()
+        
+        # Get top 3 user blog data.
+        try:
+            print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+            cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+        except:
+            print('Could not SELECT top 3 comments.')
+        topcomments = cur.fetchall() 
+        
+        if 'userName' in session:
+            tempName=session['userName']
+            avatarValue=session['avatarpath']
+            # Capitalize the name for HTML print.
+            newName = tempName.capitalize()
+            print "(Register) Logged in user is: %s" % newName
+        else:
+            tempName = ''
+            newName = ''
+            avatarValue= ''
+            print "(Register) No one is logged in."
+            
+        # original username
+        originalname = [tempName]
+        # capitalized username
+        name = [newName]
+        
+        # Search for all games.
+        searchtype = 'Search'
+        
+        return render_template('displaygames.html', originalUser=originalname, avatarValue=avatarValue, votedgames = votedgames, topcomments=topcomments, sessionUser=name, games=searchtype, selected = 'allgames', Search = Search)
+
 
 # Decorator.  When a game search request happens, do this.
 @socketio.on('searchtype', namespace='/gg')
 def findGames(searchtype):
     
     # Grab all the values and verify they are received.
-    localSearchType = searchtype
+    localSearchType = searchtype[0]
+    localSearchString = searchtype[1]
+
 
     print "Game search type is: %s" % localSearchType
+    print "Game search string is: %s" % localSearchString
 
     # Connect to the database.
     conn = connectToDB()
@@ -250,63 +306,78 @@ def findGames(searchtype):
             print("Error executing SELECT for all games lookup.")
         games=cur.fetchall()
         
-        gamesResult = []
+    elif localSearchType == 'Search':  
+        games = []
         
+        if localSearchString != '':
         
-        for entry in games:
-            # Test
-            #temptitle = entry.get('title')
-            #localprice = entry.get('price')
-            #tempdesc = entry.get('gdesc')
-            #print "Title: %s" % temptitle
-            #print "TEST: Game price is: %s" % localprice
-            #print "Description: %s" % tempdesc
-            #print "\n"
-            
-            finalprice = ''
-            # Grab the onsale value.
-            onsale = entry.get('onsale')
-            print "Onsale value is: %s" % onsale
-            if onsale == False:
-                # Grab the price (in decimal).
-                decimalprice = entry.get('price')
-                # Convert the price to a string.
-                stringprice = str(decimalprice)
-                # Add the $ character.
-                finalprice = 'Price $' + stringprice
-            
-            elif onsale == True:
-                #Grab the discount price (in decimal).
-                decimaldiscount = entry.get('discountprice')
-                # Convert the discout price to a string.
-                stringdiscount = str(decimaldiscount)
-                # Add the $ character.
-                finalprice = 'Sale Price $' + stringdiscount
+            # Get data for the game search.
+            try:
+                print(cur.mogrify("SELECT * FROM games NATURAL JOIN gamedetails WHERE (LOWER(title) LIKE LOWER(%s)) OR (LOWER(gdesc) LIKE LOWER(%s));", ('%' + localSearchString + '%', '%' + localSearchString + '%')))
+                cur.execute("SELECT * FROM games NATURAL JOIN gamedetails WHERE (LOWER(title) LIKE LOWER(%s)) OR (LOWER(gdesc) LIKE LOWER(%s));", ('%' + localSearchString + '%', '%' + localSearchString + '%'))
+       
+            except:
+                print("Error executing SELECT for game search lookup.")
+            games=cur.fetchall()
+            # TEST
+            #print(games)
 
-            
-            game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'desc': entry.get('gdesc'), 'artpath': entry.get('artpath')}
-            #game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'desc': entry.get('gdesc')}
-            gamesResult.append(game)
-            
+    gamesResult = []
+    
+    for entry in games:
         # Test
-        for entry2 in gamesResult:
-            tempid = entry2.get('gid')
-            temptitle = entry2.get('title')
-            tempprice = entry2.get('price')
-            #tempdiscount = entry2.get('discountprice')
-            tempdesc = entry2.get('desc')
-            temppath = entry2.get('artpath')
-            print "Game ID: %s" % tempid
-            print "Title: %s" % temptitle
-            print "Price: %s" % tempprice
-            #print "Discount Price: %s" % tempdiscount
-            print "Cover art path: %s" % temppath
-            print "Description: %s" % tempdesc
-            print "\n"
-            
-        # Test
-        print("You successfull retreived all games!")
-        emit('gamesResult', gamesResult)
+        #temptitle = entry.get('title')
+        #localprice = entry.get('price')
+        #tempdesc = entry.get('gdesc')
+        #print "Title: %s" % temptitle
+        #print "TEST: Game price is: %s" % localprice
+        #print "Description: %s" % tempdesc
+        #print "\n"
+        
+        finalprice = ''
+        # Grab the onsale value.
+        onsale = entry.get('onsale')
+        print "Onsale value is: %s" % onsale
+        if onsale == False:
+            # Grab the price (in decimal).
+            decimalprice = entry.get('price')
+            # Convert the price to a string.
+            stringprice = str(decimalprice)
+            # Add the $ character.
+            finalprice = 'Price $' + stringprice
+        
+        elif onsale == True:
+            #Grab the discount price (in decimal).
+            decimaldiscount = entry.get('discountprice')
+            # Convert the discout price to a string.
+            stringdiscount = str(decimaldiscount)
+            # Add the $ character.
+            finalprice = 'Sale Price $' + stringdiscount
+
+        
+        game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'price': finalprice, 'desc': entry.get('gdesc'), 'artpath': entry.get('artpath')}
+        #game = {'gid': entry.get('gid'), 'title': entry.get('title'), 'desc': entry.get('gdesc')}
+        gamesResult.append(game)
+        
+    # Test
+    for entry2 in gamesResult:
+        tempid = entry2.get('gid')
+        temptitle = entry2.get('title')
+        tempprice = entry2.get('price')
+        #tempdiscount = entry2.get('discountprice')
+        tempdesc = entry2.get('desc')
+        temppath = entry2.get('artpath')
+        print "Game ID: %s" % tempid
+        print "Title: %s" % temptitle
+        print "Price: %s" % tempprice
+        #print "Discount Price: %s" % tempdiscount
+        print "Cover art path: %s" % temppath
+        print "Description: %s" % tempdesc
+        print "\n"
+        
+    # Test
+    print("You successfull retreived all games!")
+    emit('gamesResult', gamesResult)
 
 
 # Decorator.  When a socket add-to-cart event happens, do this.

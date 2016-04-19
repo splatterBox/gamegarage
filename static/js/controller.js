@@ -102,11 +102,14 @@ GameGarage.controller('GarageController', function($scope){
     $scope.sidebarGamesList = [];
     $scope.sidebarCommentsList = [];
     $scope.dynamicFlag = 0;
-    // $scope.colorOne='';
-    // $scope.colorTwo='';
-    // $scope.colorThree='';
     // Variable that tracks what object we are in during the sidebar load.
     $scope.sidebarIndex = 0;
+
+    // Variable for game search.
+    $scope.searchString = '';
+
+
+
 
 
     // If connect on the socket, run a function.
@@ -129,11 +132,20 @@ GameGarage.controller('GarageController', function($scope){
         console.log('Game search type is: ', $scope.searchtype);
         // TEST
         console.log('Logged in user is: ', $scope.loggedinusername);
+        // TEST
+        console.log('Game search string is: ',  $scope.searchString);
 
+        // local list
+        var localList = [];
+        localList.push($scope.searchtype);
+        localList.push($scope.searchString);
+        
         // Send the info. to the server.
-        socket.emit('searchtype', $scope.searchtype);
+        socket.emit('searchtype', localList);
+        
         // Reset all fields.
         $scope.searchtype = '';
+        $scope.searchString = '';
     };
     
     // Handle game data emitted from the server.
@@ -788,10 +800,17 @@ GameGarage.controller('GarageController', function($scope){
          });
     });
     
+    $(document).ready(function(){
+        $("#deletegamesBtn").click(function(){
+            $("#delModal").modal();
+         });
+    });
+    
     // Method to delete all games in the logged in user's cart
     // (that are flagged as in the cart (NOT purchased))
     $scope.deletegames = function deletegames(){
       var name = $scope.loggedinusername;
+      $('#delModal').modal('hide');
       socket.emit('deletecart', name);
     };
     
@@ -1155,8 +1174,5 @@ GameGarage.controller('GarageController', function($scope){
         var image5 = document.getElementById("image5ID");
         image5.setAttribute('src', $scope.art5);
     }; 
-
-
-    
 
 });

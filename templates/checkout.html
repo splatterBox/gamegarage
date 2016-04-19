@@ -91,12 +91,51 @@
                 </table>
                
                 <p align="middle">
-                  <input type="submit" value="remove all games from cart?" name="deletegames" ng-click="deletegames()"/>
+                  <input type="submit" value="remove all games from cart?" name="deletegames" id="deletegamesBtn"/>
                 </p>
-                
+               
             </div>
           
+          <!-- Modal -->
+    <div class="modal" id="delModal" role="dialog">
+    <div class="modal-dialog">
+    
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="padding:15px 25px;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5><span class="glyphicon glyphicon-trash" style="font-size: 20px"></span> Are you sure?</h5>
+        
+      </div>
+      <div class="modal-body" style="padding:15px 25px;">
+        <!-- <form role="form" text-center> -->
+          <form method = "post" ng-submit="deletegames()">
+
           
+            <div class="row">
+              </br>
+            </div>
+            
+
+              
+            <div class="row">
+              <button type="submit" name="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Delete</button>
+            </div>
+          </div>
+          </form>
+        <!-- </form> -->
+        
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger btn-default pull-right" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+        
+      </div>
+
+      </div>
+      
+      </div>
+
+      <!-- / Modal dialog box ends here. //-->         
           
           
           <div class="row-articles articles">

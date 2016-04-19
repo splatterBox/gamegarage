@@ -18,29 +18,43 @@
                 </div>
                 &nbsp;<br />
                 &nbsp;<br />
-                <form method="post" action="/checkout2">
+                <form ng-submit="registercc()">
                   <p>
-                    <h3>&emsp;<center<label for="cc_number">Credit Card #:</label></h3>
-                    &emsp;<input type="text" ng-model="cc_number" id="cc_number" name="cc_number" size="30"/>
+                    <h3><label for="ccnumber">Credit Card #:</label></h3>
+                    <input type="number" ng-model="ccnumber" id="ccnumber" name="ccnumber" size="20" oninput="if(value.length>16)value=value.slice(0,16)" pattern=".{15,16}" required title="15 to 16 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3>&emsp;<label for="cc_code">Security Code:</label></h3>
-                    &emsp;<input type="text" ng-model="cc_code" id="cc_code" name="cc_code" size="5"/>
+                    <h3><label for="cccode">Security Code:</label></h3>
+                    <input type="number" ng-model="cccode" id="cccode" name="cccode" size="20" oninput="if(value.length>4)value=value.slice(0,4)" pattern=".{3,4}" required title="3 to 4 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3>&emsp;<label for="exp_month">Expiration month:</label></h3>
-                    &emsp;<input type="text" ng-model="exp_month" id="exp_month" name="exp_month" size="15"/>
+                    <h3><label for="expmonth">Expiration Month:</label></h3>
+                    <select ng-model="expmonth" id="expmonth" name="expmonth">
+                      <option selected="selected" disabled="disabled">Select Month</option>
+                      <option value="1">January</option>
+                      <option value="2">February</option>
+                      <option value="3">March</option>
+                      <option value="4">April</option>
+                      <option value="5">May</option>
+                      <option value="6">June</option>
+                      <option value="7">July</option>
+                      <option value="8">August</option>
+                      <option value="9">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
                   </p>
                   &nbsp;<br />
                   <p>
-                    <h3>&emsp;<label for="exp_year">Expiration year:</label></h3>
-                    &emsp;<input type="text" ng-model="exp_year" id="exp_year" name="exp_year" size="4"/>
+                    <h3><label for="expyear">Expiration Year:</label></h3>
+                    <input type="number" ng-model="expyear" id="expyear" name="expyear" size="20" oninput="if(value.length>4)value=value.slice(0,4)" pattern=".{4,4}" required title="4 digits"/>
                   </p>
                   &nbsp;<br />
                   <p>
-                    &emsp;<input type="submit" value="Update Credit Card" name="submit" ng-disabled="disabledSubmit()" />
+                    <input type="submit" value="update" name="update" ng-disabled="disabledCheck()"/>
                   </p>
                 </form>
                             <div class="article">

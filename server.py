@@ -1318,55 +1318,62 @@ def updateinformation():
     newName = tempName.capitalize()
     name = [newName]
     return render_template('updateinformation.html', sessionUser=name, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, selected = 'updateinformation')
-    #return app.send_static_file('index.html')
     
 @app.route('/updatecreditcard', methods=['GET', 'POST'])
 def updatecreditcard():
-    cartdict = []
-    pricedict = 0
+    
     
     if (request.method == 'POST' or request.method == 'GET'):
-            # Connect to the database.
-            conn = connectToDB()
-            # Create a database cursor object (dictionary style).
-            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            
-            # Grab the top 3 voted games.
-            try:
-                print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
-                cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
         
-            except:
-                print('Could not SELECT top 3 voted games.')
-            votedgames = cur.fetchall()
+        if 'userName' in session:
+            localName=session['userName']
+            avatarValue=session['avatarpath']
             
-            # Get top 3 user blog data.
-            try:
-                print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
-                cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
-            except:
-                print('Could not SELECT top 3 comments.')
-            topcomments = cur.fetchall()             
+            # Capitalize the name for HTML print.
+            newName = localName.capitalize()
+            # Add the capitalized name to a list.
+            name = [newName]
+        
+        # Connect to the database.
+        conn = connectToDB()
+        # Create a database cursor object (dictionary style).
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+        # Grab the top 3 voted games.
+        try:
+            print(cur.mogrify("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;"))
+            cur.execute("SELECT games.title, gamedetails.votes, gamedetails.artpath FROM games NATURAL JOIN gamedetails ORDER BY votes DESC LIMIT 3;")
+    
+        except:
+            print('Could not SELECT top 3 voted games.')
+        votedgames = cur.fetchall()    
+   
+        # Get top 3 user blog data.
+        try:
+            print(cur.mogrify("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC; "))
+            cur.execute("SELECT * FROM (SELECT comments.commentid, users.username, comments.month, comments.day, comments.year, comments.color, comments.comment FROM users NATURAL JOIN comments ORDER BY commentid DESC LIMIT 3) AS tmp ORDER BY commentid ASC;")
+        except:
+            print('Could not SELECT top 3 comments.')
+        topcomments = cur.fetchall()  
             
-            
-            cur2 = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            try:
-                print(cur.mogrify(("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")))
-                
-                cur.execute("SELECT title FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
-                cur2.execute("SELECT SUM(price) FROM games JOIN userlibrary ON games.gid = userlibrary.gid WHERE userid = 3;")
-                cartdict = cur.fetchall()
-                pricedict = cur2.fetchall()
-                cart = []
-                price = 0
-            except:
-                print("Error selecting from library.")
-            name = ['']    
-    avatarValue=session['avatarpath']
-    tempName=session['userName']
-    newName = tempName.capitalize()
-    name = [newName]
-    return render_template('updatecreditcard.html', cart=cart, price = price, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, sessionUser = name, selected = 'updatecreditcard')
+        # Change the time zone to Eastern Standard Time.
+        os.environ['TZ'] = 'US/Eastern'
+        time.tzset()
+
+        # Grab the day of the week and the time.
+        fullMonth = time.strftime('%B')
+        currentMonth = str(fullMonth)
+        print 'TEST: Current month is: %s' % fullMonth
+        tempDigitMonth = time.strftime('%m')
+        digitMonth = int(tempDigitMonth)
+        print 'TEST: Current month as integer is: %s' % digitMonth
+        tempYear = time.strftime('%G')
+        fullYear = int(tempYear)
+        print 'TEST: Current year is: %s' % fullYear
+        
+        # return render_template('checkout.html', cartSize=cartSize, cart=gamesList, avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, price=finalprice, ccstatus=ccstatus, ccmessage=ccmessage, currentmonth = digitMonth, currentyear = fullYear, sessionUser=name, selected='checkout')
+
+        return render_template('updatecreditcard.html', avatarValue=avatarValue, votedgames=votedgames, topcomments=topcomments, sessionUser = name, currentmonth = digitMonth, currentyear = fullYear, selected = 'updatecreditcard')
             
 @app.route('/updateavatar', methods=['GET', 'POST'])
 def updateavatar():

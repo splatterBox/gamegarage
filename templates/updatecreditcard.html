@@ -2,7 +2,7 @@
 
   {% block content %}
         
-      <!-- Registration -->
+      <!-- Checkout -->
       <div class="block">
         <div class="block-bot">
           <div class="head">
@@ -12,12 +12,23 @@
             </div>
           </div>
           
+          {% if sessionUser[0] != '' %}
+            <p hidden type="text" ng-model="loggedinusername" ng-init="loggedinusername='{{sessionUser[0]}}'"></p>
+            <p hidden type="text" ng-model="cmonth" ng-init="cmonth='{{currentmonth}}'"></p>
+            <p hidden type="text" ng-model="cyear" ng-init="cyear='{{currentyear}}'"></p>
+          {% endif %}
+          
+          
           <div class="row-articles articles">
             <div class="cl">&nbsp;</div>
-            <div class = "cnt">
-                </div>
-                &nbsp;<br />
-                &nbsp;<br />
+            <div class="article">
+              <div class="cl">&nbsp;</div>
+              &nbsp;<br />
+              &nbsp;<br />
+
+ 
+              <div class="cnt">
+  
                 <form ng-submit="registercc()">
                   <p>
                     <h3><label for="ccnumber">Credit Card #:</label></h3>
@@ -54,11 +65,64 @@
                   </p>
                   &nbsp;<br />
                   <p>
-                    <input type="submit" value="update" name="update" ng-disabled="disabledCheck()"/>
+                    <input type="submit" value="update" name="update" ng-disabled="disabledCC()"/>
                   </p>
                 </form>
-                            <div class="article">
+                &nbsp;<br />
+                <p>
+                  <h3>Status: </h3> 
+                  <input type="text" ng-model="checkoutstatus" placeholder="Checkout Status" size="36" readonly="readonly"/>
+                </p>
+                
+
+              </div>
+
+              
+
+              
               <div class="cl">&nbsp;</div>
+            </div>
+
+            <div class="article last-article">
+              <div class="cl">&nbsp;</div>
+              <p>
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
+                &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
@@ -72,53 +136,24 @@
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />     
-                &nbsp;<br />
-                &nbsp;<br />
-                &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
                 &nbsp;<br />
 
-  </div>
-  </div>
-  </div>
-  </div>
+                
+              </p>
+   
+
+              <div class="cl">&nbsp;</div>
+            </div>
+            <div class="cl">&nbsp;</div>
+          </div>
+        </div>
+      </div>
+      <!-- / Editor's Pick -->
+      
   
-  
-  
-{% endblock %}
+      
+
+      
+   {% endblock %}

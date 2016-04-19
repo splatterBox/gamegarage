@@ -1175,4 +1175,71 @@ GameGarage.controller('GarageController', function($scope){
         image5.setAttribute('src', $scope.art5);
     }; 
 
+
+    // Method that disable/enables the 'Update' button
+    // based on some BUT not all data checks. (for credit card update **** In User Info Update ****)
+    $scope.disabledCC = function disabledCC() {
+        
+        if(($scope.expmonth == 'Select Month') || ($scope.expyear == '') || ($scope.cccode == '') || ($scope.ccnumber == ''))
+        {
+            console.log('To create new credit card, all fields must have values.');
+            $scope.checkoutstatus = 'Complete all fields to add new credit card.';
+            return true;
+        }
+        
+        // Now check that ccnumber, cccode, expmonth and expyear are good.
+        var intccnum = parseInt($scope.ccnumber,10);
+        var intcode = parseInt($scope.cccode,10);
+        var intexpmonth = parseInt($scope.expmonth,10);
+        var intexpyear = parseInt($scope.expyear,10);
+        console.log('Intccnum is: ', intccnum);
+        console.log('Intcode is: ', intcode);
+        console.log('Intexpmonth is: ', intexpmonth);
+        console.log('Intexpyear is: ', intexpyear);
+        
+        if(isNaN($scope.ccnumber))
+        {
+            $scope.checkoutstatus = 'Credit card must have 15-16 digits.';
+            return true;
+        }
+        else if(isNaN($scope.cccode))
+        {
+            $scope.checkoutstatus = 'Security code must have 3-4 digits.';
+            return true;
+        }
+        else if(isNaN($scope.expyear))
+        {
+            $scope.checkoutstatus = 'Expiration year must have 4 digits.';
+            return true;
+        }
+
+        if(intexpyear < $scope.cyear)
+        {
+            console.log('Entered expyear is less than current year.');
+            $scope.checkoutstatus = 'Expiration year is invalid.';
+            return true;
+        }
+        
+        if((intexpyear == $scope.cyear) && (intexpmonth < $scope.cmonth))
+        {
+            console.log('Entered expyear matches current year.');
+            console.log('Entered expmonth is less than current month');
+            $scope.checkoutstatus = 'Expiration month for current year is invalid.';
+            return true;
+        }
+
+        if($scope.ccmessage!='')
+        {
+            $scope.checkoutstatus = $scope.ccmessage;
+            return false;
+        }
+        else
+        {
+            console.log('New create card data is OK.');
+            $scope.checkoutstatus = 'New credit card data is valid.';
+            return false;
+        }
+
+    };
+
 });

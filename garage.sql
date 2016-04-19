@@ -14,8 +14,7 @@ CREATE TABLE users (
   password text NOT NULL,
   favgenre text NOT NULL CONSTRAINT no_genre CHECK (favgenre ~ '\A[A-Za-z\s]+\Z') DEFAULT 'none',
   favgame text NOT NULL CONSTRAINT no_game CHECK (favgame ~ '\A[A-Za-z\s]+\Z') DEFAULT 'none',
-  avatarpath text NOT NULL DEFAULT 'none',
-  voted boolean NOT NULL DEFAULT FALSE);
+  avatarpath text NOT NULL DEFAULT 'none');
 
 CREATE EXTENSION pgcrypto;
 INSERT INTO users (username, firstname, lastname, password, favgenre, favgame, avatarpath) VALUES ('Bot', 'system', 'system', crypt('bot', gen_salt('bf')), 'FPS', 'Duck Hunt', 'avatars/m2.jpg');
